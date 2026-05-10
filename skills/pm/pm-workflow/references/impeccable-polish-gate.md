@@ -25,16 +25,18 @@ Before prototype delivery, produce a polish record in `notes/requirements.md`:
 
 If `impeccable` appears unavailable, do not stop at "not installed." Try these steps in order:
 
-1. Check the current available skill list for `impeccable`.
-2. Check common local skill paths:
+1. Check the bundled copy first: `skills/pm/pm-workflow/subskills/impeccable/SKILL.md`.
+2. If it exists, read it and follow its setup, preflight, critique, audit, polish, or product UI review instructions. Resolve its relative references and scripts from `subskills/impeccable/`.
+3. Check the current available skill list for `impeccable`.
+4. Check common local skill paths:
    - `C:\Users\<user>\.agents\skills\impeccable\SKILL.md`
    - `C:\Users\<user>\.codex\skills\impeccable\SKILL.md`
    - `<repo>/.agents/skills/impeccable/SKILL.md`
    - `<repo>/skills/impeccable/SKILL.md`
-3. If a local `SKILL.md` exists, read it and follow its setup, preflight, critique, audit, polish, or product UI review instructions.
-4. If no local skill exists and `skill-installer` is available, use it to install `impeccable`, then return to this gate.
-5. If the project or environment supports the command, try the appropriate `npx impeccable` command or local wrapper.
-6. If installation or command execution fails because of network, permissions, missing package manager, or unavailable tool support, record the exact blocker and continue with the manual fallback checklist below.
+5. If a local `SKILL.md` exists, read it and follow its setup, preflight, critique, audit, polish, or product UI review instructions.
+6. If no bundled or local skill exists and `skill-installer` is available, use it to install `impeccable`, then return to this gate.
+7. If the project or environment supports the command, try the appropriate `npx impeccable` command or local wrapper.
+8. If bundled skill resolution, installation, or command execution fails because of network, permissions, missing package manager, or unavailable tool support, record the exact blocker and continue with the manual fallback checklist below.
 
 Do not ask the user to solve the installation first unless credentials, approvals, private registry access, or policy restrictions make it impossible for the agent to proceed.
 
@@ -97,6 +99,7 @@ Check and record:
 Do not deliver the prototype until one of these is true:
 
 - `impeccable` ran and resulting fixes or decisions are recorded.
+- The bundled `subskills/impeccable` copy was found and its relevant review instructions were followed.
 - A local `impeccable` skill was found and its relevant review instructions were followed.
 - Installation or command execution was attempted, failed for a recorded reason, and the manual fallback checklist was completed.
 

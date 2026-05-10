@@ -6,8 +6,14 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import html
+import json
 import re
+import shutil
 from pathlib import Path
+
+
+SKILL_ROOT = Path(__file__).resolve().parents[1]
+FLOW_VIEWER_VENDOR = SKILL_ROOT / "assets" / "vendor" / "flow-viewer"
 
 
 def slugify(value: str, fallback: str) -> str:
@@ -20,6 +26,22 @@ def slugify(value: str, fallback: str) -> str:
 def write_if_missing(path: Path, content: str) -> None:
     if not path.exists():
         path.write_text(content, encoding="utf-8")
+
+
+def copy_flow_viewer_vendor(base: Path) -> None:
+    """Copy local Mermaid viewer dependencies into a generated delivery folder."""
+    destination = base / "assets" / "vendor" / "flow-viewer"
+    destination.mkdir(parents=True, exist_ok=True)
+    for filename in [
+        "mermaid.min.js",
+        "svg-pan-zoom.min.js",
+        "MERMAID_LICENSE",
+        "SVG_PAN_ZOOM_LICENSE",
+        "THIRD_PARTY_LICENSES.md",
+    ]:
+        source = FLOW_VIEWER_VENDOR / filename
+        if source.exists():
+            shutil.copy2(source, destination / filename)
 
 
 def index_html(product: str, iteration: str) -> str:
@@ -140,11 +162,18 @@ def prd_html(product: str, iteration: str) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
   <style>
-    body {{ margin: 0; font-family: Arial, "Microsoft YaHei", sans-serif; color: #172033; background: #fff; }}
-    main {{ width: min(920px, calc(100vw - 40px)); margin: 48px auto 80px; }}
-    h1 {{ font-size: 30px; }}
+    body {{ margin: 0; font-family: Arial, "Microsoft YaHei", sans-serif; color: #172033; background: #f7f9fc; }}
+    main {{ width: min(1120px, calc(100vw - 40px)); margin: 40px auto 80px; }}
+    h1 {{ margin: 16px 0 8px; font-size: 32px; }}
     h2 {{ margin-top: 32px; padding-bottom: 8px; border-bottom: 1px solid #d8dee8; }}
-    li {{ margin: 8px 0; line-height: 1.7; }}
+    h3 {{ margin: 20px 0 8px; }}
+    p, li {{ line-height: 1.7; }}
+    table {{ width: 100%; border-collapse: collapse; margin: 12px 0 20px; background: #fff; }}
+    th, td {{ border: 1px solid #d8dee8; padding: 10px 12px; text-align: left; vertical-align: top; }}
+    th {{ background: #eef2f7; }}
+    .toc {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 20px 0 28px; }}
+    .toc a, .panel {{ display: block; border: 1px solid #d8dee8; border-radius: 8px; background: #fff; padding: 14px 16px; color: #172033; text-decoration: none; }}
+    .muted {{ color: #687386; }}
     a {{ color: #2563eb; }}
   </style>
 </head>
@@ -152,25 +181,31 @@ def prd_html(product: str, iteration: str) -> str:
   <main>
     <a href="index.html">返回索引</a>
     <h1>{title}</h1>
-    <p>正式版本管理源文件：<a href="prd.md">prd.md</a></p>
-    <h2>1. 背景与目标</h2>
-    <ul><li>待补充。</li></ul>
-    <h2>2. 用户与场景</h2>
-    <ul><li>待补充。</li></ul>
-    <h2>3. 需求范围</h2>
-    <ul><li>必须有 / 后置 / 不做。</li></ul>
-    <h2>4. 核心流程</h2>
-    <ul><li>待补充流程图或步骤。</li></ul>
-    <h2>5. 功能需求</h2>
-    <ul><li>待补充。</li></ul>
-    <h2>6. 字段与业务规则</h2>
-    <ul><li>待补充。</li></ul>
-    <h2>7. 算法与数据要求</h2>
-    <ul><li>待补充输入、输出、指标、兜底和风险。</li></ul>
-    <h2>8. 验收标准</h2>
-    <ul><li>待补充。</li></ul>
-    <h2>9. 待确认问题 / 后续决策项</h2>
-    <ul><li>待补充。</li></ul>
+    <p class="muted">正式版本管理源文件：<a href="prd.md">prd.md</a>。本页是评审阅读入口，最终内容请以 Markdown 源文件维护。</p>
+    <nav class="toc" aria-label="PRD 目录">
+      <a href="#summary">执行摘要</a>
+      <a href="#problem">问题证据</a>
+      <a href="#users">用户与场景</a>
+      <a href="#scope">范围边界</a>
+      <a href="#requirements">功能详规</a>
+      <a href="#acceptance">验收与风险</a>
+    </nav>
+    <section class="panel">
+      <strong>生产级 PRD 完成线</strong>
+      <p>每个必须有功能都应能追溯到用户问题、页面/流程、字段、业务规则、权限、异常和验收标准。评审通过后不得保留空表、占位符或仅有章节名的内容。</p>
+    </section>
+    <h2 id="summary">1. 执行摘要</h2>
+    <p>用一段话说明：为哪些用户解决什么问题，通过什么方案达成什么业务或用户结果。</p>
+    <h2 id="problem">2. 问题证据</h2>
+    <table><thead><tr><th>维度</th><th>应填写内容</th></tr></thead><tbody><tr><td>当前流程</td><td>用户今天如何完成任务，涉及哪些工具、角色和交接点。</td></tr><tr><td>痛点代价</td><td>慢、错、漏、返工、风险、无法追踪等具体影响。</td></tr><tr><td>证据</td><td>用户访谈、业务数据、工单、观察记录或明确标注的假设。</td></tr></tbody></table>
+    <h2 id="users">3. 用户与场景</h2>
+    <p>列出主要角色、目标、入口、频率、当前替代方案和 Jobs-to-be-Done。</p>
+    <h2 id="scope">4. 范围边界</h2>
+    <p>用必须有、后置、不做、风险待确认四类说明取舍，并写清原因。</p>
+    <h2 id="requirements">5. 功能详规</h2>
+    <p>每个功能至少包含用户/角色、目标、入口、前置条件、触发动作、系统响应、字段与数据、权限规则、状态变化、异常边界、验收标准、关联原型和埋点建议。</p>
+    <h2 id="acceptance">6. 验收与风险</h2>
+    <p>使用用户故事和 Gherkin 标准描述可测试验收条件，并记录依赖、风险、缓解方案和开放问题。</p>
   </main>
 </body>
 </html>
@@ -211,6 +246,242 @@ def simple_doc_html(product: str, iteration: str, doc_title: str, source_file: s
 """
 
 
+def flow_diagrams(product: str) -> list[dict[str, str]]:
+    return [
+        {
+            "id": "main-workflow",
+            "title": "主流程",
+            "description": "从需求入口到交付确认的端到端路径，后续应替换为本产品的真实业务流。",
+            "source": f"""flowchart TD
+  A[业务方提出需求] --> B[PM 澄清问题与用户]
+  B --> C{{问题定义是否确认}}
+  C -->|否| B
+  C -->|是| D[确认范围、规则和验收信号]
+  D --> E[确认交互架构和菜单]
+  E --> F[生成并打磨 HTML 原型]
+  F --> G{{原型是否通过评审}}
+  G -->|否| E
+  G -->|是| H[深化 PRD、流程图、开发交接]
+  H --> I[最终交付归档]
+  I --> J[开发评审准备]
+""",
+        },
+        {
+            "id": "cross-role-flow",
+            "title": "跨角色协作流",
+            "description": "展示业务方、PM、设计/前端、研发/测试之间的协作顺序。",
+            "source": f"""sequenceDiagram
+  participant Biz as 业务方/需求提出者
+  participant PM as 产品负责人
+  participant UX as 原型/设计
+  participant Eng as 研发/测试
+  Biz->>PM: 提供目标、场景、痛点和约束
+  PM->>Biz: 确认问题定义和范围边界
+  PM->>UX: 交付交互架构、页面职责和主题选择
+  UX->>Biz: 演示可交互原型
+  Biz->>PM: 确认或提出修改
+  PM->>Eng: 提交 PRD、流程图和开发交接
+  Eng->>PM: 反馈实现疑问、风险和验收缺口
+  PM->>Biz: 回收后续决策项
+""",
+        },
+        {
+            "id": "status-lifecycle",
+            "title": "需求交付状态机",
+            "description": "标记一次 PM Workflow 迭代的状态生命周期。",
+            "source": """stateDiagram-v2
+  [*] --> 需求收集
+  需求收集 --> 问题定义待确认
+  问题定义待确认 --> 需求收集: 信息不足
+  问题定义待确认 --> 范围规则待确认: 问题确认
+  范围规则待确认 --> 交互架构待确认: 范围确认
+  交互架构待确认 --> 原型评审: 架构确认
+  原型评审 --> 交互架构待确认: 页面结构需调整
+  原型评审 --> 正式文档深化: 原型确认
+  正式文档深化 --> 最终交付: 文档质量通过
+  最终交付 --> [*]
+""",
+        },
+        {
+            "id": "exception-flow",
+            "title": "异常与返工路径",
+            "description": "说明信息不足、范围漂移、文档不完整或图表渲染失败时的回退路径。",
+            "source": """flowchart TD
+  A[进入交付阶段] --> B{是否缺关键事实}
+  B -->|是| C[回到需求澄清并记录缺口]
+  B -->|否| D{是否出现范围漂移}
+  D -->|是| E[写入后续决策项并等待确认]
+  D -->|否| F{文档是否达到详规标准}
+  F -->|否| G[补齐字段、规则、验收和风险]
+  F -->|是| H{flow.html 是否成功渲染}
+  H -->|否| I[检查本地 vendor 并显示错误和源码]
+  H -->|是| J[交付评审]
+  C --> A
+  E --> A
+  G --> F
+  I --> H
+""",
+        },
+    ]
+
+
+def flow_viewer_html(product: str, iteration: str) -> str:
+    title = html.escape(f"{product} 流程图 - {iteration}")
+    data = json.dumps(flow_diagrams(product), ensure_ascii=False).replace("</", "<\\/")
+    return f"""<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <style>
+    :root {{ --bg:#f6f8fb; --panel:#fff; --text:#172033; --sub:#64748b; --line:#d8dee8; --primary:#2563eb; --soft:#eff6ff; --danger:#b91c1c; }}
+    * {{ box-sizing: border-box; }}
+    body {{ margin: 0; font-family: Arial, "Microsoft YaHei", sans-serif; color: var(--text); background: var(--bg); }}
+    header {{ display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 24px; background: var(--panel); border-bottom: 1px solid var(--line); }}
+    main {{ width: min(1280px, calc(100vw - 32px)); margin: 24px auto 64px; display: grid; gap: 18px; }}
+    h1 {{ margin: 0; font-size: 24px; }}
+    h2 {{ margin: 0; font-size: 18px; }}
+    p {{ color: var(--sub); line-height: 1.6; }}
+    a {{ color: var(--primary); }}
+    .links {{ display: flex; gap: 12px; flex-wrap: wrap; }}
+    .diagram-card {{ background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }}
+    .diagram-header {{ display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); }}
+    .diagram-copy {{ min-width: 220px; }}
+    .diagram-copy p {{ margin: 4px 0 0; font-size: 13px; }}
+    .controls {{ display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }}
+    button {{ min-height: 34px; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--text); padding: 0 10px; cursor: pointer; }}
+    button:hover {{ border-color: var(--primary); color: var(--primary); }}
+    .canvas {{ min-height: 420px; height: min(66vh, 680px); border-bottom: 1px solid var(--line); background: #fbfdff; overflow: hidden; display: grid; place-items: center; }}
+    .canvas svg {{ max-width: none; cursor: grab; }}
+    .canvas svg:active {{ cursor: grabbing; }}
+    .source {{ display: none; margin: 0; padding: 16px; max-height: 360px; overflow: auto; background: #111827; color: #e5e7eb; font: 13px/1.6 Consolas, "SFMono-Regular", monospace; }}
+    .source.is-open {{ display: block; }}
+    .error {{ padding: 16px; color: var(--danger); background: #fef2f2; border-top: 1px solid #fecaca; }}
+    .notice {{ padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); }}
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>{title}</h1>
+      <p>默认显示离线渲染的 Mermaid SVG 画布。Markdown 源文件：<a href="flow.md">flow.md</a></p>
+    </div>
+    <nav class="links" aria-label="文档导航">
+      <a href="index.html">返回索引</a>
+      <a href="flow.md">查看 flow.md</a>
+      <a href="assets/vendor/flow-viewer/THIRD_PARTY_LICENSES.md">第三方许可证</a>
+    </nav>
+  </header>
+  <main>
+    <section class="notice">
+      <strong>操作提示：</strong>拖拽画布可平移，使用按钮缩放、重置或适配视图。若渲染失败，请确认 <code>assets/vendor/flow-viewer/</code> 中的本地依赖存在。
+    </section>
+    <div id="diagrams"></div>
+  </main>
+  <script src="assets/vendor/flow-viewer/mermaid.min.js"></script>
+  <script src="assets/vendor/flow-viewer/svg-pan-zoom.min.js"></script>
+  <script id="diagram-data" type="application/json">{data}</script>
+  <script>
+    const dataElement = document.getElementById('diagram-data');
+    const diagrams = JSON.parse(dataElement.textContent);
+    const root = document.getElementById('diagrams');
+    const panZoomInstances = new Map();
+
+    function createButton(label, handler) {{
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = label;
+      button.addEventListener('click', handler);
+      return button;
+    }}
+
+    function toggleSource(id) {{
+      document.getElementById(`${{id}}-source`).classList.toggle('is-open');
+    }}
+
+    function control(id, action) {{
+      const instance = panZoomInstances.get(id);
+      if (!instance) return;
+      if (action === 'zoomIn') instance.zoomIn();
+      if (action === 'zoomOut') instance.zoomOut();
+      if (action === 'reset') instance.reset();
+      if (action === 'fit') {{
+        instance.resize();
+        instance.fit();
+        instance.center();
+      }}
+    }}
+
+    function cardTemplate(diagram) {{
+      const card = document.createElement('article');
+      card.className = 'diagram-card';
+      card.innerHTML = `
+        <div class="diagram-header">
+          <div class="diagram-copy">
+            <h2>${{diagram.title}}</h2>
+            <p>${{diagram.description}}</p>
+          </div>
+          <div class="controls" id="${{diagram.id}}-controls"></div>
+        </div>
+        <div class="canvas" id="${{diagram.id}}-canvas" aria-label="${{diagram.title}} 渲染画布"></div>
+        <pre class="source" id="${{diagram.id}}-source"></pre>
+      `;
+      root.appendChild(card);
+      const controls = document.getElementById(`${{diagram.id}}-controls`);
+      controls.appendChild(createButton('放大', () => control(diagram.id, 'zoomIn')));
+      controls.appendChild(createButton('缩小', () => control(diagram.id, 'zoomOut')));
+      controls.appendChild(createButton('适配视图', () => control(diagram.id, 'fit')));
+      controls.appendChild(createButton('重置', () => control(diagram.id, 'reset')));
+      controls.appendChild(createButton('查看源码', () => toggleSource(diagram.id)));
+      document.getElementById(`${{diagram.id}}-source`).textContent = diagram.source;
+    }}
+
+    async function renderDiagram(diagram, index) {{
+      const canvas = document.getElementById(`${{diagram.id}}-canvas`);
+      try {{
+        const result = await mermaid.render(`diagram-${{index}}`, diagram.source);
+        canvas.innerHTML = result.svg;
+        const svg = canvas.querySelector('svg');
+        if (svg && window.svgPanZoom) {{
+          svg.removeAttribute('height');
+          svg.style.width = '100%';
+          svg.style.height = '100%';
+          const instance = svgPanZoom(svg, {{
+            zoomEnabled: true,
+            controlIconsEnabled: false,
+            fit: true,
+            center: true,
+            minZoom: 0.2,
+            maxZoom: 8
+          }});
+          panZoomInstances.set(diagram.id, instance);
+          setTimeout(() => control(diagram.id, 'fit'), 0);
+        }}
+      }} catch (error) {{
+        canvas.innerHTML = `<div class="error"><strong>流程图渲染失败</strong><br>${{String(error)}}</div>`;
+      }}
+    }}
+
+    async function init() {{
+      if (!window.mermaid) {{
+        root.innerHTML = '<div class="error"><strong>Mermaid 未加载。</strong><br>请确认本地 vendor 文件已复制到 assets/vendor/flow-viewer/。</div>';
+        return;
+      }}
+      mermaid.initialize({{ startOnLoad: false, securityLevel: 'loose', theme: 'default' }});
+      diagrams.forEach(cardTemplate);
+      for (let i = 0; i < diagrams.length; i += 1) {{
+        await renderDiagram(diagrams[i], i);
+      }}
+    }}
+
+    init();
+  </script>
+</body>
+</html>
+"""
+
+
 def readme_md(product: str, iteration: str) -> str:
     return f"""# {product} / {iteration} 交付索引
 
@@ -234,15 +505,15 @@ def readme_md(product: str, iteration: str) -> str:
 
 ## 当前范围
 
-- 待补充已确认范围。
+- 在问题定义、范围确认和原型评审后填写已确认范围；未确认前只记录为需求笔记中的假设。
 
 ## 本期不做
 
-- 待补充。
+- 列出本迭代明确排除的能力，并说明后续触发条件。
 
 ## 后续决策项
 
-- 待补充。
+- 列出仍会影响开发拆解、验收或排期的问题。
 """
 
 
@@ -251,96 +522,232 @@ def prd_md(product: str, iteration: str) -> str:
 
 状态：待评审
 
-## 1. 背景与目标
+## 1. 执行摘要
 
-- 待补充。
+一句话模板：我们将为【目标用户】建设【方案/能力】，解决【当前痛点】，使【业务或用户结果】得到改善。
 
-## 2. 用户与场景
+| 项 | 内容 |
+| --- | --- |
+| 目标用户 | 主要使用本能力并从中获得价值的角色 |
+| 核心问题 | 当前流程中最需要解决的阻塞、风险或低效 |
+| 解决方案 | 本迭代提供的核心能力，不写技术实现细节 |
+| 预期结果 | 可观察的业务结果、用户行为或流程改善 |
+| 成功信号 | 评审或上线后判断有效的主要指标/信号 |
 
-- 待补充。
+## 2. 问题证据与当前流程
 
-## 3. 需求范围
+### 2.1 当前流程
+
+| 步骤 | 当前做法 | 涉及角色/工具 | 痛点 | 影响 |
+| --- | --- | --- | --- | --- |
+| 1 | 记录现状步骤 | 角色、表格、系统、群消息等 | 慢/错/漏/不可追踪 | 对业务、质量或效率的影响 |
+
+### 2.2 问题陈述
+
+```text
+I am:
+Trying to:
+But:
+Because:
+This causes:
+```
+
+### 2.3 证据与假设
+
+| 类型 | 内容 | 来源 | 可信度 | 对 MVP 的影响 |
+| --- | --- | --- | --- | --- |
+| 已确认事实 | 来自用户确认或材料的事实 | 访谈/数据/文档 | 高/中/低 | 必须有/后置/风险 |
+| 待验证假设 | 暂未验证但影响方案的判断 | PM 推断/外部参考 | 高/中/低 | 验证方式 |
+
+## 3. 用户、场景与 JTBD
+
+| 角色 | 目标 | 高频场景 | 当前替代方案 | 成功标准 |
+| --- | --- | --- | --- | --- |
+| 主要角色 | 需要完成的工作 | 触发时机和使用场景 | 现在怎么做 | 什么表现说明任务完成 |
+
+### 3.1 Jobs-to-be-Done
+
+| 角色 | Functional job | Pain | Cost of pain | Desired gain |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
+
+## 4. 战略上下文与成功指标
+
+| 维度 | 内容 |
+| --- | --- |
+| 业务目标 | 本迭代服务的业务目标或管理目标 |
+| 为什么现在做 | 当前风险、机会、成本或窗口期 |
+| MVP 原则 | 第一版只保护哪条核心工作流 |
+| 主指标 | 本迭代最希望改善的指标 |
+| 次级指标 | 需要观察但不作为唯一成败标准的指标 |
+| 护栏指标 | 不应恶化的体验、质量或效率指标 |
+
+## 5. 需求范围
 
 | 分类 | 内容 |
 | --- | --- |
-| 必须有 |  |
-| 后置 |  |
-| 不做 |  |
-| 风险/后续决策项 |  |
+| 必须有 | 第一版必须支持且直接保护核心工作流的能力 |
+| 后置 | 有价值但不影响第一版闭环的能力 |
+| 不做 | 明确排除的能力及原因 |
+| 风险待确认 | 会影响范围、交互、数据或验收的待决问题 |
 
-## 4. 信息架构与页面
+## 6. 信息架构与页面职责
 
-- 待补充。
+| 菜单/页面 | 主要用户 | 页面目标 | 主操作 | 次操作 | 不放在这里的内容 |
+| --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |
 
-## 5. 核心流程
+## 7. 核心流程
 
 见 [flow.md](flow.md)。
 
-## 6. 功能需求
+| 流程 | 目标 | 入口 | 结束状态 | 异常/回退 |
+| --- | --- | --- | --- | --- |
+| 主流程 | 完成核心业务闭环 |  |  |  |
+| 审核/确认流程 | 需要人工判断或审批时使用 |  |  |  |
+| 异常/返工流程 | 数据缺失、退回、冲突或权限不足时使用 |  |  |  |
 
-- 待补充。
+## 8. 功能详规
 
-## 7. 字段与业务规则
+### FR-1：核心能力名称
 
-- 待补充。
+- 用户/角色：
+- 目标：
+- 入口：
+- 前置条件：
+- 触发动作：
+- 系统响应：
+- 字段与数据：
+- 权限规则：
+- 状态变化：
+- 异常/边界：
+- 验收标准：
+- 关联页面/原型：
+- 关联埋点：
 
-## 8. 算法与数据要求
+## 9. 字段字典
 
-- 输入：
-- 输出：
-- 指标：
-- 人工兜底：
+| 字段 | 含义 | 来源 | 必填 | 校验/口径 | 可见角色 | 可编辑角色 | 所在页面 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+|  |  | 用户录入/系统生成/导入/算法输出 | 是/否 |  |  |  |  |
 
-## 9. 权限
+## 10. 权限矩阵
 
-- 待补充。
+| 角色 | 可查看 | 可新增 | 可编辑 | 可审核/确认 | 可导出 | 限制 |
+| --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |  |
 
-## 10. 指标与埋点
+## 11. 业务规则与状态规则
 
-- 待补充。
+| 规则编号 | 规则描述 | 触发条件 | 系统处理 | 用户反馈 | 验收方式 |
+| --- | --- | --- | --- | --- | --- |
+| BR-1 |  |  |  |  |  |
 
-## 11. 验收标准
+| 状态 | 负责人 | 进入条件 | 可执行动作 | 退出条件 | 下一状态 |
+| --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |
 
-- Given 待补充
-- When 待补充
-- Then 待补充
+## 12. 算法与数据要求
 
-## 12. 本期不做
+| 项 | 内容 |
+| --- | --- |
+| 数据输入 | 数据来源、格式、必填性、质量要求 |
+| 数据输出 | 输出结果、展示位置、导出或回流方式 |
+| 算法角色 | 推荐/预测/排序/识别/生成/辅助决策/不参与 |
+| 可解释性 | 是否需要原因、依据、置信度或证据 |
+| 人工兜底 | 人可否修改、覆盖、退回、记录原因 |
+| 失败模式 | 数据缺失、算法失败、低置信度、超时等处理 |
 
-- 待补充。
+## 13. 指标与埋点
 
-## 13. 后续决策项
+| 类型 | 指标/事件 | 口径 | 触发时机 | 用途 |
+| --- | --- | --- | --- | --- |
+| 主指标 |  |  |  |  |
+| 次级指标 |  |  |  |  |
+| 护栏指标 |  |  |  |  |
+| 埋点事件 |  |  |  |  |
 
-- 待补充。
+## 14. 非功能性产品要求
+
+| 维度 | 要求 |
+| --- | --- |
+| 可用性 | 高频操作路径清晰、关键反馈明确 |
+| 可访问性 | 键盘焦点、对比度、表单标签、错误提示 |
+| 性能感知 | 列表、筛选、提交等关键动作有加载/失败状态 |
+| 审计追踪 | 关键状态变化、审核、退回、导出需记录操作者和时间 |
+| 安全/隐私 | 敏感字段、权限边界、导出限制和数据留痕 |
+
+## 15. 用户故事与验收标准
+
+### US-1：用户价值摘要
+
+- As a 具体角色
+- I want to 完成某个动作
+- so that 获得某个结果
+
+#### Acceptance Criteria
+
+- Scenario: 核心场景
+- Given 前置条件
+- When 用户或系统触发动作
+- Then 可以观察到的结果
+
+## 16. 依赖、风险与缓解
+
+| 类型 | 内容 | 影响 | 缓解方案 | 决策状态 |
+| --- | --- | --- | --- | --- |
+| 依赖 | 设计/数据/权限/外部系统/业务确认 |  |  | 已确认/待确认 |
+| 风险 | 范围、质量、数据、流程、体验风险 |  |  | 已确认/待确认 |
+
+## 17. 本期不做
+
+| 不做内容 | 原因 | 后续触发条件 |
+| --- | --- | --- |
+|  |  |  |
+
+## 18. 开放问题与后续决策项
+
+| 问题 | 影响范围 | 建议负责人 | 需要在何时确认 |
+| --- | --- | --- | --- |
+|  |  |  |  |
 """
 
 
 def flow_md(product: str, iteration: str) -> str:
+    diagrams = flow_diagrams(product)
+    diagram_sections = "\n\n".join(
+        f"## {index}. {diagram['title']}\n\n"
+        f"用途：{diagram['description']}\n\n"
+        "```mermaid\n"
+        f"{diagram['source'].strip()}\n"
+        "```"
+        for index, diagram in enumerate(diagrams, start=1)
+    )
     return f"""# {product} Mermaid 流程图 - {iteration}
 
 状态：待评审
 
-## 1. 主流程
+说明：本文件是流程图的版本管理源文件，`flow.html` 是离线渲染阅读入口。正式交付时，应把示例流程替换为本产品真实流程。
 
-```mermaid
-flowchart TD
-  A[开始] --> B[用户进入工作流]
-  B --> C{{是否满足提交条件}}
-  C -->|是| D[提交并进入下一环节]
-  C -->|否| E[补充信息或处理异常]
-  E --> B
-  D --> F[结束]
-```
+{diagram_sections}
 
-## 2. 状态规则
+## 5. 状态规则表
 
-| 状态 | 负责人 | 进入条件 | 退出条件 |
-| --- | --- | --- | --- |
-| 待补充 | 待补充 | 待补充 | 待补充 |
+| 对象 | 状态 | 负责人 | 进入条件 | 可执行动作 | 退出条件 | 下一状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 需求/任务/业务对象 | 示例状态 | 角色 | 触发条件 | 操作 | 完成条件 | 下一状态 |
 
-## 3. 异常与人工兜底
+## 6. 异常与人工兜底
 
-- 待补充。
+| 异常 | 发现方式 | 处理角色 | 处理动作 | 用户反馈 | 是否留痕 |
+| --- | --- | --- | --- | --- | --- |
+| 信息不足 | 表单校验/人工审核 | 业务方/PM | 补充材料并重新提交 | 显示缺失项和原因 | 是 |
+
+## 7. 数据/算法交接说明
+
+| 节点 | 输入 | 输出 | 负责人 | 失败处理 |
+| --- | --- | --- | --- | --- |
+| 数据或算法节点 | 数据来源、格式、质量要求 | 结果、状态、解释或置信度 | 角色/系统 | 人工兜底或重试策略 |
 """
 
 
@@ -355,39 +762,94 @@ def dev_handoff_md(product: str, iteration: str) -> str:
 
 ## 1. MVP 目标与边界
 
-- 待补充。
+| 项 | 内容 |
+| --- | --- |
+| 产品目标 | 本迭代要解决的用户/业务问题 |
+| MVP 闭环 | 第一版必须跑通的端到端路径 |
+| 成功信号 | 开发完成后业务/产品如何判断可用 |
+| 明确不做 | 不进入本期实现和验收的内容 |
 
 ## 2. 角色与权限矩阵
 
-| 角色 | 可查看 | 可操作 | 备注 |
-| --- | --- | --- | --- |
-| 待补充 |  |  |  |
+| 角色 | 可查看 | 可新增 | 可编辑 | 可提交 | 可审核/确认 | 可导出 | 限制 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 业务角色 | 页面/数据范围 | 是/否 | 是/否 | 是/否 | 是/否 | 是/否 | 项目、组织或状态限制 |
 
 ## 3. 页面与动作清单
 
-| 页面 | 关键动作 | 业务规则 | 验收标准 |
-| --- | --- | --- | --- |
-| 待补充 |  |  |  |
+| 页面/模块 | 入口 | 主要用户 | 关键动作 | 前置条件 | 成功反馈 | 失败/空状态 | 关联需求 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 页面名称 | 菜单/按钮/跳转 | 角色 | 新增/编辑/提交/审核/退回 | 条件 | Toast/状态变化/跳转 | 错误提示/空态 | FR-1 |
 
-## 4. 核心实体（需求视角）
+## 4. 核心实体词汇表（需求视角）
 
-- 待补充。
+| 实体 | 业务含义 | 关键字段 | 产生方式 | 状态 | 备注 |
+| --- | --- | --- | --- | --- | --- |
+| 业务对象 | 用业务语言解释，不写数据库表设计 | 字段名列表 | 用户创建/导入/系统生成 | 状态枚举 | 与其他实体关系 |
 
-## 5. 状态与规则
+## 5. 字段规则与校验摘要
+
+| 字段 | 所在页面 | 输入方式 | 必填 | 校验 | 默认值 | 错误提示 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 字段名 | 页面/弹窗/抽屉 | 手填/选择/导入/系统生成 | 是/否 | 长度、格式、范围、唯一性 |  |  |
+
+## 6. 状态与工作流规则
 
 见 [flow.md](flow.md)。
 
-## 6. 指标与埋点建议
+| 状态 | 进入条件 | 允许动作 | 禁止动作 | 下一状态 | 是否记录操作日志 |
+| --- | --- | --- | --- | --- | --- |
+| 示例状态 | 触发条件 | 可执行动作 | 不允许动作 | 下一状态 | 是/否 |
 
-- 待补充。
+## 7. 边界状态与异常处理
 
-## 7. 开发验收清单
+| 场景 | 触发条件 | 页面反馈 | 系统行为 | 验收方式 |
+| --- | --- | --- | --- | --- |
+| 空状态 | 没有数据 | 显示空态文案和引导动作 | 不报错 | 首次进入可见 |
+| 加载中 | 请求或处理未完成 | 显示 loading | 禁用重复提交 | 不出现重复数据 |
+| 无权限 | 角色无权限 | 显示无权限提示或隐藏动作 | 拒绝操作 | 不能越权 |
+| 冲突/过期 | 状态已变化或数据被他人处理 | 提示刷新或重新进入 | 不覆盖最新数据 | 保留原状态 |
 
-- 待补充。
+## 8. 指标与埋点建议
 
-## 8. 后续决策项
+| 事件 | 触发时机 | 关键属性 | 用途 |
+| --- | --- | --- | --- |
+| page_view | 页面打开 | role, page, project_id | 看页面使用情况 |
+| action_submit | 用户提交关键动作 | role, object_id, status_from, status_to | 分析流程转化和失败点 |
 
-- 待补充。
+## 9. 用户故事与 Gherkin 验收清单
+
+### US-1：核心用户完成主任务
+
+- As a 具体角色
+- I want to 完成某个动作
+- so that 获得某个结果
+
+#### Acceptance Criteria
+
+- Scenario: 正常完成主流程
+- Given 用户具备所需权限且前置数据存在
+- When 用户执行关键动作
+- Then 系统保存结果、更新状态并给出明确成功反馈
+
+- Scenario: 权限不足
+- Given 用户没有该动作权限
+- When 用户尝试进入或触发动作
+- Then 系统阻止操作并给出可理解反馈
+
+## 10. QA 场景与演示脚本
+
+| 场景 | 前置数据 | 操作步骤 | 期望结果 |
+| --- | --- | --- | --- |
+| 主流程演示 | 准备一条可处理数据 | 进入页面并完成关键动作 | 状态变化、反馈和数据展示符合 PRD |
+| 异常流程演示 | 准备缺失/无权限/冲突数据 | 触发异常路径 | 页面反馈和系统行为符合边界规则 |
+
+## 11. 依赖、风险与后续决策项
+
+| 类型 | 内容 | 影响 | 建议处理 | 状态 |
+| --- | --- | --- | --- | --- |
+| 依赖 | 设计稿、权限策略、数据来源、业务确认等 | 影响开发或验收 | 负责人/时间点 | 已确认/待确认 |
+| 风险 | 范围、质量、数据、体验或流程风险 | 影响交付或使用 | 缓解方案 | 已确认/待确认 |
 """
 
 
@@ -398,11 +860,11 @@ def final_delivery_md(product: str, iteration: str) -> str:
 
 ## 1. 评审状态
 
-- 待补充。
+- 记录 PRD、流程图、开发交接、原型是否已通过业务/产品/研发评审。
 
 ## 2. 确认范围
 
-- 待补充。
+- 汇总本次已确认交付范围，必须与 `prd.md` 和 `dev-handoff.md` 保持一致。
 
 ## 3. 交付物清单
 
@@ -415,11 +877,11 @@ def final_delivery_md(product: str, iteration: str) -> str:
 
 ## 4. 本期不做
 
-- 待补充。
+- 汇总本期明确不做内容，并说明原因。
 
 ## 5. 后续决策项
 
-- 待补充。
+- 汇总交付后仍需要业务、产品、设计或研发确认的问题。
 
 ## 6. 交付完成线
 
@@ -589,11 +1051,12 @@ def main() -> int:
 
     (base / "notes").mkdir(parents=True, exist_ok=True)
     (base / "assets").mkdir(parents=True, exist_ok=True)
+    copy_flow_viewer_vendor(base)
 
     write_if_missing(base / "index.html", index_html(args.product, args.iteration))
     write_if_missing(base / "prototype.html", prototype_html(args.product, args.iteration))
     write_if_missing(base / "prd.html", prd_html(args.product, args.iteration))
-    write_if_missing(base / "flow.html", simple_doc_html(args.product, args.iteration, "流程图", "flow.md", "流程图必须在 flow.md 中维护 Mermaid 源码。"))
+    write_if_missing(base / "flow.html", flow_viewer_html(args.product, args.iteration))
     write_if_missing(base / "dev-handoff.html", simple_doc_html(args.product, args.iteration, "开发交接", "dev-handoff.md", "开发交接只表达需求侧建议，不替代技术方案或排期。"))
     write_if_missing(base / "final-delivery.html", simple_doc_html(args.product, args.iteration, "最终交付说明", "final-delivery.md", "评审通过后在 final-delivery.md 中记录确认范围和后续决策项。"))
     write_if_missing(base / "README.md", readme_md(args.product, args.iteration))

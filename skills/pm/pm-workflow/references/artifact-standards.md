@@ -26,9 +26,9 @@ pm-work/
       assets/
 ```
 
-`README.md` is the version-control entry point. `index.html` is the demo/review entry point. It should link to the prototype, PRD, flow diagrams, handoff documents, final delivery note, and any multi-page screens.
+`README.md` is the version-control entry point. `index.html` is the demo/review entry point. It should link to the prototype, PRD, rendered flow viewer, handoff documents, final delivery note, and any multi-page screens.
 
-Markdown files are the source of truth for iteration, review, and diff. HTML files are readable/demo versions and must not be the only place where important requirements live.
+Markdown files are the source of truth for iteration, review, and diff. HTML files are readable/rendered versions and must not be the only place where important requirements live. Formal PRD, flow, and handoff documents must contain product-grade detail, not only headings or placeholders. See `production-document-standards.md`.
 
 ## Markdown Source Standard
 
@@ -45,9 +45,11 @@ Rules:
 
 - Keep Markdown and corresponding HTML consistent.
 - Use Markdown for version management, review comments, and future iteration.
+- Formal documents must be implementation-guiding product specs: each must-have behavior needs fields, rules, permissions, states, and acceptance criteria.
 - Record intermediate decisions in `notes/requirements.md` as soon as they become confirmed or temporarily accepted.
 - Use "后续决策项" after review passes; use "待确认问题" only before review or when a question blocks scope confirmation.
 - Do not turn product-side handoff into technical architecture, database design, formal API contracts, or delivery schedule commitments unless the user explicitly changes the task.
+- After review passes, do not leave `待补充`, empty tables, or generic placeholder rows in `prd.md`, `flow.md`, or `dev-handoff.md`.
 
 ## README.md Standard
 
@@ -70,7 +72,7 @@ Include:
 - External reference scan: source links, hidden needs, MVP impact, rejected expansion
 - Scope choices: must have / later / out of scope / risk
 - Interaction architecture: role entry, function relationships, menu structure, page responsibility, action placement, status flow
-- 原型设计主题和 `ui-ux-pro-max` 补充输入
+- 原型设计主题和 bundled `ui-ux-pro-max` 补充输入
 - 原型打磨记录：`impeccable` 可用性、主动定位/安装/恢复动作、检查结果、修正内容、未采纳建议和原因
 - Business rules and exceptions
 - Algorithm or data participation point
@@ -94,18 +96,18 @@ The prototype should be demo-ready, not production-grade.
 6. 暂停等待用户确认主题。用户未确认前，不得进入 HTML 原型生成。
 7. 读取被确认的主题文件。
 8. 把主题应用到原型布局、CSS、组件和交互状态中。
-9. 仅在需要时使用 `ui-ux-pro-max` 补充 UX、布局、图表、可访问性和响应式建议。
+9. 仅在需要时使用 bundled `ui-ux-pro-max` 补充 UX、布局、图表、可访问性和响应式建议。
 10. 在 `notes/requirements.md` 中记录交互架构摘要、设计方向确认表单、候选主题、用户确认结果、产品语境、被选中的主题、样例预览路径、选择原因和补充建议。
-11. 原型初稿完成后，读取 `references/impeccable-polish-gate.md`，使用 `impeccable` 做可用性、视觉层级、响应式、可访问性和交互状态打磨。
-12. 如果 `impeccable` 不可用，先主动定位本地 skill、尝试安装或使用 `npx impeccable` / 项目脚本；只有解决失败并记录原因后，才允许按人工 fallback checklist 审阅。
+11. 原型初稿完成后，读取 `references/impeccable-polish-gate.md`，优先使用 bundled `subskills/impeccable` 做可用性、视觉层级、响应式、可访问性和交互状态打磨。
+12. 如果 bundled `impeccable` 不可用，先主动定位本地 skill、尝试安装或使用 `npx impeccable` / 项目脚本；只有解决失败并记录原因后，才允许按人工 fallback checklist 审阅。
 
 需要补充建议时，使用：
 
 ```bash
-python skills/uiux/ui-ux-pro-max/scripts/search.py "<product type> <industry> <style keywords>" --design-system -p "<Project Name>" -f markdown
+python skills/pm/pm-workflow/subskills/ui-ux-pro-max/scripts/search.py "<product type> <industry> <style keywords>" --design-system -p "<Project Name>" -f markdown
 ```
 
-如果当前环境中的 `ui-ux-pro-max` 路径不同，使用当前可用路径。不要用它的输出替换 `assets/design-themes/` 中已经匹配的主题。
+优先使用 bundled subskill。只有 `subskills/ui-ux-pro-max` 缺失或不可用时，才使用当前环境中的其他可用路径。不要用它的输出替换 `assets/design-themes/` 中已经匹配的主题。
 
 只提取补充建议：
 
@@ -176,25 +178,30 @@ Keep panel text specific and implementable. Avoid vague phrases such as "optimiz
 
 When generating `prd.md` and `prd.html`, include:
 
-1. Background and goal
-2. Users and scenarios
-3. Scope
-4. Information architecture or page list
-5. Core workflows
-6. Functional requirements
-7. Field dictionary
-8. Business rules
-9. Algorithm/data requirements
-10. Permissions
-11. Metrics and tracking
-12. Non-functional notes
-13. Acceptance criteria
-14. Out of scope
-15. Open questions
+1. Executive summary: problem, target users, solution, expected impact
+2. Problem evidence: current workflow, pain cost, evidence, assumptions
+3. Users and scenarios: primary/secondary roles, JTBD, entry points
+4. Strategic context: business goal, why now, MVP principle
+5. Scope: must-have, later, out of scope, risk to confirm, with reasons
+6. Information architecture: menus, pages, page responsibilities, primary actions
+7. Core workflows: happy path, review/approval path, exception path, manual fallback
+8. Functional requirements: detailed FR sections with user, goal, trigger, response, fields, permissions, state changes, exceptions, acceptance criteria
+9. Field dictionary: meaning, source, required, validation, visible/editable roles, page location
+10. Business and status rules: triggers, guards, side effects, audit needs
+11. Algorithm/data requirements, if relevant: input, output, explainability, confidence, override, fallback
+12. Permissions: role capability matrix
+13. Metrics and tracking: primary, secondary, guardrail metrics, suggested events
+14. Non-functional product requirements: usability, accessibility, performance expectation, auditability, security/privacy notes
+15. User stories and Gherkin acceptance criteria
+16. Dependencies, risks, mitigations
+17. Out of scope
+18. Open questions and follow-up decisions
+
+Each must-have feature should be traceable from PRD problem/goal to functional requirement, field/rule, flow step, and acceptance criterion.
 
 ## Flow Diagram Standard
 
-Flow diagrams must be authored as Mermaid source in `flow.md`. HTML flow diagrams are optional display copies and must not replace the Mermaid source.
+Flow diagrams must be authored as Mermaid source in `flow.md`. `flow.html` is a rendered offline viewer and must not replace the Mermaid source.
 
 Flow diagrams should show:
 
@@ -227,7 +234,17 @@ flowchart TD
 |  |  |  |  |
 ````
 
+Required diagrams for workflow-heavy products:
+
+- Main end-to-end workflow, usually `flowchart`.
+- Role swimlane or cross-role flow, usually `sequenceDiagram` or grouped `flowchart`.
+- Object status lifecycle, preferably `stateDiagram-v2`.
+- Exception, return, rejection, or rework path.
+- Data handoff or algorithm participation diagram, if relevant.
+
 Use Mermaid `flowchart`, `sequenceDiagram`, `stateDiagram-v2`, or `journey` based on the business need. Prefer `flowchart` for cross-role product workflows and `stateDiagram-v2` for status machines.
+
+`flow.html` must follow `flow-viewer-standards.md`: render diagrams as SVG by default, load local vendor assets, support pan/zoom/reset/fit, and expose source only through a toggle.
 
 ## Development Handoff Standard
 
@@ -239,10 +256,13 @@ Include:
 2. Role and permission matrix
 3. Page/action list
 4. Core entities from a requirement perspective
-5. Business rules and status rules
-6. Metrics and event tracking suggestions
-7. Acceptance checklist
-8. Follow-up decision items
+5. Field rules and validation summary
+6. Business rules and status rules
+7. Error, empty, loading, disabled, no-permission, and conflict states
+8. Metrics and event tracking suggestions
+9. User stories and Gherkin acceptance checklist
+10. QA scenarios and demo script
+11. Dependencies, risks, follow-up decision items
 
 Avoid:
 

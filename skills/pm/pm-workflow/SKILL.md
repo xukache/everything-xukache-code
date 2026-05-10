@@ -21,6 +21,7 @@ description: 面向算法/研发人员的产品经理工作流。用于澄清业
 - Markdown 为源，HTML 为演示：正式 PRD、流程图、开发交接和交付说明必须有 Markdown 源文件；HTML 用于评审演示和阅读入口。
 - 演示优先，工程克制：HTML 原型服务于需求确认和开发沟通，不实现复杂后端、真实算法、复杂数据流或生产级状态机，除非用户明确要求。
 - 原型完成后再打磨：HTML 原型初稿完成后，用 `impeccable` 做可用性、视觉层级、响应式、可访问性和交互状态检查；如果 `impeccable` 不可用，必须先主动定位或安装，不能直接跳过；只修正体验质量，不新增未确认需求。
+- 本地子技能优先：凡本技能要求使用 `impeccable`、`ui-ux-pro-max` 或文档方法类 helper skill 时，先读取 `subskills/<skill-name>/SKILL.md` 并按其相对路径使用引用、脚本和资产；只有 bundled subskill 缺失或不可用时，才回退到用户本机 `.agents/skills`、`.codex/skills` 或安装流程。
 - 职责边界收敛：完成线是确认版产品需求文档和原型归档，不默认生成技术架构、数据库设计、正式 API 契约或开发排期。
 - 版本化组织：同一产品线按迭代版本管理，避免不同需求、不同轮次的文件混在一起。
 
@@ -167,7 +168,7 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 8. 把设计方向确认表单、候选主题、用户确认结果、产品语境、交互架构摘要、主题、源文件、样例预览路径、选择原因和补充建议写入 `notes/requirements.md` 的“原型设计输入”。
 9. 再开始 HTML 原型设计。
 
-`ui-ux-pro-max` 只用于补充布局、图表、可访问性、响应式和组件细节，不得覆盖已选主题。
+`ui-ux-pro-max` 只用于补充布局、图表、可访问性、响应式和组件细节，不得覆盖已选主题。优先使用 bundled subskill：`subskills/ui-ux-pro-max/SKILL.md`；需要脚本时优先使用 `subskills/ui-ux-pro-max/scripts/search.py`。
 
 原型要求：
 
@@ -180,15 +181,16 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 
 详细标准见 `references/artifact-standards.md` 和 `references/html-prd-template.md`。
 
-原型初稿完成后、交付用户确认前，必须执行一次 `impeccable` 原型打磨关卡。先读取 `references/impeccable-polish-gate.md`，再按当前环境中可用的 `impeccable` skill 或命令执行。
+原型初稿完成后、交付用户确认前，必须执行一次 `impeccable` 原型打磨关卡。先读取 `references/impeccable-polish-gate.md`，再优先读取 bundled subskill `subskills/impeccable/SKILL.md` 执行。
 
 如果 `impeccable` 不可用，不得直接写“未安装所以跳过”。必须先主动解决：
 
-1. 检查当前会话可用 skill 列表和常见本地路径，例如 `C:\Users\<user>\.agents\skills\impeccable\SKILL.md`、`C:\Users\<user>\.codex\skills\impeccable\SKILL.md`。
-2. 若存在本地 skill，读取其 `SKILL.md` 并按其 preflight、critique、audit 或 polish 流程执行。
-3. 若本地不存在但当前环境提供 `skill-installer`，先尝试安装或引导安装 `impeccable`，安装后回到原型打磨关卡。
-4. 若存在 `npx impeccable` 命令路径或项目已有相关脚本，优先使用命令执行检查。
-5. 只有在定位、安装、命令执行都失败，或受权限/网络限制无法完成时，才允许降级为人工审阅；降级时必须记录已尝试的解决动作、失败原因和人工检查结果。
+1. 检查 bundled subskill：`subskills/impeccable/SKILL.md`。
+2. 检查当前会话可用 skill 列表和常见本地路径，例如 `C:\Users\<user>\.agents\skills\impeccable\SKILL.md`、`C:\Users\<user>\.codex\skills\impeccable\SKILL.md`。
+3. 若存在本地 skill，读取其 `SKILL.md` 并按其 preflight、critique、audit 或 polish 流程执行。
+4. 若本地不存在但当前环境提供 `skill-installer`，先尝试安装或引导安装 `impeccable`，安装后回到原型打磨关卡。
+5. 若存在 `npx impeccable` 命令路径或项目已有相关脚本，优先使用命令执行检查。
+6. 只有在 bundled subskill、定位、安装、命令执行都失败，或受权限/网络限制无法完成时，才允许降级为人工审阅；降级时必须记录已尝试的解决动作、失败原因和人工检查结果。
 
 打磨范围只包括：
 
@@ -220,19 +222,44 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 - PRD 浮标里的规则和验收是否足够研发实现。
 - 哪些内容要删减、补充或拆分到下一迭代。
 
-### 阶段 4：正式文档整理
+### 阶段 4：正式文档深化
 
-在用户确认原型后，输出正式文档。Markdown 是版本管理源文件，HTML 是阅读和演示入口；详细格式见 `references/artifact-standards.md`。
+在用户确认原型后，进入正式文档深化关卡。先读取 `references/production-document-standards.md`、`references/flow-viewer-standards.md` 和 `references/artifact-standards.md`，再输出生产开发可用的产品级详规。Markdown 是版本管理源文件，HTML 是阅读和演示入口。
 
-正式文档至少包含：
+正式文档深化可以吸收 bundled subskills 的方法，但不得把它们变成额外依赖：优先读取 `subskills/prd-development/SKILL.md`、`subskills/user-story/SKILL.md`、`subskills/epic-hypothesis/SKILL.md`、`subskills/user-story-mapping/SKILL.md` 中与 PRD、用户故事、验收标准、战略假设和流程拆解相关的规则，再落到本技能的文档标准中。
 
-- `prd.md`：背景目标、用户场景、需求范围、页面功能、字段、规则、指标、验收标准、本期不做。
-- `flow.md`：Mermaid 源码和流程说明，流程图必须能从 Markdown 中直接维护。
-- `dev-handoff.md`：面向开发的需求交接，不替代技术架构、数据库设计、正式 API 契约或排期承诺。
+正式 PRD 必须包含：
+
+- 执行摘要、问题证据、用户/场景、战略上下文和成功指标。
+- 需求范围、信息架构、核心流程、功能详规、字段字典、权限、业务规则、异常边界和指标。
+- 用户故事和 Gherkin 验收标准。
+- 依赖、风险、缓解策略、开放问题和后续决策项。
+
+正式流程图必须包含：
+
+- `flow.md`：主流程、角色泳道/跨角色流程、状态机、异常/退回流程、数据交接或算法参与流程的 Mermaid 源码与说明。
+- `flow.html`：离线加载本地 Mermaid 和 pan/zoom 资源，默认显示渲染后的可拖拽、可缩放、可适配视图的 SVG 画布；源码只能作为“查看源码”切换项。
+
+正式开发交接必须包含：
+
+- `dev-handoff.md`：MVP 边界、角色权限矩阵、页面动作矩阵、实体词汇表、字段规则、状态规则、边界场景、埋点建议、用户故事和 Gherkin 验收清单。
+- 该文档是产品侧交接，不替代技术架构、数据库设计、正式 API 契约或排期承诺。
+
+其他正式交付物：
+
 - `final-delivery.md`：评审通过后的确认版交付说明。
 - `notes/requirements.md`：业务沟通和中间关键信息沉淀。
 
 若已生成 `prd.html`、`flow.html` 或 `dev-handoff.html`，必须保持它们与对应 Markdown 内容一致。
+
+**暂停确认 4：正式文档质量确认**
+
+交付正式文档前，必须自检并说明：
+
+- `prd.md`、`flow.md`、`dev-handoff.md` 是否已消除空表、`待补充` 和只写章节名的简略内容。
+- 每个必须有功能是否都有字段、规则、权限、异常和验收标准。
+- `flow.html` 是否离线渲染 Mermaid 为 SVG 画布，并支持拖拽、缩放、重置、适配视图和源码切换。
+- 文档是否足够指导开发拆解和 QA 验收，且没有越界输出最终数据库/API/排期。
 
 ### 阶段 5：产品原型和文档版本管理
 
@@ -284,7 +311,9 @@ pm-work/
 - 是否原型能本地打开并演示主流程。
 - 是否已完成 `impeccable` 原型打磨；如果起初不可用，是否已主动定位/安装/恢复，且记录尝试过程；是否未借打磨新增未经确认的业务范围。
 - 是否 `prd.md`、`flow.md`、`dev-handoff.md`、`final-delivery.md` 与 HTML 展示一致，没有孤立文档和过期描述。
+- 是否正式文档达到产品级详规，不是只有章节名、空表或待补充占位。
 - 是否流程图使用 Mermaid 源码，并沉淀在 `flow.md`。
+- 是否 `flow.html` 默认显示渲染后的 Mermaid SVG 画布，且支持离线查看、拖拽、缩放、重置、适配视图和源码切换。
 - 是否中间关键信息已落到 `notes/requirements.md`。
 - 是否文件按产品线和迭代版本组织。
 - 是否在最终交付后停止，没有默认扩展到技术架构、数据库设计、正式 API 契约或开发排期。
@@ -296,5 +325,8 @@ pm-work/
 - 交互架构与菜单确认：`references/interaction-architecture.md`
 - 原型设计主题选择：`references/design-theme-selection.md`
 - Impeccable 原型打磨关卡：`references/impeccable-polish-gate.md`
+- 生产级文档标准：`references/production-document-standards.md`
+- 离线流程图 viewer 标准：`references/flow-viewer-standards.md`
 - HTML 原型与 PRD 交付标准：`references/artifact-standards.md`
 - 页面右下角 PRD 浮标模板：`references/html-prd-template.md`
+- Bundled 子技能目录：`subskills/README.md`

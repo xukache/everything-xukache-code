@@ -116,7 +116,7 @@ Use this after MVP scope is confirmed and before prototype design.
 - Which menu order matches the daily workflow?
 - Which page owns each critical action?
 - Which screen should demonstrate the end-to-end flow in the prototype?
-- How will the prototype be polished before review: local `impeccable` skill, `npx impeccable`, project script, or fallback only after install attempts fail?
+- How will the prototype be polished before review: bundled `subskills/impeccable` first, then local `impeccable` skill, `npx impeccable`, project script, or fallback only after resolution attempts fail?
 
 Menu confirmation prompt:
 

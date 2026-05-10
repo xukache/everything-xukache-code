@@ -242,6 +242,6 @@ Required:
 - Menu/module names and page responsibilities
 - Key action placement
 - 3-5 design theme candidates with `examples.html` preview paths, followed by user theme confirmation
-- Prototype polish/audit plan for `impeccable`, including how to locate or install it if unavailable
+- Prototype polish/audit plan for bundled `subskills/impeccable`, including fallback location or install steps only if the bundled copy is missing or unusable
 
 If missing, stop before HTML.
