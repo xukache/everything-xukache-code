@@ -1,150 +1,181 @@
-# Interaction Architecture
+# 交互架构
 
-Use this reference after MVP scope is confirmed and before design theme selection or HTML prototyping.
+在 MVP 范围确认之后、设计主题选择或 HTML 原型生成之前使用本文档。
 
-The goal is to turn a list of functions into a usable product structure. A senior PM should not jump from "must-have features" to screens. First confirm how roles enter the system, how functions depend on each other, how data and states move, and where each action belongs in the interface.
+目标是把功能列表转成真实可用的产品结构。资深产品经理不能从“必须有功能”直接跳到页面设计；必须先确认角色如何进入系统、功能之间如何依赖、数据和状态如何流动，以及每个动作应该出现在界面的什么位置。
 
-## Core Rule
+## 核心规则
 
-Do not treat functions as pages by default.
+不要默认把功能等同于页面。
 
-For every important function, decide whether it belongs as:
+对每个重要功能，判断它更适合成为：
 
-- A top-level menu item.
-- A second-level menu item.
-- A tab inside a page.
-- A table action.
-- A detail page section.
-- A drawer or modal.
-- A workbench primary action.
-- A configuration item.
-- A dashboard metric.
-- A status or filter.
+- 一级菜单。
+- 二级菜单。
+- 页面内标签页。
+- 表格操作。
+- 详情页区块。
+- 抽屉或弹窗。
+- 工作台主操作。
+- 配置项。
+- 看板指标。
+- 状态或筛选项。
 
-If this decision is unclear, pause and ask before prototyping.
+如果这个决策不清楚，先暂停追问，不要进入原型。
 
-## Required Inputs
+## 必备输入
 
-Before creating an interaction architecture, collect or mark as assumption:
+创建交互架构前，至少收集或标注为假设：
 
-- Primary roles and their daily jobs.
-- Current workflow and handoff points.
-- Confirmed MVP scope.
-- Key business objects and their lifecycle states.
-- Main success path.
-- Exception and rework paths.
-- First prototype demo path.
-- Any naming conventions users already use.
+- 主要角色和他们的日常任务。
+- 当前流程和交接点。
+- 已确认 MVP 范围。
+- 关键业务对象及其生命周期状态。
+- 主要成功路径。
+- 异常和返工路径。
+- 第一版原型需要演示的路径。
+- 用户已有的命名习惯。
 
-If three or more of these are missing, stay in discovery.
+如果缺少三项或更多，继续停留在需求澄清阶段。
 
-## Senior PM Reasoning Lenses
+## 资深 PM 推理视角
 
-### 1. Role Entry Lens
+### 1. 角色入口视角
 
-For each role, answer:
-
-```text
-Role:
-First screen after login:
-Primary job:
-Most frequent action:
-Most urgent alert or queue:
-What they should not see first:
-```
-
-Use this to avoid one generic dashboard that serves nobody well.
-
-### 2. Function Relationship Lens
-
-For each core function, answer:
+对每个角色回答：
 
 ```text
-Function:
-Upstream source:
-Downstream consumer:
-Creates or changes which object:
-Creates or changes which status:
-Related metrics:
-Failure or exception path:
+角色：
+登录后的第一屏：
+主要任务：
+最高频动作：
+最紧急提醒或队列：
+不应该首先看到什么：
 ```
 
-If a function has no upstream, downstream, status, metric, or user decision, it may be a later-phase feature or configuration detail.
+用这个视角避免做一个谁都不真正适用的通用看板。
 
-### 3. Object Lifecycle Lens
+### 2. 功能关系视角
 
-Identify the product's main objects, then define their states.
+对每个核心功能回答：
 
 ```text
-Object:
-Status:
-Owner:
-Entry condition:
-Allowed actions:
-Exit condition:
-Exception path:
+功能：
+上游来源：
+下游消费者：
+创建或改变哪个对象：
+创建或改变哪个状态：
+关联指标：
+失败或异常路径：
 ```
 
-For task, audit, annotation, order, ticket, case, review, or workflow products, this lens is mandatory.
+如果某功能没有上游、下游、状态、指标或用户决策，它可能是后置能力或配置细节。
 
-### 4. Menu Architecture Lens
+### 3. 对象生命周期视角
 
-Menus should reflect user work, not internal implementation.
-
-Decide:
-
-- Default home page for each role.
-- Top-level menu names.
-- Menu order by daily workflow, not database object order.
-- Which items are grouped.
-- Which actions should not become menu items.
-- Which names match the user's business language.
-
-Menu naming rules:
-
-- Prefer user task nouns: `我的标注`, `质检审核`, `任务分配`.
-- Avoid vague containers: `管理中心`, `综合平台`, `基础配置`, unless they are truly needed.
-- Avoid implementation names: `TaskEntity`, `WorkflowEngine`, `DatasetModule`.
-- If two names are plausible, present both and ask the user which matches their team language.
-
-### 5. Page Responsibility Lens
-
-Each page should have one primary job.
+先识别产品主对象，再定义状态。
 
 ```text
-Page:
-Primary user:
-Primary job:
-Main object:
-Primary action:
-Secondary actions:
-Shown states:
-Entry points:
-Exit paths:
-What does not belong here:
+对象：
+状态：
+负责人：
+进入条件：
+允许动作：
+退出条件：
+异常路径：
 ```
 
-Use this to avoid crowded pages where dashboards, tables, forms, review tools, and settings all compete.
+任务、审核、标注、订单、工单、案件、复核或工作流产品必须使用这个视角。
 
-### 6. Action Placement Lens
+### 4. 菜单架构视角
 
-Place actions where the user has enough context to make the decision.
+菜单应该反映用户工作，而不是内部实现。
 
-Common placements:
+需要决定：
 
-- Create/import: page header or batch management page.
-- Assign/reassign: list bulk action or task detail action.
-- Continue work: role-specific queue or workbench.
-- Submit/review/pass/reject: workbench or review detail.
-- View reason/history: detail panel, drawer, or timeline.
-- Configure rule/template: settings or project configuration.
-- Export: list page, report page, or project detail, depending on scope.
+- 每个角色的默认首页。
+- 一级菜单名称。
+- 菜单按日常工作顺序排列，而不是按数据库对象排列。
+- 哪些内容需要分组。
+- 哪些动作不应该成为菜单。
+- 哪些名称符合用户业务语言。
 
-If an action changes status or ownership, show its consequence before the user confirms.
+菜单命名规则：
 
-## Interaction Architecture Output
+- 优先使用用户任务名词：`我的标注`、`质检审核`、`任务分配`。
+- 避免模糊容器：`管理中心`、`综合平台`、`基础配置`，除非确实必要。
+- 避免实现名：`TaskEntity`、`WorkflowEngine`、`DatasetModule`。
+- 如果两个名称都合理，把选项和差异告诉用户，让用户选团队日常说法。
 
-Use this format before design theme selection:
+### 5. 页面职责视角
+
+每个页面应该有一个主要任务。
+
+```text
+页面：
+主要用户：
+主要任务：
+主对象：
+主操作：
+次操作：
+展示状态：
+进入路径：
+退出路径：
+不属于本页的内容：
+```
+
+用这个视角避免把看板、表格、表单、审核工具和设置都挤在一个拥挤页面里。
+
+### 6. 动作位置视角
+
+动作应该放在用户拥有足够上下文能做决定的位置。
+
+常见位置：
+
+- 创建/导入：页面头部或批次管理页。
+- 分配/改派：列表批量操作或任务详情动作。
+- 继续工作：角色专属队列或工作台。
+- 提交/审核/通过/退回：工作台或审核详情。
+- 查看原因/历史：详情面板、抽屉或时间线。
+- 配置规则/模板：设置或项目配置。
+- 导出：列表页、报表页或项目详情页，取决于范围。
+
+如果动作会改变状态或归属，在用户确认前展示后果。
+
+### 7. 原型覆盖视角
+
+对每个已确认 must-have 功能，决定原型如何让用户点击体验。
+
+```text
+必须有功能：
+原型页面：
+入口/控件：
+用户动作：
+成功反馈：
+状态或数据变化：
+异常路径：
+验收场景：
+```
+
+如果某个必须有功能没有可点击动作、状态影响或可观察反馈，不得进入视觉设计。
+
+### 8. 多页面原型视角
+
+判断 `prototype.html` 是否能清晰承载完整交互。
+
+出现以下情况时使用 `prototype/` 多页面：
+
+- 多个角色有不同入口。
+- 存在三个或更多一级模块。
+- 工作流跨越列表、详情、工作台、审核、看板或设置。
+- 对象生命周期状态需要独立视图。
+- 单页会让开发只能从文字推断行为，而不是点击理解。
+
+使用多页面时，`prototype.html` 保留为入口页，每个页面都要能返回入口。
+
+## 交互架构输出
+
+设计主题选择前使用以下格式：
 
 ```markdown
 ## 交互架构草案
@@ -174,54 +205,65 @@ Use this format before design theme selection:
 | 动作 | 推荐位置 | 触发条件 | 结果反馈 |
 | --- | --- | --- | --- |
 
-### 7. 状态流转
+### 7. 原型交互覆盖矩阵
+| Must-have 功能 | 原型页面 | 入口/控件 | 用户动作 | 成功反馈 | 状态/数据变化 | 异常路径 | 验收场景 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+
+### 8. 多页面原型拆分建议
+| 原型页面 | 承载功能 | 主要角色 | 入口 | 返回路径 | 拆分原因 |
+| --- | --- | --- | --- | --- | --- |
+
+### 9. 状态流转
 | 对象 | 状态 | 进入条件 | 可执行动作 | 下一状态 |
 | --- | --- | --- | --- | --- |
 
-### 8. 待用户确认
+### 10. 待用户确认
 - 
 ```
 
-## Confirmation Questions
+## 确认问题
 
-Ask a small batch of high-impact questions. Do not ask every question below.
+只问少量高影响问题，不要一次问完下面所有问题。
 
-Good questions:
+好问题：
 
-- Which role should the product optimize for first: manager, operator, reviewer, analyst, or end user?
-- After login, what should that role see first to continue work without thinking?
-- Which feature produces work for another feature?
-- Which action should be available in bulk, and which must happen in a detail view?
-- Should this item be a top-level menu, a tab, or an action inside another page?
-- What does your team usually call this module?
-- Which status transition is most likely to create rework or disputes?
-- What is the one end-to-end workflow the prototype must demonstrate?
+- 当前产品第一优先优化哪个角色：管理者、操作员、审核员、分析师还是终端用户？
+- 登录后，该角色应该首先看到什么，才能不用思考就继续工作？
+- 哪个功能会给另一个功能产生待处理工作？
+- 哪些动作适合批量执行，哪些必须在详情页执行？
+- 这个内容应该是一级菜单、页面内标签页，还是另一个页面里的动作？
+- 你们团队通常怎么称呼这个模块？
+- 哪个状态流转最容易产生返工或争议？
+- 第一版原型必须演示哪一条端到端流程？
+- 哪个必须有功能还没有被可点击原型动作覆盖？
+- 单个 `prototype.html` 会不会让交互逻辑难以理解，是否应该拆到 `prototype/` 多页面？
 
-Avoid:
+避免：
 
-- "Do you like this IA?" without explaining tradeoffs.
-- Asking users to design the whole menu from scratch.
-- Presenting menu names without page responsibilities.
-- Creating one page per function before checking workflow order.
+- 不解释取舍就问“你喜欢这个 IA 吗？”
+- 让用户从零设计完整菜单。
+- 只给菜单名，不说明页面职责。
+- 没检查工作流顺序前就按一个功能一个页面来做。
 
-## Stop Conditions
+## 停止条件
 
-Stop before design theme selection when:
+出现以下情况时，在设计主题选择前停止：
 
-- The default role entry is unknown.
-- The main workflow cannot be described as steps.
-- Core functions have no upstream/downstream relationship.
-- Menu names are still implementation terms.
-- Critical actions do not have a placement.
-- Object status flow is missing for a workflow-heavy product.
-- The user has only confirmed scope, not interaction architecture.
+- 默认角色入口未知。
+- 主流程无法描述成步骤。
+- 核心功能没有上下游关系。
+- 菜单名称仍是实现术语。
+- 关键动作没有位置。
+- 任一已确认 must-have 功能缺少原型页面、入口/控件、成功反馈、状态/数据变化、异常路径或验收场景。
+- 工作流型产品缺少对象状态流。
+- 用户只确认了范围，没有确认交互架构。
 
-## Example: Internal Annotation Platform
+## 示例：内部标注平台
 
-This is an example pattern, not a default requirement.
+这是示例模式，不是默认需求。
 
 ```text
-Suggested top-level menu:
+建议一级菜单：
 - 总览看板
 - 项目与批次
 - 任务分配
@@ -230,18 +272,10 @@ Suggested top-level menu:
 - 标注规范
 - 人员管理
 
-Relationship:
-- 项目与批次 creates task batches.
-- 任务分配 sends tasks into 我的标注 queues.
-- 我的标注 submits results into 质检审核.
-- 质检审核 passes tasks into completed state or returns them to 我的标注.
-- 总览看板 reads counts and rates across the workflow.
+关系：
+- 项目与批次创建任务批次。
+- 任务分配把任务送入我的标注队列。
+- 我的标注提交结果进入质检审核。
+- 质检审核通过后进入已完成，或退回我的标注返工。
+- 总览看板读取整个流程的数量和通过率。
 ```
-
-Questions to confirm:
-
-- Should managers start from `总览看板` or `任务分配`?
-- Should annotators start from `我的标注` directly?
-- Should reviewers review by batch, annotator, task type, or priority?
-- Should returned tasks always go back to the original annotator?
-- Should `项目与批次` and `任务分配` be separate menus or combined as `任务管理`?

@@ -1,167 +1,185 @@
-# Production Document Standards
+# 生产级文档标准
 
-Use this reference when creating `prd.md`, `flow.md`, `dev-handoff.md`, and their HTML reading pages after the prototype has been confirmed.
+在原型确认后创建 `prd.md`、`flow.md`、`dev-handoff.md` 及其 HTML 阅读页时使用本文档。
 
-The goal is product-grade detail: enough for engineering, QA, design, and business stakeholders to implement and verify the work without guessing product intent. These documents still stop before engineering ownership. Do not define final database schema, final API contracts, technology choices, sprint commitments, or architecture unless the user explicitly changes the task.
+目标是输出产品级详规：让研发、测试、设计和业务评审方不靠猜也能理解要做什么、为什么做、做到什么程度算通过。文档仍然停在产品职责边界内；除非用户明确改变任务，否则不要定义最终数据库结构、正式 API 契约、技术选型、迭代排期或系统架构。
 
-`pm-workflow` bundles method helper skills under `subskills/`. When more structure is needed, read the bundled copies before falling back to user-installed skills:
+`pm-workflow` 在 `subskills/` 下内置了方法类子技能。需要更细结构时，优先读取这些 bundled 版本，再回退到用户本机安装的技能：
 
-- `subskills/prd-development/SKILL.md` for PRD depth and requirement structure.
-- `subskills/user-story/SKILL.md` for user stories and Gherkin acceptance criteria.
-- `subskills/epic-hypothesis/SKILL.md` for strategic context, outcome, and validation framing.
-- `subskills/user-story-mapping/SKILL.md` for workflow decomposition and release slice thinking.
+- `subskills/prd-development/SKILL.md`：PRD 深度和需求结构。
+- `subskills/user-story/SKILL.md`：用户故事和 Gherkin 验收标准。
+- `subskills/epic-hypothesis/SKILL.md`：战略上下文、目标结果和验证假设。
+- `subskills/user-story-mapping/SKILL.md`：流程拆解和版本切片。
 
-These subskills inform the product document method; the final output must still follow the standards in this file.
+这些子技能只提供方法参考；最终输出必须遵守本文档标准。
 
-## Production-Grade Completion Rule
+## 生产级完成规则
 
-A formal document is not complete if it only contains headings, placeholders, or generic bullets.
+正式文档如果只有标题、占位符或泛泛要点，就不算完成。
 
-Before delivery, each confirmed requirement must be traceable across:
+交付前，每条已确认需求都必须能追溯到：
 
-- Problem or user need.
-- Screen, workflow step, or system behavior.
-- Data or field involved.
-- Business rule or permission rule.
-- Acceptance criterion.
-- Open decision or explicit out-of-scope note, if unresolved.
+- 问题或用户需要。
+- 原型页面、流程步骤或系统行为。
+- 涉及的数据或字段。
+- 业务规则或权限规则。
+- 动作级验收标准。
+- 如果未解决，则必须有开放问题或明确不做说明。
 
-If a detail is unknown, write it as a follow-up decision item with owner or impact. Do not leave `待补充`, empty tables, or vague text such as `优化体验`.
+如果细节未知，写成后续决策项，并说明负责人或影响。不要留下 `待补充`、空表，或“优化体验”这类模糊描述。
 
-## PRD Minimum Standard
+## PRD 最低标准
 
-`prd.md` must include:
+`prd.md` 必须包含：
 
-1. Executive summary: problem, target users, solution direction, expected impact.
-2. Problem evidence: current workflow, pain, cost, user/business evidence, assumptions.
-3. Target users and scenarios: primary/secondary roles, jobs-to-be-done, entry points.
-4. Strategic context: business goal, why now, MVP principle, success signal.
-5. Scope: must-have, later, out of scope, risk to confirm, with reasons.
-6. Information architecture: menus, pages, page responsibilities, primary actions.
-7. Core workflows: happy path, review/approval path, exception path, manual fallback.
-8. Functional requirements: one subsection per feature or page.
-9. Field dictionary: name, meaning, source, required, validation, owner, display/edit surface.
-10. Permissions: role capability matrix.
-11. Business rules and status rules: triggers, guards, side effects, audit needs.
-12. Data and algorithm requirements: input, output, explainability, confidence, override, fallback, if applicable.
-13. Metrics and analytics: primary, secondary, guardrail metrics, suggested events.
-14. Non-functional product requirements: usability, accessibility, performance expectation, auditability, security/privacy notes from a product perspective.
-15. User stories and acceptance criteria: Mike Cohn story format plus Gherkin scenarios for build-critical behavior.
-16. Dependencies, risks, mitigations.
-17. Open questions and follow-up decisions.
+1. 执行摘要：问题、目标用户、方案方向、预期影响。
+2. 问题证据：当前流程、痛点、成本、用户/业务证据、假设。
+3. 目标用户与场景：主角色/次角色、JTBD、入口。
+4. 战略上下文：业务目标、为什么现在做、MVP 原则、成功信号。
+5. 范围：必须有、后置、不做、风险待确认，并说明原因。
+6. 信息架构：菜单、页面、页面职责、主操作。
+7. 核心流程：正常路径、审核/确认路径、异常路径、人工兜底。
+8. 功能详规：按功能或页面分节，并写到页面动作级行为。
+9. 字段字典：字段名、含义、来源、是否必填、校验、负责人、展示/编辑位置。
+10. 权限：角色能力矩阵。
+11. 业务规则与状态规则：触发条件、保护条件、副作用、审计要求。
+12. 数据与算法要求：输入、输出、可解释性、置信度、人工覆盖、兜底方式；如不涉及可标注为不适用。
+13. 指标与埋点：主指标、次级指标、护栏指标、建议事件。
+14. 非功能性产品要求：可用性、可访问性、性能感知、审计性、安全/隐私等产品侧要求。
+15. 动作级验收矩阵、用户故事和验收标准：Mike Cohn 用户故事格式，加关键行为的 Gherkin 场景。
+16. 依赖、风险和缓解策略。
+17. 开放问题和后续决策项。
 
-## Functional Requirement Detail
+## 功能详规细节
 
-Each functional requirement should use this shape:
+每个功能详规使用以下结构：
 
 ```markdown
-### FR-<number>: <requirement name>
+### FR-<编号>：<需求名称>
 
 - 用户/角色：
 - 目标：
 - 入口：
 - 前置条件：
 - 触发动作：
+- 触发控件：
 - 系统响应：
 - 字段与数据：
 - 权限规则：
 - 状态变化：
+- 成功反馈：
+- 失败/异常反馈：
 - 异常/边界：
-- 验收标准：
+- 动作级验收标准：
 - 关联页面/原型：
 - 关联埋点：
 ```
 
-## Field Dictionary Detail
+每个关键动作都必须回答：动作出现在哪里、谁能触发、需要什么前置条件、成功后改变什么、失败如何展示、测试如何观察通过/失败。
 
-Use a table like:
+## 动作级验收矩阵
+
+在 `prd.md` 中使用下表，并在 `dev-handoff.md` 中保持对应：
+
+```markdown
+| 页面 | 动作 | 触发控件 | 前置条件 | 成功结果 | 失败结果 | 状态变化 | 权限边界 | Gherkin 场景 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+```
+
+没有至少一行动作级验收记录的 must-have 功能，不算完成。
+
+## 字段字典细节
+
+使用类似表格：
 
 ```markdown
 | 字段 | 含义 | 来源 | 必填 | 校验/口径 | 可见角色 | 可编辑角色 | 所在页面 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 ```
 
-Do not replace field rules with "按实际情况处理." If the rule is unresolved, write what decision is needed and why it affects development.
+不要用“按实际情况处理”代替字段规则。如果规则未定，写清需要什么决策，以及它为什么影响开发。
 
-## User Story Detail
+## 用户故事细节
 
-Use Mike Cohn format:
+使用 Mike Cohn 格式：
 
 ```markdown
-### US-<number>: <summary>
+### US-<编号>：<摘要>
 
 - As a <role>
 - I want to <action>
 - so that <outcome>
 
-#### Acceptance Criteria
+#### 验收标准
 
-- Scenario: <name>
-- Given <precondition>
-- When <action>
-- Then <observable result>
+- Scenario: <场景名>
+- 假如 <前置条件>
+- 当 <动作>
+- 那么 <可观察结果>
 ```
 
-Each critical page action should have at least one acceptance scenario.
+每个关键页面动作至少要有一个验收场景。
 
-## Flow Document Minimum Standard
+## 流程图文档最低标准
 
-`flow.md` must include Mermaid source for:
+`flow.md` 必须包含以下 Mermaid 源码：
 
-- Main end-to-end workflow.
-- Role swimlane or cross-role sequence flow.
-- Object status lifecycle, preferably `stateDiagram-v2`.
-- Exception, return, rejection, or rework path.
-- Data handoff or algorithm participation flow, if relevant.
+- 主端到端流程。
+- 角色泳道或跨角色流程。
+- 对象状态生命周期，优先使用 `stateDiagram-v2`。
+- 异常、退回、拒绝或返工路径。
+- 数据交接或算法参与流程；如不涉及可标注不适用。
 
-Each diagram must have:
+每张图都必须包含：
 
-- Purpose.
-- Mermaid source.
-- Key rule notes.
-- Status or decision table when needed.
+- 目的。
+- Mermaid 源码。
+- 关键规则说明。
+- 必要时提供状态表或决策表。
 
-## Development Handoff Minimum Standard
+## 开发交接最低标准
 
-`dev-handoff.md` must include:
+`dev-handoff.md` 必须包含：
 
-1. Product goal and MVP boundary.
-2. Role and permission matrix.
-3. Page/action matrix.
-4. Requirement-level entity glossary, not final database schema.
-5. Field rules and validation summary.
-6. Status and workflow rules.
-7. Error, empty, loading, disabled, no-permission, and conflict states.
-8. Analytics/event suggestions.
-9. User stories and Gherkin acceptance checklist.
-10. QA scenarios and demo script.
-11. Dependencies, risks, follow-up decisions.
+1. 产品目标和 MVP 边界。
+2. 角色与权限矩阵。
+3. 页面动作矩阵：触发控件、前置条件、成功反馈、失败反馈、状态变化、权限边界、关联原型和验收场景。
+4. 需求视角的实体词汇表，不写最终数据库结构。
+5. 字段规则和校验摘要。
+6. 状态与工作流规则。
+7. 错误、空态、加载中、禁用、无权限和冲突状态。
+8. 埋点/事件建议。
+9. 用户故事和 Gherkin 验收清单。
+10. QA 场景和演示脚本。
+11. 依赖、风险和后续决策项。
 
-## HTML Reading Page Standard
+## HTML 阅读页标准
 
-HTML reading pages should make the Markdown easier to review, not replace it.
+HTML 阅读页是为了让 Markdown 更容易评审，不替代 Markdown。
 
-- `prd.html` and `dev-handoff.html` should provide a structured reading version or a clearly organized generated companion.
-- `flow.html` must render diagrams visually; source code is available only through a toggle or source panel.
-- HTML pages must link back to Markdown source and `index.html`.
+- `prd.html` 和 `dev-handoff.html` 应提供结构化阅读版本或清晰的生成式辅助页面。
+- `flow.html` 必须默认可视化渲染流程图；源码只能通过切换项或源码面板查看。
+- HTML 页面必须链接回 Markdown 源文件和 `index.html`。
 
-## Quality Gate
+## 质量门槛
 
-Before final delivery, check:
+最终交付前检查：
 
-- No `待补充` remains in formal documents after review passes.
-- No empty requirement tables remain.
-- Each must-have feature has fields, rules, and acceptance criteria.
-- Each important status has owner, entry condition, exit condition, and allowed actions.
-- Each page has purpose, primary user, primary action, empty/error/no-permission behavior.
-- `dev-handoff.md` is useful to engineering without becoming final technical architecture.
-- Open questions are clearly separated from confirmed behavior.
+- 评审通过后，正式文档中没有 `待补充`。
+- 没有空的需求表格。
+- 每个必须有功能都有字段、规则和验收标准。
+- 每个必须有功能都链接到可点击原型路径和动作级验收行。
+- 每个重要状态都有负责人、进入条件、退出条件和允许动作。
+- 每个页面都有目标、主要用户、主动作、空态/错误/无权限行为。
+- `dev-handoff.md` 对开发有用，但没有变成最终技术架构。
+- 开放问题与已确认行为清晰分开。
 
-## Anti-Patterns
+## 反模式
 
-- A PRD that names pages but does not describe behavior.
-- A flow document that only contains one happy-path diagram.
-- A handoff that says "开发自行处理" for core product rules.
-- Acceptance criteria that are not observable.
-- HTML pages that show Mermaid code instead of rendered diagrams.
-- Formal documents full of placeholders after user confirmation.
+- PRD 只列页面名，不描述行为。
+- 流程图文档只有一张正常路径图。
+- 交接文档对核心产品规则写“开发自行处理”。
+- 验收标准不可观察。
+- 动作验收只写“保存成功”，没有可见反馈、状态/数据变化和失败行为。
+- HTML 页面只显示 Mermaid 代码，不显示渲染图。
+- 用户确认后，正式文档仍充满占位内容。

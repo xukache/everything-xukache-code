@@ -1,8 +1,8 @@
-# HTML PRD Panel Template
+# HTML PRD 浮标模板
 
-Use this template when embedding PRD content into prototype pages.
+在原型页面中嵌入 PRD 内容时使用本模板。
 
-## Floating Button
+## 悬浮按钮
 
 ```html
 <button class="prd-fab" type="button" onclick="togglePrdPanel()" aria-label="打开需求说明">PRD</button>
@@ -30,7 +30,7 @@ Use this template when embedding PRD content into prototype pages.
       </ul>
     </section>
     <section>
-      <h3>验收标准</h3>
+      <h3>动作级验收标准</h3>
       <ul>
         <li>用户完成关键操作后，可以看到明确成功状态。</li>
       </ul>
@@ -39,7 +39,7 @@ Use this template when embedding PRD content into prototype pages.
 </aside>
 ```
 
-## Minimal CSS
+## 最小 CSS
 
 ```css
 .prd-fab {
@@ -111,7 +111,7 @@ Use this template when embedding PRD content into prototype pages.
 }
 ```
 
-## Minimal JavaScript
+## 最小 JavaScript
 
 ```html
 <script>
@@ -123,9 +123,9 @@ Use this template when embedding PRD content into prototype pages.
 </script>
 ```
 
-## Writing Rules
+## 写作规则
 
-- Write PRD content in the language used by business stakeholders.
-- Keep each page panel focused on that page. Move cross-page material to `prd.html`.
-- Link each business rule to a visible UI behavior or acceptance criterion.
-- Mark open questions explicitly instead of guessing.
+- PRD 内容使用业务方日常语言。
+- 每个页面浮标只聚焦该页面；跨页面材料放到 `prd.html`。
+- 每条业务规则都要关联到可见 UI 行为或验收标准。
+- 开放问题必须明确标注，不要猜测后写成事实。

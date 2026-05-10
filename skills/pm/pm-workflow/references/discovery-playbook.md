@@ -1,96 +1,96 @@
-# Discovery Playbook
+# 需求发现问题库
 
-Use this reference when the business context is vague, the user only provides a solution idea, or the algorithm/data boundary is unclear.
+当业务上下文模糊、用户只给方案想法，或算法/数据边界不清时使用本文档。
 
-For the first intake response and stage gates, use `discovery-intake.md` first. This file is the question bank and conversation guide used after the intake mode is clear.
+首轮需求接入和阶段门槛先使用 `discovery-intake.md`。本文档是接入模式明确后的问题库和对话指南。
 
-## Conversation Shape
+## 对话形态
 
-Ask one small group of questions at a time. After each answer, summarize what changed and ask the next highest-impact question.
+每次只问一小组问题。用户回答后，先总结发生了什么变化，再问下一组最高影响问题。
 
-After each confirmed or temporarily accepted summary, record the useful context in `notes/requirements.md`. The notes file is the memory store for future iteration, not a polished PRD.
+每次摘要被确认或暂定接受后，把有用上下文记录到 `notes/requirements.md`。需求笔记是后续迭代记忆，不是精修 PRD。
 
-Only record confirmed facts as facts. Put unconfirmed content under assumptions or follow-up questions, following `discovery-intake.md`.
+只有已确认内容才能写成事实。未确认内容按照 `discovery-intake.md` 放入假设或后续问题。
 
-Prefer this order:
+推荐顺序：
 
-1. Problem and user
-2. Current workflow
-3. Desired outcome and success metric
-4. External reference scan, when the product type has mature patterns
-5. Scope and constraints
-6. Rules, data, and exceptions
-7. Interaction architecture: function relationships, role entry, menu structure, page responsibility, and key action placement
-8. Prototype and PRD confirmation
+1. 问题和用户。
+2. 当前流程。
+3. 期望结果和成功指标。
+4. 当产品类型有成熟模式时，执行外部参考扫描。
+5. 范围和约束。
+6. 规则、数据和异常。
+7. 交互架构：功能关系、角色入口、菜单结构、页面职责和关键动作位置。
+8. 原型和 PRD 确认。
 
-## Requirement Memory Rules
+## 需求记忆规则
 
-Write to `notes/requirements.md` when any of these become clear:
+以下信息一旦清楚，就写入 `notes/requirements.md`：
 
-- Target user or business role
-- Current workflow or handoff
-- Pain point and business cost
-- Desired outcome or success metric
-- Scope choice: must have / later / out of scope / risk
-- External reference source, hidden need, MVP impact, and rejected expansion
-- Business rule, exception, threshold, or permission
-- Algorithm/data participation point
-- Review decision, change request, or follow-up decision item
+- 目标用户或业务角色。
+- 当前流程或交接点。
+- 痛点和业务代价。
+- 期望结果或成功指标。
+- 范围选择：必须有、后置、不在范围内、风险。
+- 外部参考来源、隐藏需求、对 MVP 的影响和拒绝扩大的内容。
+- 业务规则、异常、阈值或权限。
+- 算法/数据参与点。
+- 评审决策、修改请求或后续决策项。
 
-Do not wait until the end of the conversation to reconstruct these from memory. Keep entries short and factual; move polished content to `prd.md`, `flow.md`, and `dev-handoff.md` after confirmation.
+不要等到对话结束再凭记忆重建。记录要短、事实化；确认后再把精修内容移动到 `prd.md`、`flow.md` 和 `dev-handoff.md`。
 
-## Question Bank
+## 问题库
 
-### Problem
+### 问题
 
-- Who is the primary user of this feature?
-- What job are they trying to complete?
-- What is painful or inefficient in the current process?
-- What happens if this problem is not solved?
-- Is this a frequent problem, a high-risk problem, or both?
-- Which role is most blocked today, and which role only needs visibility?
-- What is the cost of the current workaround: delay, rework, missed handoff, quality risk, accountability risk, or manual coordination?
+- 这个功能的主要用户是谁？
+- 他们想完成什么工作？
+- 当前流程中哪里痛、慢或低效？
+- 如果不解决，会发生什么？
+- 这是高频问题、高风险问题，还是两者都是？
+- 今天哪个角色最被卡住，哪个角色只是需要可视化？
+- 当前替代方案的代价是什么：延迟、返工、交接遗漏、质量风险、责任不清，还是人工协调成本？
 
-### Current Workflow
+### 当前流程
 
-- How is this handled today?
-- Which systems, spreadsheets, groups, or offline steps are involved?
-- Where do handoffs happen?
-- Which decisions are manual today?
-- Which steps are most error-prone?
-- What enters the workflow first, and what counts as finished?
-- Where do tasks get returned, disputed, reassigned, or paused?
+- 现在怎么处理？
+- 涉及哪些系统、表格、群消息或线下步骤？
+- 交接点在哪里？
+- 现在有哪些决策是人工做的？
+- 哪些步骤最容易出错？
+- 流程最开始进入的是什么，什么状态算完成？
+- 任务会在哪里被退回、争议、改派或暂停？
 
-### Desired Outcome
+### 期望结果
 
-- What should be faster, more accurate, more visible, or more controllable after launch?
-- What business metric should improve?
-- What user behavior proves this is useful?
-- What would make the business team say "this is good enough for this iteration"?
+- 上线后，什么应该更快、更准、更可见或更可控？
+- 哪个业务指标应该改善？
+- 哪种用户行为能证明它有用？
+- 什么结果会让业务方说“这一版够用了”？
 
-### Scope
+### 范围
 
-- What must be included in the first usable version?
-- What can be mocked, manual, or deferred?
-- What must explicitly not be built now?
-- Which users or scenarios are out of scope?
-- Which feature is only useful if another feature already exists?
-- Which feature can be represented as a filter, status, action, or detail panel instead of a full page?
+- 第一版可用版本必须包含什么？
+- 哪些可以 mock、人工处理或后置？
+- 哪些现在明确不做？
+- 哪些用户或场景不在范围内？
+- 哪个功能只有在另一个功能存在后才有价值？
+- 哪个功能可以作为筛选、状态、动作或详情面板，而不是完整页面？
 
-### Function Relationships
+### 功能关系
 
-Use this when the user lists many desired functions.
+当用户列出很多功能时使用。
 
-- Which function creates the work queue?
-- Which function consumes or completes the work queue?
-- Which function changes object ownership?
-- Which function changes object status?
-- Which function only observes or summarizes results?
-- Which function creates rules or templates used by other functions?
-- What should happen after the user completes the primary action?
-- Which data should flow back into the dashboard or report?
+- 哪个功能创建待处理队列？
+- 哪个功能消费或完成待处理队列？
+- 哪个功能改变对象负责人？
+- 哪个功能改变对象状态？
+- 哪个功能只是观察或汇总结果？
+- 哪个功能创建其他功能使用的规则或模板？
+- 用户完成主动作后应该发生什么？
+- 哪些数据应该回流到看板或报表？
 
-Summarize as:
+摘要格式：
 
 ```text
 功能关系假设：
@@ -102,23 +102,23 @@ Summarize as:
 - 配置/规范：
 ```
 
-Do not convert this into page design yet. First ask the user to confirm whether the relationship is correct.
+不要立刻转成页面设计。先让用户确认功能关系是否正确。
 
-### Menu and Page Architecture
+### 菜单和页面架构
 
-Use this after MVP scope is confirmed and before prototype design.
+在 MVP 范围确认后、原型设计前使用。
 
-- Which role should the product optimize for first?
-- What should each role see first after login?
-- Which modules deserve top-level navigation?
-- Which items should be tabs, filters, batch actions, drawers, or detail sections instead of menu items?
-- What names do users naturally use for these modules?
-- Which menu order matches the daily workflow?
-- Which page owns each critical action?
-- Which screen should demonstrate the end-to-end flow in the prototype?
-- How will the prototype be polished before review: bundled `subskills/impeccable` first, then local `impeccable` skill, `npx impeccable`, project script, or fallback only after resolution attempts fail?
+- 产品第一优先服务哪个角色？
+- 每个角色登录后应该首先看到什么？
+- 哪些模块值得成为一级导航？
+- 哪些内容应该是标签页、筛选器、批量动作、抽屉或详情区块，而不是菜单项？
+- 用户自然会怎么称呼这些模块？
+- 哪种菜单顺序符合日常工作流？
+- 每个关键动作归哪个页面负责？
+- 原型里哪一屏应该演示端到端流程？
+- 原型评审前如何打磨：优先 bundled `subskills/impeccable`，再考虑本地 `impeccable` skill、`npx impeccable`、项目脚本，最后才是解决失败后的人工降级？
 
-Menu confirmation prompt:
+菜单确认提示：
 
 ```text
 菜单结构草案：
@@ -129,40 +129,40 @@ Menu confirmation prompt:
 - 需要确认的命名：
 ```
 
-Ask the user to confirm naming and workflow order before theme selection.
+设计主题选择前，必须让用户确认命名和工作流顺序。
 
-### External Reference Scan
+### 外部参考扫描
 
-Trigger this scan when the request includes platform, system, tool, workbench, dashboard, workflow, data processing, algorithm review, annotation, audit, CRM, admin, or internal operations language.
+当请求中出现平台、系统、工具、工作台、看板、工作流、数据处理、算法审核、标注、审计、CRM、后台、内部运营等语言时触发。
 
-Do not trigger it for a tiny copy change, a known single-page tweak, or a user who explicitly asks to avoid web research.
+如果只是很小的文案修改、已知单页微调，或用户明确不要联网调研，则不触发。
 
-Search query templates:
+搜索词模板：
 
 ```text
-<domain> open source platform GitHub
-<domain> workflow management open source
-<domain> admin dashboard requirements
-<domain> annotation review tool GitHub
-<domain> docs permissions workflow status
+<领域> open source platform GitHub
+<领域> workflow management open source
+<领域> admin dashboard requirements
+<领域> annotation review tool GitHub
+<领域> docs permissions workflow status
 ```
 
-Mature source signals:
+成熟来源信号：
 
-- Official docs or README explain roles, workflows, states, permissions, and deployment boundaries.
-- GitHub project has recent commits, releases, issues, stars, or active maintainers.
-- Product docs show concrete workflows rather than only marketing claims.
-- Multiple sources repeat the same pattern, such as review status, audit logs, import/export, queue assignment, or human override.
+- 官方文档或 README 解释了角色、工作流、状态、权限和部署边界。
+- GitHub 项目近期有提交、发布、issue、star 或活跃维护者。
+- 产品文档展示具体工作流，而不只是营销说法。
+- 多个来源重复相同模式，例如审核状态、审计日志、导入/导出、队列分配或人工覆盖。
 
-Minimum-boundary rules:
+最小边界规则：
 
-- Treat every external pattern as a candidate, not a requirement.
-- Ask: "Does this protect the user's core job in v1?" If not, keep it out of MVP.
-- Use the categories `可借鉴隐藏需求`, `待验证假设`, `不进入一期范围`, `对 MVP 的最小影响`, `来源链接`.
-- Put advanced workflow builders, plugin marketplaces, multi-tenant billing, complex RBAC, full observability, automation engines, and production deployment details into later/out-of-scope unless the user already named them as core pain.
-- When search creates more than five candidate needs, keep only the three that most directly protect the main workflow.
+- 把所有外部模式都当成候选，而不是需求。
+- 追问：“这是否保护 v1 的核心任务？”如果不是，就不要进入 MVP。
+- 使用分类：`可借鉴隐藏需求`、`待验证假设`、`不进入一期范围`、`对 MVP 的最小影响`、`来源链接`。
+- 高级工作流编排、插件市场、多租户计费、复杂 RBAC、完整可观测、自动化引擎和生产部署细节默认后置或不在范围内，除非用户已经把它们说成核心痛点。
+- 如果搜索产生超过五个候选需求，只保留最直接保护主流程的三个。
 
-Summarize scan output:
+扫描摘要：
 
 ```text
 外部参考扫描：
@@ -174,34 +174,34 @@ Summarize scan output:
 - 来源链接：
 ```
 
-### Rules and Constraints
+### 规则和约束
 
-- What are the required fields?
-- Which fields are system-generated, user-entered, imported, or algorithm-generated?
-- Are there approval rules, thresholds, quotas, time windows, or priorities?
-- What permissions are needed?
-- What should happen when data is missing, duplicated, late, or inconsistent?
+- 必填字段有哪些？
+- 哪些字段由系统生成、用户录入、导入或算法生成？
+- 是否有审批规则、阈值、配额、时间窗口或优先级？
+- 需要哪些权限？
+- 数据缺失、重复、延迟或不一致时怎么办？
 
-### Algorithm Needs
+### 算法需求
 
-- Is the algorithm recommending, predicting, ranking, detecting, generating, or deciding?
-- What are the input data sources?
-- What output should the user see?
-- Does the user need confidence score, explanation, evidence, or reason tags?
-- Can a human override the result?
-- How should overrides be recorded?
-- What offline metric and online business metric matter?
-- What failure modes are unacceptable?
+- 算法是在推荐、预测、排序、检测、生成，还是决策？
+- 输入数据来源是什么？
+- 用户需要看到什么输出？
+- 是否需要置信度、解释、证据或原因标签？
+- 人工能否覆盖算法结果？
+- 覆盖行为如何记录？
+- 哪些离线指标和线上业务指标重要？
+- 哪些失败模式不可接受？
 
-### Acceptance
+### 验收
 
-- What must be true for business acceptance?
-- What edge cases must be demonstrated?
-- What data examples should appear in the prototype?
-- Which flow should be shown in the demo?
-- What questions should remain as open risks?
+- 业务验收必须满足什么？
+- 哪些边界情况必须演示？
+- 原型里应该出现哪些数据样例？
+- Demo 需要展示哪条流程？
+- 哪些问题应保留为开放风险？
 
-## Summarization Template
+## 摘要模板
 
 ```text
 需求摘要：

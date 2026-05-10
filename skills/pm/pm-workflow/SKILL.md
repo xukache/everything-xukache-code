@@ -16,6 +16,8 @@ description: 面向算法/研发人员的产品经理工作流。用于澄清业
 - 三维度定义细节：需求范围、规则限制、验收标准必须同时存在。
 - 三段式推进：先业务需求沟通梳理，再产品原型和相关文档输出，最后做原型和文档版本管理。
 - 功能先成系统，再成页面：进入视觉原型前，必须确认功能之间的依赖关系、主流程、异常流程、状态流转、页面职责、菜单命名和关键操作位置。
+- 原型全量可演示：所有已确认 `必须有` 功能都必须在原型中有可点击路径、成功反馈、状态变化和关键异常反馈；不得用一级页面、PRD 浮标或文字说明替代关键交互。
+- 验收动作级明确：产品经理必须定义每个关键页面动作做到什么程度才能验收通过，包括入口、前置条件、触发动作、系统响应、状态变化、异常反馈、权限边界和可观察结果。
 - 关键节点暂停确认：在问题定义、方案范围、交互架构、设计主题、正式文档和最终交付前暂停，等待用户确认或修改。
 - 外部参考只做启发：需求调研阶段可以搜索成熟产品、开源框架或可靠案例来发现隐藏问题，但搜索结果默认是待验证假设，不得直接扩大 MVP 范围。
 - Markdown 为源，HTML 为演示：正式 PRD、流程图、开发交接和交付说明必须有 Markdown 源文件；HTML 用于评审演示和阅读入口。
@@ -138,6 +140,8 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 - 页面职责说明：哪些内容放列表、详情、抽屉、弹窗、工作台、配置页或看板。
 - 关键动作位置：新增、分配、提交、审核、退回、导出、查看历史等动作在哪里触发。
 - 状态流转：关键对象的状态、进入条件、退出条件和异常回路。
+- 原型交互覆盖矩阵：把每个 `必须有` 功能映射到原型页面、入口控件、用户动作、成功反馈、状态/数据变化、异常路径和验收场景。
+- 多页面拆分建议：判断 `prototype.html` 是否足以承载完整交互；若角色、模块或状态较多，必须规划 `prototype/` 多页面原型结构。
 - 待确认问题：会影响页面结构、菜单命名或主流程演示的问题。
 
 **暂停确认 2.5：交互架构**
@@ -149,12 +153,14 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 - 核心功能之间的前后关系是否符合真实流程。
 - 关键动作应该出现在列表、详情、抽屉、弹窗还是工作台。
 - 第一版原型要重点演示哪条端到端路径。
+- 所有 must-have 功能是否都已进入原型交互覆盖矩阵。
+- 是否需要拆成 `prototype/` 多页面原型，而不是塞进单个 `prototype.html`。
 
 未确认功能关系、菜单结构、页面职责和主流程入口前，不得进入设计主题或 HTML 原型。
 
 ### 阶段 3：HTML 原型
 
-生成高保真、可交互、可本地打开的 HTML 原型。优先单文件 HTML；当页面较多时使用一个索引页路由到多个页面。
+生成高保真、可交互、可本地打开的 HTML 原型。默认目标是“全量可演示”：所有已确认 `必须有` 功能都要能点击体验。`prototype.html` 保留为原型入口；当单文件无法清晰承载完整交互时，必须拆成 `prototype/` 多页面原型，并从入口页统一链接。
 
 开始设计原型前，必须先完成设计主题 preflight：
 
@@ -173,13 +179,15 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 原型要求：
 
 - 首屏就是可用工作界面，不做营销落地页。
-- 交互必须能演示主流程：筛选、录入、提交、审批、状态变更、查看结果、展开 PRD 浮标等。
+- 交互必须覆盖每个 must-have 功能：入口、点击动作、表单/选择、提交、审批、退回、状态变更、列表/详情刷新、查看结果、展开 PRD 浮标等。
+- 每个 must-have 功能至少有一个可点击成功路径；影响理解的异常路径必须可触发或可在相邻状态中看到。
+- 不得用 PRD 浮标、静态卡片、一级页面截图或文档说明代替关键交互逻辑。
 - 使用模拟数据，数据要贴近业务真实语境。
 - 用流程图或泳道图表达关键业务流、算法流或审批流。
-- 避免实现复杂真实业务逻辑、真实 API、复杂数据流转；用 mock、局部状态和演示事件表达即可。
+- 避免实现复杂真实业务逻辑、真实 API、复杂数据流转；用 mock、局部状态和演示事件表达即可，但必须让开发看懂预期交互和状态结果。
 - 每个关键页面右下角提供可展开 PRD 浮标，写清该页面对应的需求说明、字段、规则和验收标准。
 
-详细标准见 `references/artifact-standards.md` 和 `references/html-prd-template.md`。
+详细标准见 `references/prototype-interaction-standards.md`、`references/artifact-standards.md` 和 `references/html-prd-template.md`。
 
 原型初稿完成后、交付用户确认前，必须执行一次 `impeccable` 原型打磨关卡。先读取 `references/impeccable-polish-gate.md`，再优先读取 bundled subskill `subskills/impeccable/SKILL.md` 执行。
 
@@ -219,7 +227,9 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 - 页面结构是否贴近业务人员的实际工作路径。
 - 核心字段是否完整、命名是否符合业务习惯。
 - 关键流程是否能讲清楚。
+- 每个 must-have 功能是否都能在原型里点通，而不是只看到一级页面或文字说明。
 - PRD 浮标里的规则和验收是否足够研发实现。
+- 动作级验收是否清楚说明“做到什么程度才算通过”。
 - 哪些内容要删减、补充或拆分到下一迭代。
 
 ### 阶段 4：正式文档深化
@@ -232,7 +242,7 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 
 - 执行摘要、问题证据、用户/场景、战略上下文和成功指标。
 - 需求范围、信息架构、核心流程、功能详规、字段字典、权限、业务规则、异常边界和指标。
-- 用户故事和 Gherkin 验收标准。
+- 动作级验收矩阵、用户故事和 Gherkin 验收标准。
 - 依赖、风险、缓解策略、开放问题和后续决策项。
 
 正式流程图必须包含：
@@ -243,6 +253,7 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 正式开发交接必须包含：
 
 - `dev-handoff.md`：MVP 边界、角色权限矩阵、页面动作矩阵、实体词汇表、字段规则、状态规则、边界场景、埋点建议、用户故事和 Gherkin 验收清单。
+- 页面动作矩阵必须写清页面、动作、触发控件、前置条件、成功反馈、失败反馈、状态变化、权限边界、关联原型和验收场景。
 - 该文档是产品侧交接，不替代技术架构、数据库设计、正式 API 契约或排期承诺。
 
 其他正式交付物：
@@ -258,6 +269,7 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 
 - `prd.md`、`flow.md`、`dev-handoff.md` 是否已消除空表、`待补充` 和只写章节名的简略内容。
 - 每个必须有功能是否都有字段、规则、权限、异常和验收标准。
+- 每个必须有功能是否都有对应原型交互路径，且动作级验收可观察、可测试。
 - `flow.html` 是否离线渲染 Mermaid 为 SVG 画布，并支持拖拽、缩放、重置、适配视图和源码切换。
 - 文档是否足够指导开发拆解和 QA 验收，且没有越界输出最终数据库/API/排期。
 
@@ -280,12 +292,14 @@ pm-work/
       flow.html
       dev-handoff.html
       final-delivery.html
+      prototype/
+        README.md
       notes/
         requirements.md
       assets/
 ```
 
-`README.md` 是版本管理入口，`index.html` 是演示入口。若拆多页面，所有 HTML 页面都要能返回索引页。
+`README.md` 是版本管理入口，`index.html` 是演示入口。`prototype.html` 是原型入口页；若拆多页面，页面放入 `prototype/`，所有 HTML 页面都要能返回原型入口页或索引页。
 
 交付时给出：
 
@@ -308,7 +322,9 @@ pm-work/
 - 是否算法能力被放在正确位置，且有人工兜底。
 - 是否外部参考扫描有来源链接，且搜索发现没有未经确认地进入 `必须有`。
 - 是否在原型生成前完成交互架构确认、设计方向确认表单，并获得用户对 3-5 个主题候选的确认。
-- 是否原型能本地打开并演示主流程。
+- 是否原型能本地打开，并全量演示每个已确认 must-have 功能的关键交互。
+- 是否已建立原型交互覆盖矩阵，且没有用文字说明替代关键交互。
+- 是否每个关键页面动作都有动作级验收标准、状态变化和异常反馈。
 - 是否已完成 `impeccable` 原型打磨；如果起初不可用，是否已主动定位/安装/恢复，且记录尝试过程；是否未借打磨新增未经确认的业务范围。
 - 是否 `prd.md`、`flow.md`、`dev-handoff.md`、`final-delivery.md` 与 HTML 展示一致，没有孤立文档和过期描述。
 - 是否正式文档达到产品级详规，不是只有章节名、空表或待补充占位。
@@ -324,6 +340,7 @@ pm-work/
 - 需求梳理入口与阶段门槛：`references/discovery-intake.md`
 - 交互架构与菜单确认：`references/interaction-architecture.md`
 - 原型设计主题选择：`references/design-theme-selection.md`
+- 原型完整交互标准：`references/prototype-interaction-standards.md`
 - Impeccable 原型打磨关卡：`references/impeccable-polish-gate.md`
 - 生产级文档标准：`references/production-document-standards.md`
 - 离线流程图 viewer 标准：`references/flow-viewer-standards.md`

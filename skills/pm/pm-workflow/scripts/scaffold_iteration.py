@@ -68,7 +68,8 @@ def index_html(product: str, iteration: str) -> str:
     <h1>{title}</h1>
     <p>这是本次需求迭代的演示入口。Markdown 文档用于版本管理，HTML 页面用于评审演示。完成需求澄清后，请替换占位内容，并保持原型、PRD、流程图、开发交接和最终交付说明从这里可访问。</p>
     <section class="grid" aria-label="交付物入口">
-      <a href="prototype.html"><strong>交互原型</strong><span>演示核心页面、主流程和 PRD 浮标。</span></a>
+      <a href="prototype.html"><strong>交互原型入口</strong><span>全量演示 must-have 功能、动作反馈、状态变化和 PRD 浮标。</span></a>
+      <a href="prototype/example-page.html"><strong>多页面原型模板</strong><span>当单页无法承载完整交互时，将页面拆入 prototype/ 目录。</span></a>
       <a href="prd.html"><strong>PRD 文档</strong><span>汇总背景、范围、规则、流程和验收标准。</span></a>
       <a href="flow.html"><strong>Mermaid 流程图</strong><span>展示主流程、状态流转和异常分支；源文件见 flow.md。</span></a>
       <a href="dev-handoff.html"><strong>开发交接</strong><span>记录需求侧实体、页面动作、规则和验收清单。</span></a>
@@ -96,7 +97,18 @@ def prototype_html(product: str, iteration: str) -> str:
     main {{ width: min(1180px, calc(100vw - 40px)); margin: 24px auto 96px; }}
     .toolbar {{ display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 16px; }}
     .panel {{ border: 1px solid #d8dee8; border-radius: 8px; background: #fff; padding: 18px; }}
+    .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }}
+    .card {{ border: 1px solid #d8dee8; border-radius: 8px; background: #fff; padding: 16px; }}
+    table {{ width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }}
+    th, td {{ padding: 10px 12px; border: 1px solid #e1e7ef; text-align: left; vertical-align: top; }}
+    th {{ background: #f8fafc; }}
+    .badge {{ display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 999px; background: #e8f1ff; color: #1d4ed8; font-size: 12px; }}
     .muted {{ color: #687386; }}
+    .actions {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }}
+    .button {{ display: inline-flex; align-items: center; justify-content: center; min-height: 34px; padding: 0 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; color: #172033; text-decoration: none; cursor: pointer; }}
+    .button.primary {{ border-color: #2563eb; background: #2563eb; color: #fff; }}
+    .notice {{ margin-top: 12px; padding: 12px; border-radius: 6px; background: #f0fdf4; color: #166534; display: none; }}
+    .notice.is-visible {{ display: block; }}
     .prd-fab {{ position: fixed; right: 24px; bottom: 24px; z-index: 50; width: 52px; height: 52px; border: 0; border-radius: 12px; background: #111827; color: #fff; font-weight: 700; box-shadow: 0 12px 30px rgba(17,24,39,.22); cursor: pointer; }}
     .prd-panel {{ position: fixed; right: 24px; bottom: 88px; z-index: 49; width: min(420px, calc(100vw - 32px)); max-height: min(680px, calc(100vh - 120px)); display: none; overflow: hidden; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; box-shadow: 0 18px 60px rgba(15,23,42,.2); }}
     .prd-panel.is-open {{ display: block; }}
@@ -114,12 +126,64 @@ def prototype_html(product: str, iteration: str) -> str:
   </header>
   <main>
     <div class="toolbar">
-      <h1>核心工作台</h1>
+      <h1>原型入口与交互覆盖</h1>
       <a href="index.html">返回索引</a>
     </div>
     <section class="panel">
-      <h2>主流程演示区</h2>
-      <p class="muted">在这里实现业务方需要确认的关键页面、字段、状态和操作。</p>
+      <h2>全量可演示要求</h2>
+      <p class="muted">本页是原型入口。实际原型必须覆盖所有已确认 must-have 功能的入口、动作、反馈、状态变化、异常路径和动作级验收。复杂产品请把页面拆入 <code>prototype/</code> 目录。</p>
+      <div class="grid">
+        <div class="card">
+          <span class="badge">必须覆盖</span>
+          <h3>must-have 功能</h3>
+          <p class="muted">每个 must-have 功能至少有一个可点击成功路径，不能只放在卡片、文字或 PRD 浮标里。</p>
+        </div>
+        <div class="card">
+          <span class="badge">必须可见</span>
+          <h3>状态与反馈</h3>
+          <p class="muted">提交、审核、退回、分配、保存等动作要展示状态变化、成功反馈和关键异常反馈。</p>
+        </div>
+        <div class="card">
+          <span class="badge">可拆多页</span>
+          <h3>prototype/</h3>
+          <p class="muted">当单页承载不清楚时，使用多页面原型，并保持导航、返回路径和 PRD 面板一致。</p>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="button primary" href="prototype/example-page.html">打开多页面原型模板</a>
+        <button class="button" type="button" onclick="simulateAction()">演示状态反馈</button>
+      </div>
+      <div class="notice" id="demoNotice">示例动作已完成：列表/详情中的状态、计数或队列应在真实原型中同步表现。</div>
+    </section>
+    <section class="panel" style="margin-top:16px">
+      <h2>原型交互覆盖矩阵</h2>
+      <p class="muted">生成正式原型时，用真实功能替换这些示例行；每个 must-have 功能都必须有一行。</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Must-have 功能</th>
+            <th>原型页面</th>
+            <th>入口/控件</th>
+            <th>用户动作</th>
+            <th>成功反馈</th>
+            <th>状态/数据变化</th>
+            <th>异常路径</th>
+            <th>验收场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>核心功能示例</td>
+            <td><a href="prototype/example-page.html">prototype/example-page.html</a></td>
+            <td>主按钮 / 表格行操作 / 抽屉动作</td>
+            <td>选择数据并提交</td>
+            <td>Toast、列表刷新或详情状态更新</td>
+            <td>对象状态、负责人、计数或队列变化</td>
+            <td>必填缺失、无权限、状态冲突</td>
+            <td>Given/When/Then 可观察结果</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
   </main>
   <button class="prd-fab" type="button" onclick="togglePrdPanel()" aria-label="打开需求说明">PRD</button>
@@ -131,12 +195,14 @@ def prototype_html(product: str, iteration: str) -> str:
     <div class="prd-panel__body">
       <section>
         <h3>页面目标</h3>
-        <p>说明该页面帮助哪个角色完成什么业务动作。</p>
+        <p>作为原型入口，汇总 must-have 功能覆盖情况，并链接到单页或多页面交互原型。</p>
       </section>
       <section>
-        <h3>验收标准</h3>
+        <h3>动作级验收标准</h3>
         <ul>
-          <li>业务方可以通过本页面演示并确认主流程。</li>
+          <li>每个已确认 must-have 功能都有可点击入口和可观察反馈。</li>
+          <li>关键动作能展示成功、失败或无权限等必要状态。</li>
+          <li>多页面原型能从本入口进入，并能返回索引或原型入口。</li>
         </ul>
       </section>
     </div>
@@ -147,9 +213,111 @@ def prototype_html(product: str, iteration: str) -> str:
       const isOpen = panel.classList.toggle('is-open');
       panel.setAttribute('aria-hidden', String(!isOpen));
     }}
+    function simulateAction() {{
+      document.getElementById('demoNotice').classList.add('is-visible');
+    }}
   </script>
 </body>
 </html>
+"""
+
+
+def prototype_example_page_html(product: str, iteration: str) -> str:
+    title = html.escape(f"{product} 多页面原型模板 - {iteration}")
+    return f"""<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <style>
+    body {{ margin: 0; font-family: Arial, "Microsoft YaHei", sans-serif; background: #f6f8fb; color: #172033; }}
+    header {{ display: flex; justify-content: space-between; align-items: center; padding: 18px 28px; background: #fff; border-bottom: 1px solid #d8dee8; }}
+    main {{ width: min(1120px, calc(100vw - 40px)); margin: 24px auto 80px; }}
+    .panel {{ border: 1px solid #d8dee8; border-radius: 8px; background: #fff; padding: 18px; margin-bottom: 16px; }}
+    .muted {{ color: #687386; }}
+    .layout {{ display: grid; grid-template-columns: 260px 1fr; gap: 16px; }}
+    @media (max-width: 860px) {{ .layout {{ grid-template-columns: 1fr; }} }}
+    button, .button {{ display: inline-flex; align-items: center; justify-content: center; min-height: 34px; padding: 0 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; color: #172033; text-decoration: none; cursor: pointer; }}
+    button.primary {{ border-color: #2563eb; background: #2563eb; color: #fff; }}
+    .toast {{ display: none; margin-top: 12px; padding: 12px; border-radius: 6px; background: #ecfdf5; color: #166534; }}
+    .toast.is-visible {{ display: block; }}
+    .error {{ display: none; margin-top: 12px; padding: 12px; border-radius: 6px; background: #fef2f2; color: #991b1b; }}
+    .error.is-visible {{ display: block; }}
+    table {{ width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }}
+    th, td {{ padding: 10px 12px; border: 1px solid #e1e7ef; text-align: left; }}
+    th {{ background: #f8fafc; }}
+    .status {{ display: inline-flex; padding: 3px 8px; border-radius: 999px; background: #e0f2fe; color: #075985; font-size: 12px; }}
+  </style>
+</head>
+<body>
+  <header>
+    <strong>{title}</strong>
+    <nav><a href="../prototype.html">返回原型入口</a> · <a href="../index.html">返回索引</a></nav>
+  </header>
+  <main>
+    <section class="panel">
+      <h1>多页面原型模板</h1>
+      <p class="muted">把本页复制为真实业务页面，如 overview.html、tasks.html、review.html。每个页面都应承载明确角色、关键动作、状态反馈和 PRD 面板。</p>
+    </section>
+    <div class="layout">
+      <aside class="panel">
+        <h2>页面职责</h2>
+        <p class="muted">说明本页服务哪个角色、处理哪个对象、承载哪些 must-have 功能。</p>
+        <ul>
+          <li>主要角色：</li>
+          <li>主对象：</li>
+          <li>主动作：</li>
+          <li>不放在本页：</li>
+        </ul>
+      </aside>
+      <section class="panel">
+        <h2>可点击交互示例</h2>
+        <p class="muted">正式原型中用真实业务字段、状态和动作替换示例。</p>
+        <button class="primary" type="button" onclick="markDone()">提交并更新状态</button>
+        <button type="button" onclick="showError()">触发异常反馈</button>
+        <div class="toast" id="successToast">提交成功：状态已从“待处理”变为“待审核”。</div>
+        <div class="error" id="errorToast">提交失败：缺少必填字段或当前状态不允许提交。</div>
+        <table>
+          <thead><tr><th>对象</th><th>当前状态</th><th>负责人</th><th>下一步</th></tr></thead>
+          <tbody><tr><td>示例对象</td><td><span class="status" id="status">待处理</span></td><td>当前用户</td><td>提交后进入下一角色队列</td></tr></tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+  <script>
+    function markDone() {{
+      document.getElementById('status').textContent = '待审核';
+      document.getElementById('successToast').classList.add('is-visible');
+      document.getElementById('errorToast').classList.remove('is-visible');
+    }}
+    function showError() {{
+      document.getElementById('errorToast').classList.add('is-visible');
+      document.getElementById('successToast').classList.remove('is-visible');
+    }}
+  </script>
+</body>
+</html>
+"""
+
+
+def prototype_readme_md(product: str, iteration: str) -> str:
+    return f"""# {product} / {iteration} 多页面原型目录
+
+`prototype.html` 是原型入口页。本目录用于承载复杂产品的多页面交互原型。
+
+## 使用规则
+
+- 每个已确认 must-have 功能都必须有可点击原型路径。
+- 页面必须表现入口、触发控件、成功反馈、状态/数据变化和关键异常反馈。
+- 页面之间的导航、返回路径、命名和角色入口必须一致。
+- 不得用静态页面、PRD 浮标或文字说明替代关键交互。
+
+## 建议页面
+
+| 页面文件 | 页面职责 | 承载功能 | 主要角色 |
+| --- | --- | --- | --- |
+| example-page.html | 多页面原型模板 | 复制后替换为真实业务页面 | 产品/设计/研发评审 |
 """
 
 
@@ -203,7 +371,7 @@ def prd_html(product: str, iteration: str) -> str:
     <h2 id="scope">4. 范围边界</h2>
     <p>用必须有、后置、不做、风险待确认四类说明取舍，并写清原因。</p>
     <h2 id="requirements">5. 功能详规</h2>
-    <p>每个功能至少包含用户/角色、目标、入口、前置条件、触发动作、系统响应、字段与数据、权限规则、状态变化、异常边界、验收标准、关联原型和埋点建议。</p>
+    <p>每个功能至少包含用户/角色、目标、入口、前置条件、触发控件、触发动作、系统响应、字段与数据、权限规则、状态变化、成功/失败反馈、异常边界、动作级验收标准、关联原型和埋点建议。</p>
     <h2 id="acceptance">6. 验收与风险</h2>
     <p>使用用户故事和 Gherkin 标准描述可测试验收条件，并记录依赖、风险、缓解方案和开放问题。</p>
   </main>
@@ -496,7 +664,8 @@ def readme_md(product: str, iteration: str) -> str:
 | 开发交接 | [dev-handoff.md](dev-handoff.md) | [dev-handoff.html](dev-handoff.html) |
 | 最终交付说明 | [final-delivery.md](final-delivery.md) | [final-delivery.html](final-delivery.html) |
 | 需求笔记 | [notes/requirements.md](notes/requirements.md) | - |
-| 交互原型 | - | [prototype.html](prototype.html) |
+| 交互原型入口 | - | [prototype.html](prototype.html) |
+| 多页面原型目录 | [prototype/README.md](prototype/README.md) | [prototype/example-page.html](prototype/example-page.html) |
 | 演示入口 | - | [index.html](index.html) |
 
 ## 职责边界
@@ -506,6 +675,13 @@ def readme_md(product: str, iteration: str) -> str:
 ## 当前范围
 
 - 在问题定义、范围确认和原型评审后填写已确认范围；未确认前只记录为需求笔记中的假设。
+
+## 原型交互覆盖要求
+
+- `prototype.html` 是原型入口页；复杂交互拆入 `prototype/` 目录。
+- 所有已确认 must-have 功能都必须能在原型中点击演示。
+- 原型、PRD、流程图和开发交接中的页面、动作、状态和验收标准必须一致。
+- 不得用静态一级页面、PRD 浮标或文字说明替代关键交互逻辑。
 
 ## 本期不做
 
@@ -616,14 +792,23 @@ This causes:
 - 入口：
 - 前置条件：
 - 触发动作：
+- 触发控件：
 - 系统响应：
 - 字段与数据：
 - 权限规则：
 - 状态变化：
+- 成功反馈：
+- 失败/异常反馈：
 - 异常/边界：
-- 验收标准：
+- 动作级验收标准：
 - 关联页面/原型：
 - 关联埋点：
+
+## 8.1 动作级验收矩阵
+
+| 页面 | 动作 | 触发控件 | 前置条件 | 成功结果 | 失败结果 | 状态变化 | 权限边界 | Gherkin 场景 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 页面/模块 | 新增/编辑/提交/审核/退回 | 按钮/表格行/抽屉/弹窗 | 权限、状态、数据条件 | Toast/状态更新/列表刷新 | 校验/无权限/冲突提示 | from -> to | 角色与数据范围 | AC-1 |
 
 ## 9. 字段字典
 
@@ -691,6 +876,11 @@ This causes:
 - Given 前置条件
 - When 用户或系统触发动作
 - Then 可以观察到的结果
+
+- Scenario: 异常或权限场景
+- Given 用户不满足权限、状态或必填数据条件
+- When 用户尝试触发动作
+- Then 系统阻止操作、保留原状态并给出可理解反馈
 
 ## 16. 依赖、风险与缓解
 
@@ -775,11 +965,11 @@ def dev_handoff_md(product: str, iteration: str) -> str:
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 业务角色 | 页面/数据范围 | 是/否 | 是/否 | 是/否 | 是/否 | 是/否 | 项目、组织或状态限制 |
 
-## 3. 页面与动作清单
+## 3. 页面动作矩阵
 
-| 页面/模块 | 入口 | 主要用户 | 关键动作 | 前置条件 | 成功反馈 | 失败/空状态 | 关联需求 |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| 页面名称 | 菜单/按钮/跳转 | 角色 | 新增/编辑/提交/审核/退回 | 条件 | Toast/状态变化/跳转 | 错误提示/空态 | FR-1 |
+| 页面/模块 | 入口 | 主要用户 | 动作 | 触发控件 | 前置条件 | 成功反馈 | 失败/异常反馈 | 状态变化 | 权限边界 | 关联原型 | 验收场景 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 页面名称 | 菜单/按钮/跳转 | 角色 | 新增/编辑/提交/审核/退回 | 按钮/表格行/抽屉/弹窗 | 权限、状态、必填数据 | Toast/状态变化/跳转/刷新 | 错误提示/空态/无权限/冲突 | from -> to | 角色与数据范围 | prototype/*.html | AC-1 |
 
 ## 4. 核心实体词汇表（需求视角）
 
@@ -982,9 +1172,18 @@ This causes:
 | 不做 |  |
 | 风险待确认 |  |
 
+## 原型交互覆盖记录
+
+| Must-have 功能 | 原型页面 | 入口/控件 | 用户动作 | 成功反馈 | 状态/数据变化 | 异常路径 | 验收场景 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+|  | prototype.html 或 prototype/*.html |  |  |  |  |  |  |
+
 ## 原型设计输入
 
 - 产品语境：
+- 已确认交互架构：
+- 原型是否拆分多页面：
+- 多页面原型目录：
 - 设计方向确认表单：
 - 候选主题：
 - 用户确认结果：
@@ -1006,6 +1205,12 @@ This causes:
 - 未采纳建议：
 - 未采纳原因：
 - 是否改变业务范围：否
+
+## 验收标准确认记录
+
+| 功能/页面动作 | 验收颗粒度 | Given | When | Then | 是否覆盖原型 | 是否确认 |
+| --- | --- | --- | --- | --- | --- | --- |
+|  | 动作级 |  |  |  | 是/否 | 是/否 |
 
 ## 业务规则
 
@@ -1051,10 +1256,13 @@ def main() -> int:
 
     (base / "notes").mkdir(parents=True, exist_ok=True)
     (base / "assets").mkdir(parents=True, exist_ok=True)
+    (base / "prototype").mkdir(parents=True, exist_ok=True)
     copy_flow_viewer_vendor(base)
 
     write_if_missing(base / "index.html", index_html(args.product, args.iteration))
     write_if_missing(base / "prototype.html", prototype_html(args.product, args.iteration))
+    write_if_missing(base / "prototype" / "example-page.html", prototype_example_page_html(args.product, args.iteration))
+    write_if_missing(base / "prototype" / "README.md", prototype_readme_md(args.product, args.iteration))
     write_if_missing(base / "prd.html", prd_html(args.product, args.iteration))
     write_if_missing(base / "flow.html", flow_viewer_html(args.product, args.iteration))
     write_if_missing(base / "dev-handoff.html", simple_doc_html(args.product, args.iteration, "开发交接", "dev-handoff.md", "开发交接只表达需求侧建议，不替代技术方案或排期。"))

@@ -1,37 +1,37 @@
-# Flow Viewer Standards
+# 流程图查看器标准
 
-Use this reference when generating `flow.html` for a PM workflow delivery folder.
+在为 PM 工作流交付目录生成 `flow.html` 时使用本文档。
 
-The goal is to make Mermaid flow diagrams reviewable by business, product, design, engineering, and QA without requiring a Markdown renderer. The page must open locally and show rendered diagrams by default.
+目标是让业务、产品、设计、研发和测试评审方不依赖 Markdown 渲染器，也能直接查看 Mermaid 流程图。页面必须可本地打开，并默认展示已渲染的图，而不是源码。
 
-## Required Behavior
+## 必须行为
 
-`flow.html` must:
+`flow.html` 必须：
 
-- Load Mermaid from local `assets/vendor/flow-viewer/mermaid.min.js`.
-- Load pan/zoom from local `assets/vendor/flow-viewer/svg-pan-zoom.min.js`.
-- Render Mermaid source into SVG diagrams on page load.
-- Show rendered diagrams by default, not code blocks.
-- Support dragging/panning the SVG canvas.
-- Support zoom in, zoom out, reset, and fit-to-view.
-- Provide a "view source" toggle for Mermaid source.
-- Show an explicit error state if a diagram fails to render.
-- Link to `flow.md`, `index.html`, and third-party license notes.
-- Avoid external network dependencies.
+- 从本地 `assets/vendor/flow-viewer/mermaid.min.js` 加载 Mermaid。
+- 从本地 `assets/vendor/flow-viewer/svg-pan-zoom.min.js` 加载拖拽/缩放能力。
+- 页面加载时把 Mermaid 源码渲染为 SVG 图。
+- 默认展示渲染后的流程图，而不是代码块。
+- 支持拖拽/平移 SVG 画布。
+- 支持放大、缩小、重置和适配视图。
+- 提供“查看源码”切换项，方便查看 Mermaid 源码。
+- 当某张图渲染失败时展示明确错误状态。
+- 链接到 `flow.md`、`index.html` 和第三方许可证说明。
+- 不依赖外部网络资源。
 
-## Source Handling
+## 源码处理
 
-The page may embed Mermaid source in HTML using a safe data block:
+页面可以用安全的数据块在 HTML 中嵌入 Mermaid 源码：
 
 ```html
 <script type="application/json" id="diagram-data">...</script>
 ```
 
-The same diagrams must also be present in `flow.md`, because Markdown remains the version-control source of truth. The embedded HTML source is a render-time copy for offline viewing.
+同一批流程图也必须存在于 `flow.md`，因为 Markdown 仍然是版本管理的源文件。HTML 中嵌入的源码只是为了离线渲染阅读。
 
-## Viewer Controls
+## 查看器控件
 
-Each rendered diagram should have controls:
+每张已渲染流程图都应提供以下控件：
 
 - `放大`
 - `缩小`
@@ -39,22 +39,22 @@ Each rendered diagram should have controls:
 - `重置`
 - `查看源码` / `隐藏源码`
 
-Controls must be keyboard reachable and labeled in the document language.
+控件必须可以通过键盘访问，并使用文档语言标注。
 
-## Diagram Set
+## 图表集合
 
-For workflow-heavy products, include at least:
+对工作流较重的产品，至少包含：
 
-- Main workflow: `flowchart`.
-- Cross-role flow: `sequenceDiagram` or grouped flowchart.
-- Status lifecycle: `stateDiagram-v2`.
-- Exception/rework flow: `flowchart`.
+- 主流程：`flowchart`。
+- 跨角色流程：`sequenceDiagram` 或分组 `flowchart`。
+- 状态生命周期：`stateDiagram-v2`。
+- 异常/返工流程：`flowchart`。
 
-If a product includes algorithm/data steps, include a data handoff diagram or mark it as out of scope.
+如果产品包含算法或数据步骤，则补充数据交接图；如果本期不涉及，明确标注为不适用或不在范围内。
 
-## Offline Vendor Layout
+## 离线 Vendor 结构
 
-Generated folders should include:
+生成目录中应包含：
 
 ```text
 assets/
@@ -67,30 +67,30 @@ assets/
       THIRD_PARTY_LICENSES.md
 ```
 
-The `pm-workflow` skill keeps canonical copies under:
+`pm-workflow` 的规范副本保存在：
 
 ```text
 skills/pm/pm-workflow/assets/vendor/flow-viewer/
 ```
 
-The scaffold script copies them into each generated delivery folder.
+脚手架脚本会把这些文件复制到每个生成的交付目录。
 
-## Fallbacks
+## 降级处理
 
-If scripts fail to load:
+如果脚本加载失败：
 
-- Show a clear message that local vendor assets are missing.
-- Keep the Mermaid source visible in a source panel.
-- Tell the reviewer to regenerate the scaffold or copy `assets/vendor/flow-viewer`.
+- 显示明确提示，说明本地 vendor 资源缺失。
+- 在源码面板中保留 Mermaid 源码可见。
+- 提醒评审方重新运行脚手架，或复制 `assets/vendor/flow-viewer`。
 
-Do not silently show only code without explaining why rendering failed.
+不得在不解释原因的情况下静默只显示代码。
 
-## Test Requirements
+## 测试要求
 
-Before delivering a generated folder:
+交付生成目录前：
 
-- Open `flow.html` locally.
-- Confirm at least one `<svg>` exists inside the diagram canvas.
-- Confirm no external network requests are required.
-- Confirm zoom and fit controls change the rendered SVG view.
-- Confirm source toggle works.
+- 本地打开 `flow.html`。
+- 确认流程图画布中至少存在一个 `<svg>`。
+- 确认不需要外部网络请求。
+- 确认放大和适配视图控件会改变 SVG 视图。
+- 确认源码切换可用。

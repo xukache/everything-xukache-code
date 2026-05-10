@@ -1,41 +1,41 @@
-# Discovery Intake
+# 需求澄清入口
 
-Use this reference during the first stage of `pm-workflow`, before creating MVP scope, prototype pages, PRD, or delivery folders.
+在 `pm-workflow` 第一阶段使用本文档。此时还不能创建 MVP 范围、原型页面、PRD 或交付目录。
 
-The goal is to turn a vague idea or feature request into a confirmed product problem. Do not treat guesses as facts.
+目标是把模糊想法或功能诉求转成已确认的产品问题。不要把推测当成事实。
 
-## Intake Modes
+## 输入模式
 
-Choose the lightest mode that fits the user's input.
+选择能覆盖用户输入的最轻模式。
 
-| Mode | When to use | Allowed output | Not allowed yet |
+| 模式 | 适用情况 | 允许输出 | 暂时不允许 |
 | --- | --- | --- | --- |
-| Fuzzy idea | User gives a broad idea, example, or "I want a platform/tool" | Candidate understanding, assumptions, 3-5 clarification questions | Directory initialization, MVP scope, PRD, prototype |
-| Feature request | User names features but not the underlying problem | Problem reframing, JTBD prompts, current workflow questions | Treating requested features as confirmed requirements |
-| Function list without workflow | User lists modules such as dashboard, assignment, review, export, settings, but not how they interact | Function relationship assumptions, workflow questions, role-entry questions | Turning each function into a page or menu item |
-| Evidence-backed request | User provides users, workflow, pain, data, or research | Problem statement draft, scope options, requirements notes | Final PRD or prototype before user confirms |
+| 模糊想法 | 用户只给宽泛想法、例子，或说“我想做一个平台/工具” | 候选理解、待验证假设、3-5 个澄清问题 | 初始化目录、MVP 范围、PRD、原型 |
+| 功能诉求 | 用户说了功能，但没说明背后的问题 | 问题重构、JTBD 提示、当前流程问题 | 把用户提出的功能直接当成已确认需求 |
+| 有功能列表但无工作流 | 用户列出看板、分配、审核、导出、设置等模块，但没说它们如何交互 | 功能关系假设、工作流问题、角色入口问题 | 把每个功能直接变成页面或菜单 |
+| 有证据的诉求 | 用户提供了用户、流程、痛点、数据或调研 | 问题陈述草案、范围选项、需求笔记 | 在用户确认前输出最终 PRD 或原型 |
 
-## First Response Rule
+## 首轮响应规则
 
-When the input is fuzzy, the first response should contain only:
+当输入很模糊时，首轮回复只能包含：
 
-1. What I think you might be asking for
-2. What is still an assumption
-3. The 3-5 highest-impact questions about the real user, current workflow, pain, cost, and acceptance signal
-4. What will happen after those answers
+1. 我认为你可能想要什么。
+2. 哪些内容仍然只是推测。
+3. 围绕真实用户、当前流程、痛点、代价和验收信号的 3-5 个最高影响问题。
+4. 回答后下一步会发生什么。
 
-Do not initialize files or write `requirements.md` until either:
+除非满足以下任一条件，否则不要初始化文件或写 `requirements.md`：
 
-- The user explicitly asks to create the workspace or documents, or
-- The problem definition has been confirmed.
+- 用户明确要求创建工作区或文档。
+- 问题定义已经被确认。
 
-## Six Lenses
+## 六个澄清视角
 
-Borrow these lenses from strong product discovery skills and use only what the situation needs.
+这些视角来自成熟产品发现方法。按场景取用，不要机械全用。
 
-### 1. Problem Statement Lens
+### 1. 问题陈述视角
 
-Clarify the problem from the affected user's point of view.
+从受影响用户视角澄清问题：
 
 ```text
 I am:
@@ -45,131 +45,131 @@ Because:
 This causes:
 ```
 
-Quality checks:
+质量检查：
 
-- The user is specific enough to picture.
-- "Trying to" is an outcome, not a screen or feature.
-- "But" names the barrier.
-- "Because" is a likely root cause, not only a symptom.
-- Impact can be practical, emotional, operational, or business-facing.
+- 用户具体到能想象是谁。
+- `Trying to` 是结果，不是页面或功能。
+- `But` 说明阻碍。
+- `Because` 是可能根因，不只是症状。
+- 影响可以是实践、情绪、运营或业务层面的影响。
 
-Anti-patterns:
+反模式：
 
-- "The problem is we need a dashboard."
-- "The problem is there is no AI feature."
-- "The problem is low efficiency" without who is blocked and where.
+- “问题是我们需要一个看板。”
+- “问题是没有 AI 功能。”
+- “问题是效率低”，但没说明谁被卡住、卡在哪里。
 
-### 2. Jobs-to-Be-Done Lens
+### 2. JTBD 视角
 
-Use this when the user describes functions before the real task is clear.
-
-```text
-Functional job:
-Current workaround:
-Pain:
-Cost of pain:
-Desired gain:
-Alternative solutions:
-```
-
-For internal/B2B tools, social and emotional jobs can be translated into work confidence and accountability:
-
-- Who needs to look reliable, in control, or accountable?
-- What mistake, delay, or blind spot are they trying to avoid?
-- What would make them trust the workflow?
-
-### 3. Evidence Lens
-
-Separate facts from assumptions.
+当用户先描述功能而不是任务时使用：
 
 ```text
-Known facts:
-User-provided evidence:
-Assumptions:
-Missing evidence:
-Fast validation option:
+功能性任务：
+当前替代方案：
+痛点：
+痛点代价：
+期望收益：
+替代方案：
 ```
 
-Use a lightweight validation suggestion only when the direction is risky or unsupported. Keep it as an optional product validation step, not a development commitment.
+对内部/B2B 工具，社会和情绪任务可以翻译成工作信心与责任感：
 
-Optional PoL probe prompt for high-risk assumptions:
+- 谁需要显得可靠、可控或可负责？
+- 他们想避免什么错误、延迟或盲区？
+- 什么会让他们信任这个工作流？
+
+### 3. 证据视角
+
+区分事实和假设。
 
 ```text
-Risky assumption:
-Smallest signal to test:
-Fast probe:
-Pass signal:
-Fail signal:
-Time limit:
+已知事实：
+用户提供的证据：
+假设：
+缺失证据：
+快速验证方式：
 ```
 
-Use this only when the problem or solution direction is uncertain enough that writing full PRD/prototype would likely create waste.
+只有当方向风险较高或证据不足时，才给轻量验证建议。它是可选的产品验证动作，不是开发承诺。
 
-### 4. Delivery Readiness Lens
-
-Before moving to MVP scope, check:
+高风险假设可使用 PoL 探针提示：
 
 ```text
-Primary user:
-Current workflow:
-Core job:
-Main barrier:
-Pain cost:
-Expected outcome:
-MVP boundary:
-Out of scope:
-Acceptance signal:
+高风险假设：
+最小验证信号：
+快速探针：
+通过信号：
+失败信号：
+时间限制：
 ```
 
-If three or more fields are missing, stay in discovery and ask questions.
+只有在问题或方案方向不确定到直接写 PRD/原型会造成浪费时使用。
 
-If `Current workflow`, `Main barrier`, or `Acceptance signal` is missing, do not create MVP scope even if the user has confirmed several features.
+### 4. 交付准备度视角
 
-### 5. Interaction Readiness Lens
-
-Before moving from MVP scope to prototype design, check:
+进入 MVP 范围前检查：
 
 ```text
-Primary role entry:
-Main workflow steps:
-Function dependencies:
-Object lifecycle/statuses:
-Menu/module naming:
-Page responsibilities:
-Key action placement:
-Prototype demo path:
+主要用户：
+当前流程：
+核心任务：
+主要阻碍：
+痛点代价：
+期望结果：
+MVP 边界：
+不在范围内：
+验收信号：
 ```
 
-If three or more fields are missing, do not start design theme selection or HTML prototyping. Use `interaction-architecture.md`.
+如果缺少三项或更多，继续留在需求发现阶段并追问。
 
-### 6. External Reference Lens
+如果缺少 `当前流程`、`主要阻碍` 或 `验收信号`，即使用户确认了一些功能，也不要创建 MVP 范围。
 
-Use this after an initial problem definition exists and before MVP scope is confirmed, especially for platforms, tools, systems, algorithm workbenches, data workflows, internal admin products, review consoles, annotation tools, or domains with mature open-source frameworks.
+### 5. 交互准备度视角
 
-The goal is to discover hidden needs, not expand scope. Search web/GitHub sources for mature products, open-source frameworks, official docs, or reliable implementation references. Keep the scan small: 3-5 high-confidence sources are enough.
-
-Record findings in this shape:
+从 MVP 范围进入原型设计前检查：
 
 ```text
-Search query:
-Source:
-Relevant pattern:
-Hidden need it suggests:
-MVP impact: must-have candidate / later / risk to confirm / out of scope
-Why it should not expand scope:
+主要角色入口：
+主流程步骤：
+功能依赖：
+对象生命周期/状态：
+菜单/模块命名：
+页面职责：
+关键动作位置：
+原型演示路径：
 ```
 
-Rules:
+如果缺少三项或更多，不要开始设计主题选择或 HTML 原型。改用 `interaction-architecture.md`。
 
-- Search findings are assumptions until the user confirms them.
-- Do not promote a finding into MVP scope just because a mature framework supports it.
-- Default complex capabilities to `later`, `risk to confirm`, or `out of scope`.
-- Only promote a finding to `must-have candidate` when it directly protects the current core workflow or acceptance signal.
-- If network access is unavailable, record the skipped search and continue with user-provided context.
+### 6. 外部参考视角
 
-## Requirements Note Rules
+在初步问题定义存在、MVP 范围确认前使用，尤其适用于平台、工具、系统、算法工作台、数据流程、内部管理端、审核台、标注工具，或已有成熟开源框架的领域。
 
-When writing `notes/requirements.md`, use these buckets:
+目标是发现隐藏需求，而不是扩大范围。搜索成熟产品、开源框架、官方文档或可靠实现参考。扫描保持小规模：3-5 个高可信来源足够。
+
+记录格式：
+
+```text
+搜索词：
+来源：
+相关模式：
+提示的隐藏需求：
+对 MVP 的影响：必须有候选 / 后置 / 风险待确认 / 不在范围内
+为什么不应扩大范围：
+```
+
+规则：
+
+- 搜索发现只是候选假设，直到用户确认。
+- 不要因为成熟框架支持某能力，就把它放进 MVP。
+- 复杂能力默认归为 `后置`、`风险待确认` 或 `不在范围内`。
+- 只有发现直接保护当前核心工作流或验收信号时，才允许进入 `必须有候选`。
+- 如果无法联网，记录未执行搜索的原因，然后继续基于用户上下文推进。
+
+## 需求笔记规则
+
+写 `notes/requirements.md` 时使用这些分组：
 
 ```markdown
 ## 已确认事实
@@ -193,55 +193,55 @@ When writing `notes/requirements.md`, use these buckets:
 ## 后续澄清问题
 ```
 
-Rules:
+规则：
 
-- Confirmed facts must come from user input, source material, or explicit user confirmation.
-- Assumptions must be labeled as assumptions.
-- Do not promote assumptions into PRD, MVP scope, or prototype behavior until confirmed.
-- External references must include source links and an MVP impact label.
-- External reference findings must not enter `必须有` until the user confirms they solve the current core pain.
-- Keep the first notes short; the PRD is created later.
+- 已确认事实必须来自用户输入、材料来源或用户明确确认。
+- 假设必须标注为假设。
+- 假设在被确认前，不得进入 PRD、MVP 范围或原型行为。
+- 外部参考必须包含来源链接和对 MVP 的影响标签。
+- 外部参考发现必须等用户确认它解决当前核心痛点后，才能进入 `必须有`。
+- 第一版笔记保持短而事实化；PRD 后续再写。
 
-## Gate Checks
+## 阶段门槛
 
-### Gate 1: Can summarize the problem?
+### 门槛 1：能否总结问题？
 
-Required:
+必备：
 
-- Affected user or role
-- Job/outcome they are trying to achieve
-- Barrier or pain
-- Current workaround or current workflow
+- 受影响用户或角色。
+- 他们想完成的任务或结果。
+- 阻碍或痛点。
+- 当前替代方案或当前流程。
 
-If missing, ask more questions.
+缺失时继续追问。
 
-### Gate 2: Can create MVP scope?
+### 门槛 2：能否创建 MVP 范围？
 
-Required:
+必备：
 
-- Confirmed problem statement
-- Primary user
-- Current workflow and workaround
-- Core pain and cost of pain
-- Must-have workflow
-- Out-of-scope list
-- At least one acceptance signal
-- If external reference scanning was useful, source-backed findings are labeled as `later`, `risk to confirm`, `out of scope`, or user-confirmed `must-have`
+- 已确认的问题陈述。
+- 主要用户。
+- 当前流程和替代方案。
+- 核心痛点和痛点代价。
+- 必须有工作流。
+- 不在范围内清单。
+- 至少一个验收信号。
+- 如果外部参考扫描有用，来源支持的发现必须标注为 `后置`、`风险待确认`、`不在范围内` 或用户确认的 `必须有`。
 
-If missing, do not produce `必须有 / 后置 / 不做 / 风险待确认`.
+缺失时，不要输出 `必须有 / 后置 / 不做 / 风险待确认`。
 
-### Gate 3: Can create prototype?
+### 门槛 3：能否创建原型？
 
-Required:
+必备：
 
-- Confirmed MVP scope
-- Confirmed interaction architecture or user-approved assumptions
-- Key pages or workflow steps
-- Main user actions
-- Important states and exceptions
-- Menu/module names and page responsibilities
-- Key action placement
-- 3-5 design theme candidates with `examples.html` preview paths, followed by user theme confirmation
-- Prototype polish/audit plan for bundled `subskills/impeccable`, including fallback location or install steps only if the bundled copy is missing or unusable
+- 已确认 MVP 范围。
+- 已确认交互架构，或用户批准的暂定假设。
+- 关键页面或工作流步骤。
+- 主要用户动作。
+- 重要状态和异常。
+- 菜单/模块名称和页面职责。
+- 关键动作位置。
+- 3-5 个设计主题候选及 `examples.html` 预览路径，并完成用户主题确认。
+- bundled `subskills/impeccable` 的原型打磨/审阅计划；仅当 bundled 副本缺失或不可用时，才需要说明回退位置或安装步骤。
 
-If missing, stop before HTML.
+缺失时，在 HTML 前停止。
