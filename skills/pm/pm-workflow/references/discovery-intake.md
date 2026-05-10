@@ -12,6 +12,7 @@ Choose the lightest mode that fits the user's input.
 | --- | --- | --- | --- |
 | Fuzzy idea | User gives a broad idea, example, or "I want a platform/tool" | Candidate understanding, assumptions, 3-5 clarification questions | Directory initialization, MVP scope, PRD, prototype |
 | Feature request | User names features but not the underlying problem | Problem reframing, JTBD prompts, current workflow questions | Treating requested features as confirmed requirements |
+| Function list without workflow | User lists modules such as dashboard, assignment, review, export, settings, but not how they interact | Function relationship assumptions, workflow questions, role-entry questions | Turning each function into a page or menu item |
 | Evidence-backed request | User provides users, workflow, pain, data, or research | Problem statement draft, scope options, requirements notes | Final PRD or prototype before user confirms |
 
 ## First Response Rule
@@ -20,7 +21,7 @@ When the input is fuzzy, the first response should contain only:
 
 1. What I think you might be asking for
 2. What is still an assumption
-3. The 3-5 highest-impact questions
+3. The 3-5 highest-impact questions about the real user, current workflow, pain, cost, and acceptance signal
 4. What will happen after those answers
 
 Do not initialize files or write `requirements.md` until either:
@@ -28,7 +29,7 @@ Do not initialize files or write `requirements.md` until either:
 - The user explicitly asks to create the workspace or documents, or
 - The problem definition has been confirmed.
 
-## Five Lenses
+## Six Lenses
 
 Borrow these lenses from strong product discovery skills and use only what the situation needs.
 
@@ -106,13 +107,14 @@ Use this only when the problem or solution direction is uncertain enough that wr
 
 ### 4. Delivery Readiness Lens
 
-Before moving to MVP scope or prototype, check:
+Before moving to MVP scope, check:
 
 ```text
 Primary user:
 Current workflow:
 Core job:
 Main barrier:
+Pain cost:
 Expected outcome:
 MVP boundary:
 Out of scope:
@@ -121,7 +123,26 @@ Acceptance signal:
 
 If three or more fields are missing, stay in discovery and ask questions.
 
-### 5. External Reference Lens
+If `Current workflow`, `Main barrier`, or `Acceptance signal` is missing, do not create MVP scope even if the user has confirmed several features.
+
+### 5. Interaction Readiness Lens
+
+Before moving from MVP scope to prototype design, check:
+
+```text
+Primary role entry:
+Main workflow steps:
+Function dependencies:
+Object lifecycle/statuses:
+Menu/module naming:
+Page responsibilities:
+Key action placement:
+Prototype demo path:
+```
+
+If three or more fields are missing, do not start design theme selection or HTML prototyping. Use `interaction-architecture.md`.
+
+### 6. External Reference Lens
 
 Use this after an initial problem definition exists and before MVP scope is confirmed, especially for platforms, tools, systems, algorithm workbenches, data workflows, internal admin products, review consoles, annotation tools, or domains with mature open-source frameworks.
 
@@ -167,6 +188,8 @@ When writing `notes/requirements.md`, use these buckets:
 
 ## 范围边界
 
+## 交互架构与菜单假设
+
 ## 后续澄清问题
 ```
 
@@ -198,6 +221,8 @@ Required:
 
 - Confirmed problem statement
 - Primary user
+- Current workflow and workaround
+- Core pain and cost of pain
 - Must-have workflow
 - Out-of-scope list
 - At least one acceptance signal
@@ -210,10 +235,13 @@ If missing, do not produce `必须有 / 后置 / 不做 / 风险待确认`.
 Required:
 
 - Confirmed MVP scope
+- Confirmed interaction architecture or user-approved assumptions
 - Key pages or workflow steps
 - Main user actions
 - Important states and exceptions
-- Prototype design input from `ui-ux-pro-max`
-- Prototype polish/audit plan for `impeccable` or a recorded reason for skipping it
+- Menu/module names and page responsibilities
+- Key action placement
+- 3-5 design theme candidates with `examples.html` preview paths, followed by user theme confirmation
+- Prototype polish/audit plan for `impeccable`, including how to locate or install it if unavailable
 
 If missing, stop before HTML.

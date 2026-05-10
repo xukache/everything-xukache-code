@@ -69,8 +69,9 @@ Include:
 - Current workflow
 - External reference scan: source links, hidden needs, MVP impact, rejected expansion
 - Scope choices: must have / later / out of scope / risk
+- Interaction architecture: role entry, function relationships, menu structure, page responsibility, action placement, status flow
 - 原型设计主题和 `ui-ux-pro-max` 补充输入
-- 原型打磨记录：`impeccable` 检查结果、修正内容、未采纳建议和原因
+- 原型打磨记录：`impeccable` 可用性、主动定位/安装/恢复动作、检查结果、修正内容、未采纳建议和原因
 - Business rules and exceptions
 - Algorithm or data participation point
 - Acceptance criteria
@@ -85,16 +86,18 @@ The prototype should be demo-ready, not production-grade.
 
 必须按以下顺序执行：
 
-1. 读取 `references/design-theme-selection.md`。
-2. 判断产品类型、用户角色、信息密度、工作流复杂度和品牌/参考来源。
-3. 从 `assets/design-themes/` 中生成候选主题；中后台、控制台、CRM、运营平台、内部工具、权限/表格/表单密集系统默认推荐 Vben；用户指定品牌、参考站点、截图或风格名时，可查找 `assets/design-themes/open-design/<slug>/DESIGN.md`。
-4. 输出设计方向确认表单，并提供候选主题的 `examples.html` 样例预览路径。
-5. 暂停等待用户确认主题。用户未确认前，不得进入 HTML 原型生成。
-6. 读取被确认的主题文件。
-7. 把主题应用到原型布局、CSS、组件和交互状态中。
-8. 仅在需要时使用 `ui-ux-pro-max` 补充 UX、布局、图表、可访问性和响应式建议。
-9. 在 `notes/requirements.md` 中记录设计方向确认表单、候选主题、用户确认结果、产品语境、被选中的主题、样例预览路径、选择原因和补充建议。
-10. 原型初稿完成后，使用 `impeccable` 做可用性、视觉层级、响应式、可访问性和交互状态打磨，或记录无法执行的原因。
+1. 读取 `references/interaction-architecture.md`，确认角色入口、主流程、功能关系、菜单结构、页面职责、动作位置和状态流转。
+2. 读取 `references/design-theme-selection.md`。
+3. 判断产品类型、用户角色、信息密度、工作流复杂度、菜单结构和品牌/参考来源。
+4. 从 `assets/design-themes/` 中生成 3-5 个候选主题；中后台、控制台、CRM、运营平台、内部工具、权限/表格/表单密集系统默认把 Vben 放在第一推荐，但仍要提供替代主题。
+5. 输出设计方向确认表单，并提供候选主题的 `examples.html` 样例预览路径。
+6. 暂停等待用户确认主题。用户未确认前，不得进入 HTML 原型生成。
+7. 读取被确认的主题文件。
+8. 把主题应用到原型布局、CSS、组件和交互状态中。
+9. 仅在需要时使用 `ui-ux-pro-max` 补充 UX、布局、图表、可访问性和响应式建议。
+10. 在 `notes/requirements.md` 中记录交互架构摘要、设计方向确认表单、候选主题、用户确认结果、产品语境、被选中的主题、样例预览路径、选择原因和补充建议。
+11. 原型初稿完成后，读取 `references/impeccable-polish-gate.md`，使用 `impeccable` 做可用性、视觉层级、响应式、可访问性和交互状态打磨。
+12. 如果 `impeccable` 不可用，先主动定位本地 skill、尝试安装或使用 `npx impeccable` / 项目脚本；只有解决失败并记录原因后，才允许按人工 fallback checklist 审阅。
 
 需要补充建议时，使用：
 
@@ -110,7 +113,7 @@ python skills/uiux/ui-ux-pro-max/scripts/search.py "<product type> <industry> <s
 - 图表或看板建议
 - 可访问性、焦点态、对比度、响应式和反模式提醒
 
-`impeccable` 原型打磨只处理体验质量，不改业务范围。允许修正：
+`impeccable` 原型打磨只处理体验质量，不改业务范围。即使需要安装或恢复工具，也不能借此改变已确认的产品范围。允许修正：
 
 - 信息层级、布局节奏、对齐、间距和视觉噪声。
 - 表格、筛选器、表单、弹窗、抽屉、按钮和状态标签的可用性。
@@ -125,14 +128,16 @@ Must have:
 
 - Realistic mock data.
 - A clear primary workflow.
+- Confirmed role entry, menu structure, page responsibilities, action placement, and status flow.
 - Page states that matter for the demo.
 - Empty/loading/error examples only when they influence requirement understanding.
 - Local interactions implemented with minimal JavaScript.
 - No real API keys, no production endpoints, no hidden external dependencies.
 - Responsive layout for common desktop widths; mobile only if the product is mobile-first or requested.
 - 已输出设计方向确认表单，并获得用户对主题候选的确认。
+- 已输出交互架构草案，并获得用户对菜单/模块结构的确认，或明确记录为用户批准的暂定假设。
 - 已选择 `assets/design-themes/` 中的设计主题，并体现在原型布局、组件、颜色、字体和交互状态中。
-- 已完成 `impeccable` 原型打磨记录，或记录无法执行原因。
+- 已完成 `impeccable` 原型打磨记录；如果工具起初不可用，已记录主动定位、安装、命令尝试或人工降级过程。
 
 Avoid:
 
@@ -140,9 +145,12 @@ Avoid:
 - Overbuilding data synchronization, backend simulation, auth, or complex state machines.
 - Decorative landing-page sections when the user needs an internal tool, dashboard, review console, or workflow system.
 - PRD content that drifts away from the screen it describes.
+- Treating each requested function as a separate page without checking workflow relationships.
+- Starting visual design before menu names, page responsibilities, and key action placement are confirmed.
 - Using emoji as UI icons when a consistent icon style or simple text label would be clearer.
 - 与已选设计主题冲突的一次性视觉样式。
 - 让 `ui-ux-pro-max` 覆盖已选主题的颜色、字体、圆角、间距或视觉气质。
+- 因为 `impeccable` 未安装就直接跳过打磨。
 - 借 `impeccable` 打磨新增未经确认的业务需求、字段、流程或页面。
 
 ## Embedded PRD Standard

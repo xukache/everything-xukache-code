@@ -20,7 +20,8 @@ Prefer this order:
 4. External reference scan, when the product type has mature patterns
 5. Scope and constraints
 6. Rules, data, and exceptions
-7. Prototype and PRD confirmation
+7. Interaction architecture: function relationships, role entry, menu structure, page responsibility, and key action placement
+8. Prototype and PRD confirmation
 
 ## Requirement Memory Rules
 
@@ -47,6 +48,8 @@ Do not wait until the end of the conversation to reconstruct these from memory. 
 - What is painful or inefficient in the current process?
 - What happens if this problem is not solved?
 - Is this a frequent problem, a high-risk problem, or both?
+- Which role is most blocked today, and which role only needs visibility?
+- What is the cost of the current workaround: delay, rework, missed handoff, quality risk, accountability risk, or manual coordination?
 
 ### Current Workflow
 
@@ -55,6 +58,8 @@ Do not wait until the end of the conversation to reconstruct these from memory. 
 - Where do handoffs happen?
 - Which decisions are manual today?
 - Which steps are most error-prone?
+- What enters the workflow first, and what counts as finished?
+- Where do tasks get returned, disputed, reassigned, or paused?
 
 ### Desired Outcome
 
@@ -69,6 +74,62 @@ Do not wait until the end of the conversation to reconstruct these from memory. 
 - What can be mocked, manual, or deferred?
 - What must explicitly not be built now?
 - Which users or scenarios are out of scope?
+- Which feature is only useful if another feature already exists?
+- Which feature can be represented as a filter, status, action, or detail panel instead of a full page?
+
+### Function Relationships
+
+Use this when the user lists many desired functions.
+
+- Which function creates the work queue?
+- Which function consumes or completes the work queue?
+- Which function changes object ownership?
+- Which function changes object status?
+- Which function only observes or summarizes results?
+- Which function creates rules or templates used by other functions?
+- What should happen after the user completes the primary action?
+- Which data should flow back into the dashboard or report?
+
+Summarize as:
+
+```text
+功能关系假设：
+- 上游：
+- 执行：
+- 审核/确认：
+- 返工/异常：
+- 汇总/看板：
+- 配置/规范：
+```
+
+Do not convert this into page design yet. First ask the user to confirm whether the relationship is correct.
+
+### Menu and Page Architecture
+
+Use this after MVP scope is confirmed and before prototype design.
+
+- Which role should the product optimize for first?
+- What should each role see first after login?
+- Which modules deserve top-level navigation?
+- Which items should be tabs, filters, batch actions, drawers, or detail sections instead of menu items?
+- What names do users naturally use for these modules?
+- Which menu order matches the daily workflow?
+- Which page owns each critical action?
+- Which screen should demonstrate the end-to-end flow in the prototype?
+- How will the prototype be polished before review: local `impeccable` skill, `npx impeccable`, project script, or fallback only after install attempts fail?
+
+Menu confirmation prompt:
+
+```text
+菜单结构草案：
+- 一级菜单：
+- 二级菜单/标签：
+- 不进入菜单、只作为动作或筛选的内容：
+- 默认首页：
+- 需要确认的命名：
+```
+
+Ask the user to confirm naming and workflow order before theme selection.
 
 ### External Reference Scan
 
@@ -150,6 +211,8 @@ Summarize scan output:
 - 目标：
 - 当前流程：
 - 本次范围：
+- 功能关系：
+- 菜单/页面结构：
 - 规则/约束：
 - 算法参与点：
 - 验收标准：
