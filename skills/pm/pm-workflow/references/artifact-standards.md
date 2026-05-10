@@ -67,8 +67,10 @@ Include:
 - Original user request and business background
 - Problem definition
 - Current workflow
+- External reference scan: source links, hidden needs, MVP impact, rejected expansion
 - Scope choices: must have / later / out of scope / risk
 - 原型设计主题和 `ui-ux-pro-max` 补充输入
+- 原型打磨记录：`impeccable` 检查结果、修正内容、未采纳建议和原因
 - Business rules and exceptions
 - Algorithm or data participation point
 - Acceptance criteria
@@ -79,17 +81,20 @@ Include:
 
 The prototype should be demo-ready, not production-grade.
 
-设计原型前，必须先按 `references/design-theme-selection.md` 完成设计主题 preflight。被选中的主题是颜色、字体、圆角、间距、组件样式和整体视觉方向的主来源。
+设计原型前，必须先按 `references/design-theme-selection.md` 完成设计主题 preflight 和设计方向确认表单。被用户确认的主题是颜色、字体、圆角、间距、组件样式和整体视觉方向的主来源。
 
 必须按以下顺序执行：
 
 1. 读取 `references/design-theme-selection.md`。
 2. 判断产品类型、用户角色、信息密度、工作流复杂度和品牌/参考来源。
-3. 从 `assets/design-themes/` 中选择主题；中后台、控制台、CRM、运营平台、内部工具、权限/表格/表单密集系统默认优先 Vben；用户指定品牌、参考站点、截图或风格名时，可查找 `assets/design-themes/open-design/<slug>/DESIGN.md`。
-4. 读取被选中的主题文件。
-5. 把主题应用到原型布局、CSS、组件和交互状态中。
-6. 仅在需要时使用 `ui-ux-pro-max` 补充 UX、布局、图表、可访问性和响应式建议。
-7. 在 `notes/requirements.md` 中记录产品语境、被选中的主题、选择原因和补充建议。
+3. 从 `assets/design-themes/` 中生成候选主题；中后台、控制台、CRM、运营平台、内部工具、权限/表格/表单密集系统默认推荐 Vben；用户指定品牌、参考站点、截图或风格名时，可查找 `assets/design-themes/open-design/<slug>/DESIGN.md`。
+4. 输出设计方向确认表单，并提供候选主题的 `examples.html` 样例预览路径。
+5. 暂停等待用户确认主题。用户未确认前，不得进入 HTML 原型生成。
+6. 读取被确认的主题文件。
+7. 把主题应用到原型布局、CSS、组件和交互状态中。
+8. 仅在需要时使用 `ui-ux-pro-max` 补充 UX、布局、图表、可访问性和响应式建议。
+9. 在 `notes/requirements.md` 中记录设计方向确认表单、候选主题、用户确认结果、产品语境、被选中的主题、样例预览路径、选择原因和补充建议。
+10. 原型初稿完成后，使用 `impeccable` 做可用性、视觉层级、响应式、可访问性和交互状态打磨，或记录无法执行的原因。
 
 需要补充建议时，使用：
 
@@ -105,6 +110,15 @@ python skills/uiux/ui-ux-pro-max/scripts/search.py "<product type> <industry> <s
 - 图表或看板建议
 - 可访问性、焦点态、对比度、响应式和反模式提醒
 
+`impeccable` 原型打磨只处理体验质量，不改业务范围。允许修正：
+
+- 信息层级、布局节奏、对齐、间距和视觉噪声。
+- 表格、筛选器、表单、弹窗、抽屉、按钮和状态标签的可用性。
+- 空状态、错误状态、加载状态、禁用态、hover、focus 和 active 状态。
+- 响应式、对比度、键盘焦点、UX 文案和明显反模式。
+
+不得通过 `impeccable` 新增未经确认的角色、字段、页面、审批流、算法能力、数据来源或后端逻辑。超出范围的建议只能写入后续决策项。
+
 对于内部工具、看板、审核台或工作流系统，优先使用信息密度高但可读的布局，包含清晰表格、筛选器、状态标签、侧边导航、面包屑和任务导向控件。不要把运营型产品做成营销落地页，并优先按 `design-theme-selection.md` 选择 Vben。
 
 Must have:
@@ -116,7 +130,9 @@ Must have:
 - Local interactions implemented with minimal JavaScript.
 - No real API keys, no production endpoints, no hidden external dependencies.
 - Responsive layout for common desktop widths; mobile only if the product is mobile-first or requested.
+- 已输出设计方向确认表单，并获得用户对主题候选的确认。
 - 已选择 `assets/design-themes/` 中的设计主题，并体现在原型布局、组件、颜色、字体和交互状态中。
+- 已完成 `impeccable` 原型打磨记录，或记录无法执行原因。
 
 Avoid:
 
@@ -127,6 +143,7 @@ Avoid:
 - Using emoji as UI icons when a consistent icon style or simple text label would be clearer.
 - 与已选设计主题冲突的一次性视觉样式。
 - 让 `ui-ux-pro-max` 覆盖已选主题的颜色、字体、圆角、间距或视觉气质。
+- 借 `impeccable` 打磨新增未经确认的业务需求、字段、流程或页面。
 
 ## Embedded PRD Standard
 

@@ -17,9 +17,10 @@ Prefer this order:
 1. Problem and user
 2. Current workflow
 3. Desired outcome and success metric
-4. Scope and constraints
-5. Rules, data, and exceptions
-6. Prototype and PRD confirmation
+4. External reference scan, when the product type has mature patterns
+5. Scope and constraints
+6. Rules, data, and exceptions
+7. Prototype and PRD confirmation
 
 ## Requirement Memory Rules
 
@@ -30,6 +31,7 @@ Write to `notes/requirements.md` when any of these become clear:
 - Pain point and business cost
 - Desired outcome or success metric
 - Scope choice: must have / later / out of scope / risk
+- External reference source, hidden need, MVP impact, and rejected expansion
 - Business rule, exception, threshold, or permission
 - Algorithm/data participation point
 - Review decision, change request, or follow-up decision item
@@ -67,6 +69,49 @@ Do not wait until the end of the conversation to reconstruct these from memory. 
 - What can be mocked, manual, or deferred?
 - What must explicitly not be built now?
 - Which users or scenarios are out of scope?
+
+### External Reference Scan
+
+Trigger this scan when the request includes platform, system, tool, workbench, dashboard, workflow, data processing, algorithm review, annotation, audit, CRM, admin, or internal operations language.
+
+Do not trigger it for a tiny copy change, a known single-page tweak, or a user who explicitly asks to avoid web research.
+
+Search query templates:
+
+```text
+<domain> open source platform GitHub
+<domain> workflow management open source
+<domain> admin dashboard requirements
+<domain> annotation review tool GitHub
+<domain> docs permissions workflow status
+```
+
+Mature source signals:
+
+- Official docs or README explain roles, workflows, states, permissions, and deployment boundaries.
+- GitHub project has recent commits, releases, issues, stars, or active maintainers.
+- Product docs show concrete workflows rather than only marketing claims.
+- Multiple sources repeat the same pattern, such as review status, audit logs, import/export, queue assignment, or human override.
+
+Minimum-boundary rules:
+
+- Treat every external pattern as a candidate, not a requirement.
+- Ask: "Does this protect the user's core job in v1?" If not, keep it out of MVP.
+- Use the categories `可借鉴隐藏需求`, `待验证假设`, `不进入一期范围`, `对 MVP 的最小影响`, `来源链接`.
+- Put advanced workflow builders, plugin marketplaces, multi-tenant billing, complex RBAC, full observability, automation engines, and production deployment details into later/out-of-scope unless the user already named them as core pain.
+- When search creates more than five candidate needs, keep only the three that most directly protect the main workflow.
+
+Summarize scan output:
+
+```text
+外部参考扫描：
+- 来源：
+- 可借鉴隐藏需求：
+- 待验证假设：
+- 不进入一期范围：
+- 对 MVP 的最小影响：
+- 来源链接：
+```
 
 ### Rules and Constraints
 

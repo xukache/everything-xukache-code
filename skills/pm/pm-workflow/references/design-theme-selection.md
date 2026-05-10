@@ -1,17 +1,19 @@
 # 设计主题选择规则
 
-在创建 HTML 原型前，必须先完成设计主题 preflight：先判断产品语境，再选择主题，再读取主题文件，最后生成原型。这个流程借鉴 Open Design 的思路：先做 discovery，必要时选择视觉方向，再把 active design system 作为生成产物的主约束。
+在创建 HTML 原型前，必须先完成设计主题 preflight：先判断产品语境，再生成候选主题，再通过设计方向确认表单让用户确认，最后读取 active design system 并生成原型。这个流程借鉴 Open Design 的思路：先做 discovery，必要时展示视觉方向，再把用户确认后的 active design system 作为生成产物的主约束。
 
 主题文件只描述风格本体。所有“什么时候使用哪个主题、什么时候不用哪个主题、无匹配主题时怎么办”的判断，都只写在本文档。
 
 ## 基本原则
 
-- 先选择主题，再设计原型。
-- 先读取被选中的主题文件，再写 HTML、CSS 和组件。
-- 已有主题匹配时，必须优先复用本地精选主题：`assets/design-themes/vben.md` 或 `assets/design-themes/revenuecat.md`。
+- 先推荐候选主题，再等待用户确认，最后设计原型。
+- 禁止在用户未确认候选主题时静默使用默认主题。
+- 用户明确回复“按你推荐的继续”“用第一个”“确认使用 X 主题”等，才算主题确认。
+- 先读取被确认的主题文件，再写 HTML、CSS 和组件。
+- 已有主题匹配时，必须优先推荐本地精选主题：`assets/design-themes/vben/DESIGN.md` 或 `assets/design-themes/revenuecat/DESIGN.md`。
 - 当用户指定品牌、参考站点、截图或具体风格名时，可以使用 `assets/design-themes/open-design/<slug>/DESIGN.md` 中的 Open Design 扩展主题。
 - `ui-ux-pro-max` 只能补充布局、图表、可访问性、响应式和组件细节，不能覆盖已选主题的颜色、字体、圆角、间距、组件气质和整体视觉方向。
-- 每次原型交付都要把主题、主题源文件、选择原因和补充建议记录到 `notes/requirements.md` 的“原型设计输入”中。
+- 每次原型交付都要把设计方向确认表单、候选主题、用户确认结果、主题源文件、样例预览路径和补充建议记录到 `notes/requirements.md` 的“原型设计输入”中。
 
 ## Open Design 式流程
 
@@ -25,26 +27,55 @@
 - 工作流复杂度：是否包含任务分配、审批、审核、质检、异常处理、权限控制。
 - 品牌/参考来源：用户是否指定品牌、参考站点、截图、现有设计系统或风格名。
 
-### 2. Theme Branch：选择分支
+### 2. Theme Branch：生成候选主题
 
 按以下顺序决策：
 
 1. 用户指定品牌、参考站点、截图或已有设计系统：先在 Open Design 扩展库中查找匹配的 `assets/design-themes/open-design/<slug>/DESIGN.md`；如果没有匹配，再生成临时 `brand-spec` / 设计摘要，并决定是否在交付后沉淀为新主题。
-2. 当前产品语境匹配内置主题：直接选择最匹配的主题文件。
+2. 当前产品语境匹配内置主题：推荐 1-3 个最匹配的主题，并把推荐主题放在第一位。
 3. 当前产品语境没有匹配主题：给出 3-5 个候选视觉方向，等待用户选定后再生成原型。
 
 不要把临时设计建议直接混入已有主题文件。
 
-### 3. Active Theme：读取主题文件
+### 3. Design Direction Form：用户确认
+
+生成 HTML 原型前，必须向用户输出设计方向确认表单。表单固定包含：
+
+```markdown
+## 设计方向确认表单
+
+- 产品类型：
+- 界面用途：
+- 主用户：
+- 核心工作流：
+- 信息密度：
+- 品牌/参考来源：
+- 推荐主题候选：
+  1. 主题名：
+     - 主题文件：
+     - 样例预览：
+     - 推荐理由：
+     - 适合的产品类型：
+- 需要用户确认的问题：
+```
+
+确认规则：
+
+- 用户未确认前，不得进入 HTML 原型生成。
+- 用户只确认产品需求，不等于确认设计主题。
+- 如果用户不关心视觉选择，可以回复“按推荐继续”；此时使用第一推荐主题。
+- 如果用户要求换风格，重新给候选主题和样例预览，不直接生成原型。
+
+### 4. Active Theme：读取主题文件
 
 选定主题后，必须读取对应主题文件，并把其中的 token、组件、布局、Do/Don't 和 prompt guide 作为原型的主约束。
 
 主题文件可能来自：
 
-- 本地精选主题：`assets/design-themes/<theme>.md`
+- 本地精选主题：`assets/design-themes/<theme>/DESIGN.md`
 - Open Design 扩展主题：`assets/design-themes/open-design/<slug>/DESIGN.md`
 
-### 4. Build：生成 HTML 原型
+### 5. Build：生成 HTML 原型
 
 原型必须落实已选主题：
 
@@ -52,11 +83,12 @@
 - 页面结构、导航、表格、表单、状态、弹窗、抽屉等组件风格遵循主题文件。
 - 交互状态包含 hover、focus、active、disabled、empty、error 等必要状态。
 
-### 5. Self-check：主题一致性自检
+### 6. Self-check：主题一致性自检
 
 交付前检查：
 
 - 是否已经记录主题和选择原因。
+- 是否已经记录设计方向确认表单、候选主题、样例预览路径和用户确认结果。
 - 是否误用了另一主题的主色、圆角、字体或卡片风格。
 - 信息密度是否和产品语境匹配。
 - 内部工具、控制台、审核台、工作流系统是否被做成营销落地页。
@@ -64,14 +96,14 @@
 
 ## 内置主题选择规则
 
-| 主题 | 文件 | 优先选择信号 | 避免优先选择信号 |
-| --- | --- | --- | --- |
-| Vben | `assets/design-themes/vben.md` | 后台、管理端、控制台、CRM、运营平台、内部工具、数据看板、审核台、任务台、权限、菜单、表格、筛选、批量操作、抽屉、弹窗、状态流转 | 营销官网、品牌展示页、内容社区、游戏、强叙事首屏 |
-| RevenueCat | `assets/design-themes/revenuecat.md` | 产品型 SaaS 页面、开发者工具展示页、数据产品展示页、轻量产品界面、白底精密展示、少量操作入口、品牌感克制的产品介绍 | 高复杂度中后台、权限/菜单/表格密集管理端、需要高度贴近真实中后台组件生态的工作台 |
+| 主题 | 主题文件 | 样例预览 | 优先选择信号 | 避免优先选择信号 |
+| --- | --- | --- | --- | --- |
+| Vben | `assets/design-themes/vben/DESIGN.md` | `assets/design-themes/vben/examples.html` | 后台、管理端、控制台、CRM、运营平台、内部工具、数据看板、审核台、任务台、权限、菜单、表格、筛选、批量操作、抽屉、弹窗、状态流转 | 营销官网、品牌展示页、内容社区、游戏、强叙事首屏 |
+| RevenueCat | `assets/design-themes/revenuecat/DESIGN.md` | `assets/design-themes/revenuecat/examples.html` | 产品型 SaaS 页面、开发者工具展示页、数据产品展示页、轻量产品界面、白底精密展示、少量操作入口、品牌感克制的产品介绍 | 高复杂度中后台、权限/菜单/表格密集管理端、需要高度贴近真实中后台组件生态的工作台 |
 
 ## 中后台默认策略
 
-只要需求描述中出现以下信号，默认优先选择 Vben：
+只要需求描述中出现以下信号，默认优先推荐 Vben，但仍必须通过设计方向确认表单获得用户确认：
 
 - 后台、管理端、控制台、工作台、运营平台、CRM、内部工具。
 - 审核、质检、标注、任务分配、审批、工单、权限、组织架构。
@@ -83,7 +115,8 @@
 
 ```markdown
 - 设计主题：Vben
-- 主题源文件：assets/design-themes/vben.md
+- 主题源文件：assets/design-themes/vben/DESIGN.md
+- 样例预览路径：assets/design-themes/vben/examples.html
 - 选择原因：本轮需求是权限、筛选、表格和状态流密集的运营工作台，需要稳定的侧边导航、顶栏、表格、抽屉和语义状态组件。
 ```
 
@@ -102,7 +135,8 @@
 
 ```markdown
 - 设计主题：RevenueCat
-- 主题源文件：assets/design-themes/revenuecat.md
+- 主题源文件：assets/design-themes/revenuecat/DESIGN.md
+- 样例预览路径：assets/design-themes/revenuecat/examples.html
 - 选择原因：本轮需求更偏产品能力展示和轻量操作入口，需要白底精密、结构清晰、主操作克制突出的视觉语言。
 ```
 
@@ -115,7 +149,7 @@
 3. 找到匹配主题时，读取其 `DESIGN.md`，并记录为本轮主题源文件。
 4. 没有匹配主题时，判断是否能映射到 Vben、RevenueCat 或其他相近 Open Design 主题。
 5. 仍不能映射时，生成临时 `brand-spec` 设计摘要，用于本轮原型。
-6. 交付后建议是否沉淀为新的 `assets/design-themes/<theme>.md`。
+6. 交付后建议是否沉淀为新的 `assets/design-themes/<theme>/DESIGN.md`。
 
 品牌类 Open Design 主题只作为 aesthetic inspiration，不代表官方品牌资产或授权。不要在交付文档中声称“官方风格”或“官方设计系统”。
 
@@ -159,8 +193,12 @@
 ## 原型设计输入
 
 - 产品语境：
+- 设计方向确认表单：
+- 候选主题：
+- 用户确认结果：
 - 设计主题：
 - 主题源文件：
+- 样例预览路径：
 - 选择原因：
 - 品牌/参考来源：
 - 是否来自 Open Design 扩展库：

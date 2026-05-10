@@ -3,8 +3,9 @@
 > 明亮、模块化、精密的后台工作台。像一间干净的数字控制室：白色画布、清晰信息层、稳定导航骨架，以及克制但明确的交互反馈。
 
 **主题：** 自适应 light/dark，默认以浅色为主
+**适用场景：** 后台管理系统、SaaS 控制台、CRM、数据看板、运营平台、内部工具
 
-Vben 风格是一套可复用的应用工作台设计语言。它不追求营销页式的夸张视觉，而是强调高频操作、密集信息、权限清晰、状态明确的界面秩序。整体体验应该让用户感到可信、快速、整洁、可配置，并且能支撑长时间使用。
+Vben 风格是一套可复用的中后台设计语言。它不追求营销页式的夸张视觉，而是服务于高频操作、密集信息、权限清晰、状态明确的业务场景。整体体验应该让用户感到可信、快速、整洁、可配置，并且适合每天长时间使用。
 
 ## Tokens — Colors
 
@@ -16,6 +17,12 @@ Vben 风格是一套可复用的应用工作台设计语言。它不追求营销
 | Surface 页面底色        | `#f8fafc`                 | `--color-surface`        | 应用主体背景、工作区背景、轻量分区背景。   |
 | Surface Raised 抬升表面 | `#ffffff`                 | `--color-surface-raised` | 卡片、面板、弹窗、抽屉、表格容器。         |
 | Surface Muted 弱化表面  | `#f1f5f9`                 | `--color-surface-muted`  | 次级面板、禁用区域、分段控件、表头背景。   |
+| Popover 浮层表面        | `#ffffff`                 | `--color-popover`        | 下拉菜单、选择器面板、气泡、右键菜单背景。 |
+| Popover Text 浮层文字   | `#172033`                 | `--color-popover-text`   | 下拉菜单项、浮层标题、选项文字。           |
+| Accent 交互浅底         | `#f1f5f9`                 | `--color-accent`         | 菜单项 hover/focus、弱选中背景。           |
+| Accent Hover 强交互浅底 | `#e2e8f0`                 | `--color-accent-hover`   | 图标按钮 hover、浮层菜单项强 hover。       |
+| Icon Default 默认图标   | `#64748b`                 | `--color-icon`           | 普通图标、工具栏图标、未激活导航图标。     |
+| Icon Active 激活图标    | `#4f63d7`                 | `--color-icon-active`    | 激活导航、选中项、强调操作图标。           |
 | Text Primary 主文字     | `#172033`                 | `--color-text-primary`   | 页面标题、模块标题、表格主值、导航文字。   |
 | Text Secondary 次文字   | `#475569`                 | `--color-text-secondary` | 正文、说明、表单标签、辅助信息。           |
 | Text Tertiary 弱文字    | `#64748b`                 | `--color-text-tertiary`  | 占位符、时间戳、元信息、低强调计数。       |
@@ -47,6 +54,9 @@ Vben 风格是一套可复用的应用工作台设计语言。它不追求营销
 | Surface Dark 深色底色            | `#111827`                   | `--color-surface-dark`        | 深色应用主体背景。             |
 | Surface Raised Dark 深色抬升表面 | `#1e293b`                   | `--color-surface-raised-dark` | 深色卡片、面板、抽屉、弹窗。   |
 | Surface Muted Dark 深色弱化表面  | `#273449`                   | `--color-surface-muted-dark`  | 深色表头、次级面板、禁用控件。 |
+| Popover Dark 深色浮层            | `#1e293b`                   | `--color-popover-dark`        | 深色下拉菜单、选择器、气泡。   |
+| Accent Dark 深色交互浅底         | `#273449`                   | `--color-accent-dark`         | 深色菜单项 hover/focus 背景。  |
+| Icon Dark 深色默认图标           | `#94a3b8`                   | `--color-icon-dark`           | 深色普通图标和工具栏图标。     |
 | Text Primary Dark 深色主文字     | `#f8fafc`                   | `--color-text-primary-dark`   | 深色标题和高强调内容。         |
 | Text Secondary Dark 深色次文字   | `#cbd5e1`                   | `--color-text-secondary-dark` | 深色正文和标签。               |
 | Text Tertiary Dark 深色弱文字    | `#94a3b8`                   | `--color-text-tertiary-dark`  | 深色占位符和元信息。           |
@@ -63,7 +73,7 @@ Vben 风格是一套可复用的应用工作台设计语言。它不追求营销
 - **字号：** 12px, 13px, 14px, 16px, 18px, 20px, 24px, 30px, 36px
 - **行高：** 1.2, 1.35, 1.45, 1.5
 - **字距：** 正文 normal；页面标题可使用 `-0.01em` 到 `-0.02em`
-- **用途：** 导航、表格、表单、按钮、标题、指标数字、操作文案。
+- **用途：** 导航、表格、表单、按钮、标题、指标数字、后台操作文案。
 
 ### Mono — 等宽字体 · `--font-mono`
 
@@ -127,6 +137,19 @@ Vben 风格是一套可复用的应用工作台设计语言。它不追求营销
 | 弹窗      | 14px   | `--radius-modal`       |
 | 抽屉      | 0px    | `--radius-drawer`      |
 | 标签页    | 8px    | `--radius-tab`         |
+| Logo 图标 | 0px    | `--radius-logo`        |
+
+### Icon & Logo Scale
+
+| 名称 | 值 | Token | 用途 |
+|------|----|-------|------|
+| icon-xs | 12px | `--icon-xs` | 辅助说明、小型状态点旁图标。 |
+| icon-sm | 14px | `--icon-sm` | 表格行内图标、输入框辅助图标。 |
+| icon-md | 16px | `--icon-md` | 默认操作图标、菜单图标、下拉菜单图标。 |
+| icon-lg | 20px | `--icon-lg` | 侧边栏折叠态图标、重要工具栏图标。 |
+| icon-xl | 24px | `--icon-xl` | 空状态、模块标题前图标。 |
+| logo-mark | 32px | `--logo-mark-size` | 顶栏/侧边栏默认 Logo 图标。 |
+| logo-mark-lg | 40px | `--logo-mark-size-lg` | 登录页、品牌展示区 Logo 图标。 |
 
 ### Shadows
 
@@ -173,6 +196,24 @@ Vben 风格是一套可复用的应用工作台设计语言。它不追求营销
 
 正方形按钮，尺寸 `32px` 或 `36px`，圆角 `8px`。默认透明背景和 `Text Tertiary` 图标。Hover 使用 `Surface Muted` 背景和 `Text Primary`。选中态使用 `Primary Soft` 背景和 `Primary` 图标。
 
+### Logo 品牌标识
+
+**用途：** 顶部栏、侧边栏、登录页、品牌入口。
+
+Vben 风格的 Logo 由“图标 mark + 文本 wordmark”组成。默认 Logo 图标尺寸 `32px`，不使用圆角，保持原始图形轮廓，背景透明。Logo 容器高度跟随 Header 或 Sidebar，高度撑满父容器，水平内边距 `12px`，图标与文字间距 `8px`。文字使用 `18px`、semibold、`Text Primary`，单行截断，不换行。
+
+侧边栏折叠时只保留 Logo 图标，隐藏文字；不要压缩文字或缩小到不可读。暗色主题中优先提供独立 `srcDark` 版本，如果没有暗色 Logo，必须保证默认 Logo 在深色背景上仍有足够对比度。登录页可以使用 `40px` Logo 图标和更明显的品牌文字，但仍保持简洁，不添加复杂光效。
+
+### Icon 图标系统
+
+**用途：** 导航识别、按钮操作、状态说明、表格行操作、空状态辅助。
+
+默认图标尺寸为 `16px`，线性风格优先，线宽保持一致。导航和工具栏中同一组图标必须来自同一种图标语言，避免线性、实心、双色、emoji 混用。普通图标使用 `Icon Default`，hover 时可变为 `Text Primary`，激活态使用 `Icon Active`。危险操作图标使用 `Danger`，但不要给整块操作项铺红色背景。
+
+Vben 风格允许三种图标来源：Iconify 字符串、远程图片 URL、组件图标。后台通用操作优先使用 Iconify/lucide 一类线性图标；品牌、头像、第三方平台标识可以使用远程图片或 SVG。远程图片图标必须固定尺寸并设置 `object-fit: contain`，不能因原图比例导致菜单抖动。缺失图标时使用统一 fallback 图标，不要留空导致文字错位。
+
+常用尺寸规则：菜单图标 `16px`，折叠侧边栏图标 `20px`，按钮图标 `16px`，表格行操作图标 `14px` 到 `16px`，空状态图标 `48px` 到 `64px`。图标和文字并排时，间距固定 `8px`；纯图标按钮必须提供 hover/focus 状态和可访问名称。
+
 ### Sidebar Navigation 侧边导航
 
 **用途：** 应用主导航。
@@ -187,7 +228,7 @@ Vben 风格是一套可复用的应用工作台设计语言。它不追求营销
 
 ### Page Container 页面容器
 
-**用途：** 标准应用工作区。
+**用途：** 标准后台工作区。
 
 使用 `Surface` 背景，桌面端 `24px` 页面内边距。页面标题位于内容上方，可带描述和右侧操作。内容模块之间使用 `24px` 间距。表单和详情页可限制最大宽度；看板和表格页可以撑满可用空间。
 
@@ -221,11 +262,25 @@ Vben 风格是一套可复用的应用工作台设计语言。它不追求营销
 
 高度 `36px`，水平内边距 `12px`，圆角 `8px`，白色背景，`Border Subtle` 边框。占位符使用 `Text Tertiary`。聚焦时边框为 `Primary` 并显示 `shadow-focus`。错误态边框为 `Danger`，错误说明文字也使用 `Danger`。
 
-### Select / Dropdown 选择器/下拉菜单
+### Dropdown Menu 浮层菜单
+
+**用途：** 用户菜单、更多操作、行操作、右键菜单、带图标的命令列表。
+
+Vben 的浮层菜单不要使用浏览器或组件库默认样式。菜单面板使用 `Popover` 背景、`Popover Text` 文字、`Border Subtle` 边框、`8px` 圆角、`shadow-md`，最小宽度 `128px`。面板内部必须有 `4px` 内边距，菜单项之间允许 `4px` 以下的微间距；不要让菜单项直接贴边。
+
+菜单项使用 `Text Primary` 或 `Text Primary / 80%`，高度建议 `32px` 到 `36px`，水平内边距 `8px`，垂直内边距 `6px`，圆角 `4px`，字号 `14px`。Hover 和键盘 focus 都使用 `Accent` 背景，文字切到 `Text Primary`。禁用项不可点击，透明度降到 `50%`，不要只变灰而保留 hover 效果。
+
+带图标菜单项中，图标尺寸 `16px`，左侧对齐，图标与文字间距 `8px`。分割线使用 `Border Subtle`，高度 `1px`，上下间距 `4px`，并向两侧抵消面板内边距形成干净横线。分组标题使用 `14px` semibold，内边距 `8px 6px`；用户信息区域可使用 `12px` 到 `16px` 的更大头像与 `p-3` 内边距，但下方普通菜单仍回到紧凑节奏。
+
+浮层出现时使用轻量动画：打开时 `fade-in + zoom-in-95`，关闭时 `fade-out + zoom-out-95`；根据方向附加 `slide-in`，距离控制在 `8px` 内。触发器与浮层之间保持 `4px` 偏移；Select 这类 popper 面板可以使用 `4px` translate 让位置更自然。子菜单使用相同视觉规则，但阴影提升到 `shadow-lg`，避免与父菜单糊在一起。
+
+### Select / Dropdown 选择器
 
 **用途：** 选项选择、紧凑命令菜单。
 
-触发器与输入框高度和圆角一致。触发器文字使用 `Text Primary`，占位符使用 `Text Tertiary`。下拉面板使用 `Surface Raised`、`12px` 圆角、`shadow-md`、`8px` 内边距。选项高度 `32px`；选中项使用 `Primary Soft` 和 `Primary`。
+触发器与输入框高度和圆角一致，默认高度 `40px`，水平内边距 `12px`，背景透明或 `Surface Raised`，边框使用 `Border Subtle`，阴影只使用 `shadow-xs`。右侧箭头图标 `16px`，透明度约 `50%`。聚焦时不要使用厚重外框，使用主色内描边或 `shadow-focus`。
+
+选择器下拉面板使用与 `Dropdown Menu` 一致的浮层系统：`Popover` 背景、`Border Subtle` 边框、`8px` 圆角、`shadow-md`、最大高度 `384px`、最小宽度 `128px`。视口内部使用 `4px` 内边距。选项使用 `14px` 字号，`6px` 垂直内边距，左侧 `8px`，右侧保留 `32px` 给选中图标。选中项右侧显示 `16px` check 图标；hover/focus 使用 `Accent` 背景，不要用大面积主色实底。
 
 ### Tabs / Tabbar 标签页
 
@@ -282,6 +337,8 @@ Vben 风格是一套可复用的应用工作台设计语言。它不追求营销
 - 使用一个主色承担操作、焦点、激活导航和选中态。
 - 让 `Canvas`、`Surface`、`Surface Raised` 成为界面的主导背景。
 - 语义色只用于状态、校验和系统反馈。
+- Logo 保持图标与文字的固定比例，折叠状态只隐藏文字，不压缩品牌图形。
+- 图标使用统一线性语言，默认尺寸 `16px`，同一组操作不要混用多套风格。
 - 表格要重视扫描效率：统一行高、数字对齐、分割线克制。
 - 常见工具栏操作优先使用图标按钮。
 - 长流程侧边编辑用抽屉，短确认和中断式决策用弹窗。
@@ -292,8 +349,10 @@ Vben 风格是一套可复用的应用工作台设计语言。它不追求营销
 
 - 不要使用多个高饱和强调色抢主操作的注意力。
 - 不要让所有模块都变成重阴影卡片；大多数面板应保持安静。
-- 不要把高频工作台做成营销页 hero 风格。
-- 不要在所有按钮上滥用胶囊圆角；胶囊主要用于徽标和状态。
+- 不要把高频后台工具做成营销页 hero 风格。
+- 不要把 Logo 放进圆形头像容器，也不要给 Logo 添加厚重阴影、描边或发光效果。
+- 不要混用 emoji、实心图标、线性图标和品牌图标作为同一层级的操作图标。
+- 不要在所有按钮上滥用胶囊圆角；胶囊更适合徽标和状态。
 - 不要只用颜色表达状态，必须配合文字或图标。
 - 不要把主操作藏进更多菜单。
 - 不要在用户需要快速检查数据的地方放大幅装饰插画。
@@ -301,19 +360,20 @@ Vben 风格是一套可复用的应用工作台设计语言。它不追求营销
 
 ## Elevation
 
-- **Flat Surface 平面层：** 无阴影，使用 `Border Subtle`，用于大多数面板和表格。
-- **Raised Card 轻抬升层：** 使用 `shadow-xs`，用于看板卡片和轻量模块。
-- **Floating Surface 浮层：** 使用 `shadow-md`，用于下拉菜单、气泡、通知。
+- **Flat Surface 平面层：** 无阴影，使用 `Border Subtle`，适合大多数面板和表格。
+- **Raised Card 轻抬升层：** 使用 `shadow-xs`，适合看板卡片和轻量模块。
+- **Floating Surface 浮层：** 使用 `shadow-md`，适合下拉菜单、选择器面板、气泡、通知。浮层必须同时具备边框、`8px` 圆角、`4px` 内边距和轻量进入动画。
+- **Nested Floating Surface 子浮层：** 使用 `shadow-lg`，适合二级菜单、级联菜单和复杂右键菜单，确保层级与父浮层分离。
 - **Modal Layer 弹窗层：** 使用 `shadow-lg`，只用于弹窗和抽屉。
 - **Focus Ring 焦点层：** 使用 `shadow-focus`，所有键盘可访问交互都需要。
 
 ## Imagery
 
-图像应该帮助理解，而不是装饰应用外壳。优先使用产品截图、紧凑数据可视化、状态图、头像缩略图和中性空状态图标。插画应少量使用，保持单色或主色浅底。除用户头像或团队资料外，不建议使用商业图库摄影。产品截图应放在白色或抬升表面中，使用细边框，不要做夸张透视。
+图像应该帮助理解，而不是装饰后台外壳。优先使用产品截图、紧凑数据可视化、状态图、头像缩略图和中性空状态图标。插画应少量使用，保持单色或主色浅底。除用户头像或团队资料外，不建议使用商业图库摄影。产品截图应放在白色或抬升表面中，使用细边框，不要做夸张透视。
 
 ## Layout
 
-Vben 风格默认使用稳定的侧边栏加顶部工具栏。主内容区域位于 `Surface` 背景上，承载表格、表单、卡片、看板和详情面板。详情页和设置页建议使用 `1280px` 内容最大宽度；表格页和数据看板可以使用全宽布局。
+Vben 风格默认使用稳定的侧边栏加顶部工具栏。主内容区域位于 `Surface` 背景上，承载表格、表单、卡片、看板和详情面板。详情页和设置页建议使用 `1280px` 内容最大宽度；表格页和运营看板可以使用全宽布局。
 
 常见布局模式：
 
@@ -347,15 +407,17 @@ Vben 风格默认使用稳定的侧边栏加顶部工具栏。主内容区域位
 
 ### 组件生成 Prompt 示例
 
-1. **创建列表页：** 设计一个 Vben 风格列表页，背景使用 `Surface`。顶部包含页面标题、说明文字和右侧主按钮。下方是抬升筛选面板，包含搜索输入框、选择器筛选、重置按钮和查询按钮。再下方是带边框表格，表头弱化背景，行高 `44px`，hover 行高亮，包含状态徽标和紧凑行操作按钮。
-2. **设计指标看板：** 创建一个数据看板，顶部四个指标卡片组成响应式网格。每张卡片使用白色背景、弱边框、`12px` 圆角和 `20px` 内边距。指标数字使用 `32px` 粗体和主文字色；标签使用 `13px` 次文字色；趋势使用语义浅色徽标。下方加入大图表面板，右上角有时间范围分段控件。
+1. **创建列表页：** 设计一个 Vben 风格后台列表页，背景使用 `Surface`。顶部包含页面标题、说明文字和右侧主按钮。下方是抬升筛选面板，包含搜索输入框、选择器筛选、重置按钮和查询按钮。再下方是带边框表格，表头弱化背景，行高 `44px`，hover 行高亮，包含状态徽标和紧凑行操作按钮。
+2. **设计指标看板：** 创建一个后台数据看板，顶部四个指标卡片组成响应式网格。每张卡片使用白色背景、弱边框、`12px` 圆角和 `20px` 内边距。指标数字使用 `32px` 粗体和主文字色；标签使用 `13px` 次文字色；趋势使用语义浅色徽标。下方加入大图表面板，右上角有时间范围分段控件。
 3. **构建设置表单：** 创建一个设置页，由多个堆叠数据卡片组成。每个区块包含 `18px` 标题、简短说明和标准表单控件。输入框高度 `36px`。底部使用固定保存栏，包含次级取消按钮和主保存按钮。整体使用弱分割线，不使用重阴影。
 4. **创建抽屉编辑流程：** 设计一个右侧抽屉用于编辑记录。宽度 `520px`，白色表面，固定头部，可滚动表单主体，固定底部操作区。输入框圆角 `8px`，聚焦显示主色焦点环。底部包含主保存按钮和次取消按钮。
 5. **生成空状态：** 在带边框面板中居中展示一个中性线性图标、标题、简短说明和一个主操作按钮。使用弱文字和克制图形，不要使用大幅彩色插画，除非是首次使用引导。
+6. **生成下拉操作菜单：** 设计一个 Vben 风格更多操作菜单。触发器是 `32px` 图标按钮，hover 使用 `Accent` 背景。浮层宽度 `180px`，背景 `Popover`，边框 `Border Subtle`，圆角 `8px`，内边距 `4px`，阴影 `shadow-md`。菜单项高度 `32px`，圆角 `4px`，图标 `16px`，图标与文字间距 `8px`，hover/focus 使用 `Accent` 背景。危险操作只让图标和文字变为 `Danger`，不要整行红底。
+7. **生成侧边栏 Logo 与导航图标：** 创建一个 Vben 风格侧边栏顶部品牌区。Logo 图标 `32px`，不加圆角，背景透明；右侧品牌文字 `18px` semibold，单行截断，图标与文字间距 `8px`，容器水平内边距 `12px`。导航项图标统一 `16px` 线性风格，折叠态图标可放大到 `20px`，激活项图标使用 `Primary`，未激活使用 `Icon Default`。
 
 ## Similar Products
 
-- **Linear：** 精准排版、低噪声表面、支持键盘操作的高效工作流。
+- **Linear：** 精准排版、低噪声表面、适合键盘操作的高效工作流。
 - **Stripe Dashboard：** 数据呈现清晰、色彩克制、金融和产品工作流层级明确。
 - **Vercel Dashboard：** 开发者工具气质、界面外壳极简、面板清晰、深色模式克制。
 - **Retool：** 运营工具密度高、控件直接、布局实用。
@@ -372,6 +434,12 @@ Vben 风格默认使用稳定的侧边栏加顶部工具栏。主内容区域位
   --color-surface: #f8fafc;
   --color-surface-raised: #ffffff;
   --color-surface-muted: #f1f5f9;
+  --color-popover: #ffffff;
+  --color-popover-text: #172033;
+  --color-accent: #f1f5f9;
+  --color-accent-hover: #e2e8f0;
+  --color-icon: #64748b;
+  --color-icon-active: #4f63d7;
   --color-text-primary: #172033;
   --color-text-secondary: #475569;
   --color-text-tertiary: #64748b;
@@ -400,6 +468,9 @@ Vben 风格默认使用稳定的侧边栏加顶部工具栏。主内容区域位
   --color-surface-dark: #111827;
   --color-surface-raised-dark: #1e293b;
   --color-surface-muted-dark: #273449;
+  --color-popover-dark: #1e293b;
+  --color-accent-dark: #273449;
+  --color-icon-dark: #94a3b8;
   --color-text-primary-dark: #f8fafc;
   --color-text-secondary-dark: #cbd5e1;
   --color-text-tertiary-dark: #94a3b8;
@@ -445,6 +516,15 @@ Vben 风格默认使用稳定的侧边栏加顶部工具栏。主内容区域位
   --spacing-64: 64px;
   --spacing-80: 80px;
 
+  /* Icons & Logo */
+  --icon-xs: 12px;
+  --icon-sm: 14px;
+  --icon-md: 16px;
+  --icon-lg: 20px;
+  --icon-xl: 24px;
+  --logo-mark-size: 32px;
+  --logo-mark-size-lg: 40px;
+
   /* Layout */
   --page-max-width: 1440px;
   --content-max-width: 1280px;
@@ -472,6 +552,7 @@ Vben 风格默认使用稳定的侧边栏加顶部工具栏。主内容区域位
   --radius-modal: 14px;
   --radius-drawer: 0px;
   --radius-tab: 8px;
+  --radius-logo: 0px;
 
   /* Shadows */
   --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.06);
@@ -488,6 +569,12 @@ Vben 风格默认使用稳定的侧边栏加顶部工具栏。主内容区域位
   --color-surface: var(--color-surface-dark);
   --color-surface-raised: var(--color-surface-raised-dark);
   --color-surface-muted: var(--color-surface-muted-dark);
+  --color-popover: var(--color-popover-dark);
+  --color-popover-text: var(--color-text-primary-dark);
+  --color-accent: var(--color-accent-dark);
+  --color-accent-hover: #334155;
+  --color-icon: var(--color-icon-dark);
+  --color-icon-active: var(--color-primary-dark);
   --color-text-primary: var(--color-text-primary-dark);
   --color-text-secondary: var(--color-text-secondary-dark);
   --color-text-tertiary: var(--color-text-tertiary-dark);
@@ -509,6 +596,12 @@ Vben 风格默认使用稳定的侧边栏加顶部工具栏。主内容区域位
   --color-surface: #f8fafc;
   --color-surface-raised: #ffffff;
   --color-surface-muted: #f1f5f9;
+  --color-popover: #ffffff;
+  --color-popover-text: #172033;
+  --color-accent: #f1f5f9;
+  --color-accent-hover: #e2e8f0;
+  --color-icon: #64748b;
+  --color-icon-active: #4f63d7;
   --color-text-primary: #172033;
   --color-text-secondary: #475569;
   --color-text-tertiary: #64748b;
@@ -562,6 +655,15 @@ Vben 风格默认使用稳定的侧边栏加顶部工具栏。主内容区域位
   --spacing-64: 64px;
   --spacing-80: 80px;
 
+  /* Icons & Logo */
+  --icon-xs: 12px;
+  --icon-sm: 14px;
+  --icon-md: 16px;
+  --icon-lg: 20px;
+  --icon-xl: 24px;
+  --logo-mark-size: 32px;
+  --logo-mark-size-lg: 40px;
+
   /* Radius */
   --radius-panel: 10px;
   --radius-card: 12px;
@@ -572,6 +674,7 @@ Vben 风格默认使用稳定的侧边栏加顶部工具栏。主内容区域位
   --radius-modal: 14px;
   --radius-drawer: 0px;
   --radius-tab: 8px;
+  --radius-logo: 0px;
 
   /* Shadows */
   --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.06);

@@ -18,7 +18,7 @@
 
 ## 使用边界
 
-- 本地精选主题 `vben.md` 和 `revenuecat.md` 仍是默认优先主题。
+- 本地精选主题 `vben/DESIGN.md` 和 `revenuecat/DESIGN.md` 仍是默认优先推荐主题，但必须经过用户确认后才能用于原型。
 - Open Design 主题用于补充更丰富的品牌灵感和视觉方向。
 - 品牌类主题只作为 aesthetic inspiration，不代表官方品牌资产或授权。
 - 不要把 Open Design 的主题选择逻辑写回单个主题文件；选择逻辑只维护在 `references/design-theme-selection.md`。
