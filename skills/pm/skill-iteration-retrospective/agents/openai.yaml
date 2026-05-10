@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill 迭代复盘"
+  short_description: "把失败的 Skill 调用诊断成可执行的迭代规格。"
+  default_prompt: "使用这个 Skill 复盘一次失败的 Skill 调用，并输出清晰的下一版迭代规格。"
