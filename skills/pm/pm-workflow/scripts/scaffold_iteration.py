@@ -77,6 +77,7 @@ def index_html(product: str, iteration: str) -> str:
       <a href="final-delivery.html"><strong>最终交付说明</strong><span>评审通过后记录确认范围、交付物和后续决策项。</span></a>
       <a href="README.md"><strong>Markdown 文档索引</strong><span>进入可版本管理的正式文档入口。</span></a>
       <a href="notes/requirements.md"><strong>需求笔记</strong><span>记录业务沟通、后续决策项和版本变更。</span></a>
+      <a href="notes/stage-workers.md"><strong>阶段 Worker 记录</strong><span>记录各阶段 worker 调用、主 PM 验收和用户确认状态。</span></a>
     </section>
   </main>
 </body>
@@ -666,6 +667,7 @@ def readme_md(product: str, iteration: str) -> str:
 | 开发交接 | [dev-handoff.md](dev-handoff.md) | [dev-handoff.html](dev-handoff.html) |
 | 最终交付说明 | [final-delivery.md](final-delivery.md) | [final-delivery.html](final-delivery.html) |
 | 需求笔记 | [notes/requirements.md](notes/requirements.md) | - |
+| 阶段 Worker 记录 | [notes/stage-workers.md](notes/stage-workers.md) | - |
 | 交互原型入口 | - | [prototype.html](prototype.html) |
 | 多页面原型目录 | [prototype/README.md](prototype/README.md) | [prototype/example-page.html](prototype/example-page.html) |
 | 演示入口 | - | [index.html](index.html) |
@@ -683,6 +685,12 @@ def readme_md(product: str, iteration: str) -> str:
 - 需求阶段必须先完成 worker 输出和主 PM 验收。
 - [requirements-list.md](requirements-list.md) 是需求清单源文件；没有确认版需求清单，不进入交互架构或原型设计。
 - 每条需求都必须包含问题陈述、JTBD、是否值得做判断、证据等级、优先级、风险和验收信号。
+
+## 阶段 Worker 完成线
+
+- 需求阶段之后，默认只保留方案架构、原型设计、文档交付 3 类 worker。
+- [notes/stage-workers.md](notes/stage-workers.md) 是阶段 worker 调用记录源文件。
+- 每个阶段都必须记录读取的 reference/helper skills、关键输出、验收结论、用户确认状态和未决问题。
 
 ## 原型交互覆盖要求
 
@@ -710,15 +718,15 @@ def requirements_list_md(product: str, iteration: str) -> str:
 
 | 项 | 内容 |
 | --- | --- |
-| 需求阶段 worker | 已派发 / 角色化降级 / 未执行 |
+| 需求阶段 worker | 已新开 / 已复用 / 角色化降级 / 未执行 |
 | 主 PM 验收结论 | 通过 / 需补充 / 不通过 |
 | 是否允许进入范围表 | 是 / 否 |
 | 是否允许进入交互架构 | 是 / 否 |
 | 主要未决问题 |  |
 
-## 2. 子技能调用记录
+## 2. Helper Skill 调用记录
 
-| 子技能 | 已用/未用 | 使用原因或未用原因 | 关键输出 |
+| Helper skill | 已用/未用 | 使用原因或未用原因 | 关键输出 |
 | --- | --- | --- | --- |
 | problem-statement |  | 模糊需求第一闸门 |  |
 | jobs-to-be-done |  | 功能诉求转真实任务 |  |
@@ -753,13 +761,13 @@ def requirements_list_md(product: str, iteration: str) -> str:
 
 ## 6. 需求清单
 
-| 需求编号 | 用户/角色 | 问题陈述 | JTBD | 用户目标 | 功能候选 | 价值/痛点代价 | 证据等级 | 是否值得做 | 优先级 | 进入一期原因 | 依赖与风险 | 验收信号 | 使用的子技能 |
+| 需求编号 | 用户/角色 | 问题陈述 | JTBD | 用户目标 | 功能候选 | 价值/痛点代价 | 证据等级 | 是否值得做 | 优先级 | 进入一期原因 | 依赖与风险 | 验收信号 | 使用的 helper skill |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | REQ-001 |  |  |  |  |  |  | 高/中/低 | 做 / 先验证 / 后置 / 不做 | P0/P1/P2 |  |  |  |  |
 
 ## 7. 风险与验证清单
 
-| 假设/风险 | 影响 | 验证方式 | 触发决策 | 使用的子技能 |
+| 假设/风险 | 影响 | 验证方式 | 触发决策 | 使用的 helper skill |
 | --- | --- | --- | --- | --- |
 |  |  |  |  |  |
 
@@ -771,8 +779,59 @@ def requirements_list_md(product: str, iteration: str) -> str:
 | 是否有 JTBD | 是/否 |  |
 | 是否有是否值得做判断 | 是/否 |  |
 | 是否形成需求清单 | 是/否 |  |
-| 是否记录子技能调用情况 | 是/否 |  |
+| 是否记录 helper skill 调用情况 | 是/否 |  |
 | 是否需要继续追问 | 是/否 |  |
+"""
+
+
+def stage_workers_md(product: str, iteration: str) -> str:
+    return f"""# {product} 阶段 Worker 记录 - {iteration}
+
+状态：待评审
+
+## 1. 调用总览
+
+| 阶段 | Worker | 新开/复用/角色化降级 | 主 PM 验收 | 用户确认 | 关键输出 |
+| --- | --- | --- | --- | --- | --- |
+| 阶段 1 | 需求 worker |  |  |  | requirements-list.md |
+| 阶段 2-2.5 | 方案架构 worker |  |  |  | 范围表、角色权限、对象状态、菜单、页面职责、原型覆盖矩阵 |
+| 阶段 3 | 原型设计 worker |  |  |  | 主题选择、prototype.html / prototype/*.html、impeccable 检查 |
+| 阶段 4-5 | 文档交付 worker |  |  |  | prd.md、flow.md、dev-handoff.md、final-delivery.md、索引一致性检查 |
+
+## 2. 阶段记录模板
+
+### Worker：<需求发现 / 方案架构 / 原型设计 / 文档交付>
+
+- 触发时间：
+- 触发条件：
+- 真实 worker 状态：已新开 / 已复用 / 角色化降级
+- 若复用，复用的 worker：
+- 若降级，原因：工具不支持 / 用户明确禁止 / 其他
+- 输入材料：
+- 读取的 reference：
+- 读取/调用的 helper skills：
+- worker 关键输出：
+- 主 PM 审核发现：
+- 主 PM 验收结论：通过 / 需补充 / 不通过
+- 用户确认状态：已确认 / 暂定继续 / 未确认
+- 未决问题：
+- 下一步：
+
+## 3. 范围一致性追踪
+
+| 需求编号 | Must-have 功能 | 方案范围 | 交互架构 | 原型页面 | PRD 条目 | 流程图 | 开发交接 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| REQ-001 |  |  |  |  |  |  |  | 待确认 |
+
+## 4. 阶段退回记录
+
+| 时间 | Worker | 退回原因 | 修正要求 | 修正结果 |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
+
+## 5. 说明
+
+默认只记录 4 行：需求发现 worker、方案架构 worker、原型设计 worker、文档交付 worker。主题选择、原型打磨、流程图渲染和最终索引检查只作为 worker 内部步骤记录；只有用户要求或项目特别复杂时，才追加子任务记录。
 """
 
 
@@ -1202,12 +1261,23 @@ This causes:
 
 ## 需求阶段 worker 调用记录
 
-- 真实子 agent 是否派发：
-- 若未派发，降级原因：
+- 真实 worker 状态：已新开 / 已复用 / 角色化降级
+- 若复用，复用的 worker：
+- 若降级，原因：工具不支持 / 用户明确禁止 / 其他
 - 主 PM 验收结论：
-- 使用的子技能：
-- 未使用的子技能及原因：
+- 使用的 helper skills：
+- 未使用的 helper skills 及原因：
 - 关键输出链接：[requirements-list.md](../requirements-list.md)
+
+## 后续阶段 worker 调用记录
+
+- 方案架构 worker 标准：`references/solution-architecture-worker-standards.md`
+- 原型设计 worker 标准：`references/prototype-design-worker-standards.md`
+- 文档交付 worker 标准：`references/documentation-delivery-worker-standards.md`
+- 记录文件：[stage-workers.md](stage-workers.md)
+- 当前通过的阶段：
+- 当前退回的阶段：
+- 主要未决问题：
 
 ## 是否值得做判断
 
@@ -1372,6 +1442,7 @@ def main() -> int:
     write_if_missing(base / "dev-handoff.md", dev_handoff_md(args.product, args.iteration))
     write_if_missing(base / "final-delivery.md", final_delivery_md(args.product, args.iteration))
     write_if_missing(base / "notes" / "requirements.md", requirements_md(args.product, args.iteration))
+    write_if_missing(base / "notes" / "stage-workers.md", stage_workers_md(args.product, args.iteration))
 
     print(base)
     return 0

@@ -13,7 +13,8 @@ description: 面向算法/研发人员的产品经理工作流。用于澄清业
 - 先定义问题，再定义方案：不要一上来实现页面或算法流程，先确认业务问题、目标用户、业务价值和成功指标。
 - 对话式采集需求：主动追问缺失信息，把业务方的自然语言转成可开发的结构化上下文。
 - 资深 PM 深挖：用户给的是功能愿望时，必须追问真实用户、当前流程、最大痛点、失败代价、第一期验收信号和替代方案；不要把“想要某功能”直接写成确认需求。
-- 需求阶段 worker 先行：模糊需求、功能诉求或新产品想法必须先由需求阶段 worker 使用 bundled PM subskills 做问题陈述、JTBD、是否值得做判断和需求清单；主 PM 验收通过后才进入范围、交互架构或原型。
+- 需求阶段 worker 先行：模糊需求、功能诉求或新产品想法必须先由需求阶段 worker 使用 PM helper skills 做问题陈述、JTBD、是否值得做判断和需求清单；主 PM 验收通过后才进入范围、交互架构或原型。
+- 后续阶段 worker 分工：需求发现之后默认只保留方案架构、原型设计、文档交付 3 类 worker；主 PM 按对应 worker 标准审核、纠偏和用户确认，避免把流程拆得过碎。
 - 三维度定义细节：需求范围、规则限制、验收标准必须同时存在。
 - 三段式推进：先业务需求沟通梳理，再产品原型和相关文档输出，最后做原型和文档版本管理。
 - 功能先成系统，再成页面：进入视觉原型前，必须确认功能之间的依赖关系、主流程、异常流程、状态流转、页面职责、菜单命名和关键操作位置。
@@ -23,8 +24,8 @@ description: 面向算法/研发人员的产品经理工作流。用于澄清业
 - 外部参考只做启发：需求调研阶段可以搜索成熟产品、开源框架或可靠案例来发现隐藏问题，但搜索结果默认是待验证假设，不得直接扩大 MVP 范围。
 - Markdown 为源，HTML 为演示：正式 PRD、流程图、开发交接和交付说明必须有 Markdown 源文件；HTML 用于评审演示和阅读入口。
 - 演示优先，工程克制：HTML 原型服务于需求确认和开发沟通，不实现复杂后端、真实算法、复杂数据流或生产级状态机，除非用户明确要求。
-- 原型完成后再打磨：HTML 原型初稿完成后，用 `impeccable` 做可用性、视觉层级、响应式、可访问性和交互状态检查；如果 `impeccable` 不可用，必须先主动定位或安装，不能直接跳过；只修正体验质量，不新增未确认需求。
-- 本地子技能优先：凡本技能要求使用 `impeccable`、`ui-ux-pro-max` 或文档方法类 helper skill 时，先读取 `subskills/<skill-name>/SKILL.md` 并按其相对路径使用引用、脚本和资产；只有 bundled subskill 缺失或不可用时，才回退到用户本机 `.agents/skills`、`.codex/skills` 或安装流程。
+- 原型完成后再打磨：HTML 原型初稿完成后，用 `impeccable audit` 和 `impeccable polish` 做可用性、视觉层级、响应式、可访问性和交互状态检查；如果 `impeccable` 不可用，必须先主动同步或安装，不能直接跳过；只修正体验质量，不新增未确认需求。
+- 全局技能调用：凡本技能要求使用 `impeccable`、`ui-ux-pro-max` 或 PM 方法类 helper skill 时，先将 `subskills/` 中的 bundled 副本同步到全局 skills 目录，再按正常 skill 名称调用；不要把 `subskills/<skill-name>/SKILL.md` 作为运行时直接入口。
 - 职责边界收敛：完成线是确认版产品需求文档和原型归档，不默认生成技术架构、数据库设计、正式 API 契约或开发排期。
 - 版本化组织：同一产品线按迭代版本管理，避免不同需求、不同轮次的文件混在一起。
 
@@ -41,7 +42,17 @@ description: 面向算法/研发人员的产品经理工作流。用于澄清业
 
 首轮澄清时禁止初始化目录、写入 `requirements.md`、输出 MVP 范围表、生成 PRD 或制作原型，除非用户明确要求先创建工作区。
 
-当进入需求梳理时，主 PM 必须先读取 `references/demand-worker-standards.md`，并按其规则派发需求阶段 worker。若当前环境支持子 agent，使用真实子 agent；若不支持，降级为角色化 worker 流程并记录原因。需求阶段必须产出需求清单；没有需求清单，不得进入交互架构或原型设计。
+当进入需求梳理时，主 PM 必须先读取 `references/demand-worker-standards.md`，并按其规则执行需求阶段 worker。每个产品迭代第一次进入需求阶段时，必须新开真实 worker；阶段内调整、补充和返工复用已启动的需求 worker。只有当前工具环境不支持新开 worker，或用户明确要求不要新开时，才允许在主 worker 内角色化降级并记录原因。需求阶段必须产出需求清单；没有需求清单，不得进入交互架构或原型设计。
+
+需求阶段之后，主 PM 直接按阶段读取对应 worker 标准：`solution-architecture-worker-standards.md`、`prototype-design-worker-standards.md`、`documentation-delivery-worker-standards.md`。每个产品迭代第一次进入方案架构、原型设计或文档交付阶段时，必须分别新开真实 worker；该阶段后续调整复用已启动的同一 worker。每个 worker 的新开、复用、降级、验收和用户确认都记录到 `notes/stage-workers.md`。主题选择、impeccable 打磨、流程图渲染和最终索引检查是 worker 内部步骤，不单独派发 worker，除非用户明确要求拆分。
+
+调用 helper skill 前，先执行或等价完成全局同步：
+
+```bash
+python skills/pm/pm-workflow/scripts/sync_subskills.py
+```
+
+如果必须强制使用本技能内置版本，使用 `--overwrite`；若全局已存在同名 skill 且不覆盖，记录“已存在，使用全局版本”。同步后按正常 skill 名称调用，例如 `problem-statement`、`jobs-to-be-done`、`user-story`、`impeccable`。
 
 当用户已经列出功能点但没有讲清功能之间怎么配合时，先把功能点转成待验证的工作流假设，并追问：
 
@@ -77,28 +88,28 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 在用户输入仍处于模糊想法、功能愿望、复杂 Epic 或新产品方向时，必须先执行需求阶段 worker：
 
 1. 主 PM 读取 `references/demand-worker-standards.md`。
-2. 主 PM 派发需求 worker，要求其优先读取 bundled subskills：
-   - `subskills/problem-statement/SKILL.md`
-   - `subskills/jobs-to-be-done/SKILL.md`
-   - `subskills/discovery-interview-prep/SKILL.md`
-   - `subskills/pol-probe/SKILL.md`
-   - `subskills/user-story/SKILL.md`
-   - `subskills/user-story-splitting/SKILL.md`
-   - `subskills/epic-breakdown-advisor/SKILL.md`
-   - `subskills/prd-development/SKILL.md`
-3. 需求 worker 输出问题陈述、JTBD、是否值得做判断、需求清单草案、风险/验证清单和子技能调用记录。
+2. 主 PM 派发需求 worker，要求其先确认 helper skills 已同步到全局 skills 目录，再按 skill 名称调用：
+   - `problem-statement`
+   - `jobs-to-be-done`
+   - `discovery-interview-prep`
+   - `pol-probe`
+   - `user-story`
+   - `user-story-splitting`
+   - `epic-breakdown-advisor`
+   - `prd-development`
+3. 需求 worker 输出问题陈述、JTBD、是否值得做判断、需求清单草案、风险/验证清单和 helper skill 调用记录。
 4. 主 PM 审核 worker 输出，修正过度推断、标注假设，向用户输出需求确认稿。
 5. 用户确认需求清单后，才能进入范围表和交互架构。
 
 需求 worker 不是每次都全量使用 8 个技能，但必须记录每个技能“已用 / 未用 / 未用原因”。没有调用记录，不得完成需求阶段。
 
-需求阶段执行引用白名单：只读取 `references/demand-worker-standards.md` 和上述 8 个 bundled subskills。不要在需求阶段读取交互架构、原型设计、文档交付、流程图、HTML 模板或视觉打磨相关 references。旧版 discovery reference 不再作为阶段 1 的直接输入，避免同一阶段出现两套规则。
+需求阶段执行引用白名单：只读取 `references/demand-worker-standards.md` 和上述 8 个全局 helper skills。不要在需求阶段读取交互架构、原型设计、文档交付、流程图、HTML 模板或视觉打磨相关 references。旧版 discovery reference 不再作为阶段 1 的直接输入，避免同一阶段出现两套规则。
 
 若确实需要行业参考或竞品启发，只能作为需求 worker 的验证动作建议或主 PM 的最小补充输入，且必须记录为 `待验证假设`、`先验证`、`后置` 或 `风险待确认`。不得因为外部产品有复杂能力，就把插件市场、复杂权限、自动化工作流、技术架构、部署方案或高级配置纳入第一期。
 
 把已确认或暂定确认的关键信息同步沉淀到 `notes/requirements.md`，包括问题定义、范围取舍、业务规则、算法参与点、验收标准和后续决策项。
 
-需求阶段结束前，必须同步沉淀或生成 `requirements-list.md`。需求清单必须包含需求编号、用户/角色、问题陈述、JTBD、用户目标、功能候选、价值/痛点代价、证据等级、是否值得做、优先级、进入一期原因、依赖与风险、验收信号和使用的子技能。
+需求阶段结束前，必须同步沉淀或生成 `requirements-list.md`。需求清单必须包含需求编号、用户/角色、问题陈述、JTBD、用户目标、功能候选、价值/痛点代价、证据等级、是否值得做、优先级、进入一期原因、依赖与风险、验收信号和使用的 helper skill。
 
 **暂停确认 1：问题定义**
 
@@ -117,11 +128,13 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 
 若 `目标用户 / 当前流程 / 核心痛点 / 失败代价 / 成功指标或验收信号` 中任意两项仍不清楚，不得进入范围表；继续追问或标注“暂定继续”的风险。
 
-若缺少 `问题陈述 / JTBD / 是否值得做判断 / 需求清单 / 子技能调用记录` 中任意一项，不得进入范围表；继续派发需求 worker、追问用户或标注为待验证。
+若缺少 `问题陈述 / JTBD / 是否值得做判断 / 需求清单 / helper skill 调用记录` 中任意一项，不得进入范围表；继续派发需求 worker、追问用户或标注为待验证。
 
 ### 阶段 2：产品原型和相关文档输出
 
-只有在问题定义已被用户确认，或用户明确允许“基于当前假设继续”时，才能进入本阶段。否则继续停留在阶段 1，按 `references/demand-worker-standards.md` 补齐问题陈述、JTBD、是否值得做判断、需求清单和子技能调用记录。
+只有在问题定义已被用户确认，或用户明确允许“基于当前假设继续”时，才能进入本阶段。否则继续停留在阶段 1，按 `references/demand-worker-standards.md` 补齐问题陈述、JTBD、是否值得做判断、需求清单和 helper skill 调用记录。
+
+进入阶段 2 时，先读取 `references/solution-architecture-worker-standards.md`。第一次进入本阶段必须新开方案架构 worker；若是本阶段调整，则复用已启动的方案架构 worker。只有工具不支持或用户明确禁止新开时，才允许角色化降级，并在 `notes/stage-workers.md` 记录原因。方案架构 worker 合并处理范围、角色、规则、对象、状态、主流程、菜单、页面职责、动作位置和原型覆盖矩阵；不选择主题、不生成 HTML 原型、不写正式 PRD。
 
 基于已确认的问题定义，输出产品方案草案：
 
@@ -145,9 +158,13 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 
 用户确认范围不等于确认原型结构。范围确认后，必须进入交互架构确认，不得直接开始 HTML 原型。
 
+主 PM 验收方案架构 worker 时，必须检查：每个 must-have 是否能追溯到 `requirements-list.md`，是否有进入一期原因和最小验收信号，是否把 `先验证 / 后置 / 不做` 的条目误放入 must-have。未通过时回到方案架构 worker，不进入原型设计。
+
 ### 阶段 2.5：交互架构与菜单确认
 
-只有在范围与规则被用户确认，或用户明确允许“基于当前假设继续”时，才能进入本阶段。先读取 `references/interaction-architecture.md`，把功能点组织成能被真实用户完成工作的产品结构。
+只有在范围与规则被用户确认，或用户明确允许“基于当前假设继续”时，才能进入本阶段。继续沿用方案架构 worker，把功能点组织成能被真实用户完成工作的产品结构。
+
+阶段 2.5 不再单独派发 worker；它是方案架构 worker 的后半段。主 PM 在这里把菜单、页面职责、动作位置和原型覆盖矩阵单独拿出来给用户确认，确保方案不是功能堆叠，也不是直接跳到页面绘制。
 
 必须输出交互架构草案：
 
@@ -177,13 +194,17 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 
 未确认功能关系、菜单结构、页面职责和主流程入口前，不得进入设计主题或 HTML 原型。
 
+方案架构 worker 未输出原型交互覆盖矩阵，或任一 must-have 没有页面、入口、动作、反馈、状态变化和验收场景，不得进入阶段 3。
+
 ### 阶段 3：HTML 原型
 
 生成高保真、可交互、可本地打开的 HTML 原型。默认目标是“全量可演示”：所有已确认 `必须有` 功能都要能点击体验。`prototype.html` 保留为原型入口；当单文件无法清晰承载完整交互时，必须拆成 `prototype/` 多页面原型，并从入口页统一链接。
 
+进入阶段 3 时，先读取 `references/prototype-design-worker-standards.md`。第一次进入本阶段必须新开原型设计 worker；若是本阶段调整，则复用已启动的原型设计 worker。主 PM 只维护一个原型设计 worker；设计主题选择、HTML 原型生成和 impeccable 打磨都是该 worker 的内部步骤，并在 `notes/stage-workers.md` 的同一条记录中说明。
+
 开始设计原型前，必须先完成设计主题 preflight：
 
-1. 读取 `references/design-theme-selection.md`。
+1. 按 `references/prototype-design-worker-standards.md` 的白名单读取设计主题标准和主题资产。
 2. 从已确认的问题定义、范围和交互架构中判定产品类型、用户角色、信息密度、工作流复杂度、菜单结构和品牌/参考来源。
 3. 从 `assets/design-themes/` 中生成 3-5 个候选主题；中后台、控制台、CRM、运营平台、内部工具、权限/表格/表单密集系统默认把 Vben 放在第一推荐，但仍要给出可比较的替代主题。
 4. 候选主题必须包含本地 `examples.html` 样例预览路径；用户说“想看看是什么样子”时，先展示或指向样例预览，不直接生成正式原型。
@@ -193,7 +214,7 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 8. 把设计方向确认表单、候选主题、用户确认结果、产品语境、交互架构摘要、主题、源文件、样例预览路径、选择原因和补充建议写入 `notes/requirements.md` 的“原型设计输入”。
 9. 再开始 HTML 原型设计。
 
-`ui-ux-pro-max` 只用于补充布局、图表、可访问性、响应式和组件细节，不得覆盖已选主题。优先使用 bundled subskill：`subskills/ui-ux-pro-max/SKILL.md`；需要脚本时优先使用 `subskills/ui-ux-pro-max/scripts/search.py`。
+`ui-ux-pro-max` 只用于补充布局、图表、可访问性、响应式和组件细节，不得覆盖已选主题。调用前先同步到全局 skills 目录，再按 `ui-ux-pro-max` skill 使用；需要脚本时使用同步后的全局 skill 目录中的脚本，若全局脚本不存在，再回退到 bundled 副本的脚本。
 
 原型要求：
 
@@ -206,18 +227,18 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 - 避免实现复杂真实业务逻辑、真实 API、复杂数据流转；用 mock、局部状态和演示事件表达即可，但必须让开发看懂预期交互和状态结果。
 - 每个关键页面右下角提供可展开 PRD 浮标，写清该页面对应的需求说明、字段、规则和验收标准。
 
-详细标准见 `references/prototype-interaction-standards.md`、`references/artifact-standards.md` 和 `references/html-prd-template.md`。
+详细标准由 `references/prototype-design-worker-standards.md` 的白名单 reference 提供。
 
-原型初稿完成后、交付用户确认前，必须执行一次 `impeccable` 原型打磨关卡。先读取 `references/impeccable-polish-gate.md`，再优先读取 bundled subskill `subskills/impeccable/SKILL.md` 执行。
+原型初稿完成后、交付用户确认前，必须在原型设计 worker 内执行 `impeccable audit` 和 `impeccable polish`。按 `references/prototype-design-worker-standards.md` 的白名单读取打磨标准，并通过全局 `impeccable` skill 调用。
 
 如果 `impeccable` 不可用，不得直接写“未安装所以跳过”。必须先主动解决：
 
-1. 检查 bundled subskill：`subskills/impeccable/SKILL.md`。
-2. 检查当前会话可用 skill 列表和常见本地路径，例如 `C:\Users\<user>\.agents\skills\impeccable\SKILL.md`、`C:\Users\<user>\.codex\skills\impeccable\SKILL.md`。
-3. 若存在本地 skill，读取其 `SKILL.md` 并按其 preflight、critique、audit 或 polish 流程执行。
-4. 若本地不存在但当前环境提供 `skill-installer`，先尝试安装或引导安装 `impeccable`，安装后回到原型打磨关卡。
-5. 若存在 `npx impeccable` 命令路径或项目已有相关脚本，优先使用命令执行检查。
-6. 只有在 bundled subskill、定位、安装、命令执行都失败，或受权限/网络限制无法完成时，才允许降级为人工审阅；降级时必须记录已尝试的解决动作、失败原因和人工检查结果。
+1. 先运行或等价执行 `python skills/pm/pm-workflow/scripts/sync_subskills.py --skill impeccable`，把 bundled `impeccable` 同步到全局 skills 目录。
+2. 检查当前会话可用 skill 列表中是否有 `impeccable`。
+3. 若存在全局 skill，按 `impeccable audit` 再 `impeccable polish` 执行。
+4. 若全局 skill 不可用但当前环境提供 `skill-installer`，先尝试安装或引导安装 `impeccable`，安装后回到 audit + polish。
+5. 若存在 `npx impeccable` 命令路径或项目已有相关脚本，优先使用命令执行 audit / polish 等价检查。
+6. 只有在全局同步、安装、命令执行都失败，或受权限/网络限制无法完成时，才允许降级为人工审阅；降级时必须记录已尝试的解决动作、失败原因和人工检查结果。
 
 打磨范围只包括：
 
@@ -234,7 +255,7 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 交付原型给用户确认前，必须在 `notes/requirements.md` 记录：
 
 - `impeccable` 可用性检查结果。
-- 使用的执行方式：skill、`npx impeccable`、项目脚本或人工降级。
+- 使用的执行方式：`impeccable audit`、`impeccable polish`、`npx impeccable`、项目脚本或人工降级。
 - 若曾不可用，主动定位/安装/恢复动作和结果。
 - 发现的问题、已修正的问题、未采纳建议和原因。
 - 是否确认没有新增未经用户确认的需求范围。
@@ -251,11 +272,15 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 - 动作级验收是否清楚说明“做到什么程度才算通过”。
 - 哪些内容要删减、补充或拆分到下一迭代。
 
+原型设计 worker 交付后，主 PM 必须逐项对照原型交互覆盖矩阵验收。任何 must-have 只出现在静态卡片、菜单名称、PRD 浮标或文字说明里，都视为未完成，必须退回原型设计 worker。
+
 ### 阶段 4：正式文档深化
 
-在用户确认原型后，进入正式文档深化关卡。先读取 `references/production-document-standards.md`、`references/flow-viewer-standards.md` 和 `references/artifact-standards.md`，再输出生产开发可用的产品级详规。Markdown 是版本管理源文件，HTML 是阅读和演示入口。
+在用户确认原型后，进入正式文档深化关卡。先读取 `references/documentation-delivery-worker-standards.md`，再由文档交付 worker 按白名单读取生产文档、流程图 viewer 和 artifact 标准，输出生产开发可用的产品级详规。Markdown 是版本管理源文件，HTML 是阅读和演示入口。
 
-正式文档深化可以吸收 bundled subskills 的方法，但不得把它们变成额外依赖：优先读取 `subskills/prd-development/SKILL.md`、`subskills/user-story/SKILL.md`、`subskills/epic-hypothesis/SKILL.md`、`subskills/user-story-mapping/SKILL.md` 中与 PRD、用户故事、验收标准、战略假设和流程拆解相关的规则，再落到本技能的文档标准中。
+进入阶段 4 时，同时读取 `references/documentation-delivery-worker-standards.md`。第一次进入本阶段必须新开文档交付 worker；若是本阶段调整，则复用已启动的文档交付 worker。文档交付 worker 要以已确认原型、需求清单和交互覆盖矩阵为输入，不得重新发明需求范围。PRD、流程图、开发交接、HTML 阅读页和最终交付检查都由同一个文档交付 worker 完成。主 PM 负责检查文档是否足以指导开发拆解和 QA 验收，但没有越界替工程决定数据库、API、架构或排期。
+
+正式文档深化可以吸收全局 helper skills 的方法，但不得把它们变成额外依赖：先同步 bundled 副本到全局 skills 目录，再按 `prd-development`、`user-story`、`epic-hypothesis`、`user-story-mapping` skill 调用其中与 PRD、用户故事、验收标准、战略假设和流程拆解相关的规则，最终仍落到本技能的文档标准中。
 
 正式 PRD 必须包含：
 
@@ -277,7 +302,7 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 
 其他正式交付物：
 
-- `requirements-list.md`：需求阶段确认版需求清单，记录问题陈述、JTBD、是否值得做、优先级、风险、验收信号和子技能调用记录。
+- `requirements-list.md`：需求阶段确认版需求清单，记录问题陈述、JTBD、是否值得做、优先级、风险、验收信号和 helper skill 调用记录。
 - `final-delivery.md`：评审通过后的确认版交付说明。
 - `notes/requirements.md`：业务沟通和中间关键信息沉淀。
 
@@ -294,6 +319,8 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 - 文档是否足够指导开发拆解和 QA 验收，且没有越界输出最终数据库/API/排期。
 
 ### 阶段 5：产品原型和文档版本管理
+
+阶段 5 不再单独派发 worker；它是文档交付 worker 的收尾检查。主 PM 在最终交付前检查索引、断链、范围一致性、Markdown/HTML 对齐和停止线。
 
 最终目录建议：
 
@@ -337,7 +364,9 @@ pm-work/
 
 - 是否已确认问题定义，而不是只复述解决方案。
 - 是否已追问真实痛点、当前流程、失败代价和第一期验收信号，而不是只收集功能点。
-- 是否已执行需求阶段 worker，且记录每个需求类 subskill 的使用或未用原因。
+- 是否已执行需求阶段 worker，且记录每个需求类 helper skill 的使用或未用原因。
+- 是否已执行方案架构、原型设计、文档交付 worker，或记录了角色化降级原因。
+- 是否 `notes/stage-workers.md` 记录了每个阶段的输入、读取 reference、worker 输出、主 PM 验收和用户确认状态。
 - 是否已输出并确认需求清单，而不是只有功能列表。
 - 是否已判断每个功能候选“做 / 先验证 / 后置 / 不做”，并说明证据等级和原因。
 - 是否有 `本次不做`，避免范围失控。
@@ -364,8 +393,8 @@ pm-work/
 按阶段读取 reference，不要跨阶段预读：
 
 - 阶段 1 需求 worker 唯一入口：`references/demand-worker-standards.md`
-- 阶段 2.5 交互架构：`references/interaction-architecture.md`
-- 阶段 3 原型主题与交互：`references/design-theme-selection.md`、`references/prototype-interaction-standards.md`、`references/html-prd-template.md`
-- 阶段 3 原型打磨：`references/impeccable-polish-gate.md`
-- 阶段 4 文档交付：`references/production-document-standards.md`、`references/flow-viewer-standards.md`、`references/artifact-standards.md`
-- Bundled 子技能目录：`subskills/README.md`
+- 阶段 2-2.5 方案架构 worker：`references/solution-architecture-worker-standards.md`
+- 阶段 3 原型设计 worker：`references/prototype-design-worker-standards.md`
+- 阶段 4-5 文档交付 worker：`references/documentation-delivery-worker-standards.md`
+- 支撑 reference 只由对应 worker 按白名单读取，不作为主流程直接入口。
+- Helper skill 同步说明：`subskills/README.md`

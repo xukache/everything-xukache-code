@@ -6,27 +6,28 @@
 
 ## 主 PM 与需求 Worker 分工
 
-- 主 PM：负责理解上下文、派发需求 worker、整合子技能结果、追问用户、验收需求阶段产物。
-- 需求 worker：负责基于用户输入和 bundled subskills 产出问题陈述、JTBD、是否值得做判断、需求清单、风险/验证清单。
+- 主 PM：负责理解上下文、派发需求 worker、整合 helper skill 结果、追问用户、验收需求阶段产物。
+- 需求 worker：负责基于用户输入和全局 helper skills 产出问题陈述、JTBD、是否值得做判断、需求清单、风险/验证清单。
 - 主 PM 不得把需求 worker 的输出原样交付；必须审核、修正、标注假设，并用业务语言向用户确认。
 
 ## 子 Agent 调度规则
 
-运行环境支持子 agent 时，主 PM 必须派发真实需求 worker。
+每个产品迭代第一次进入需求阶段时，主 PM 必须新开真实需求 worker。阶段内补充、调整、返工时复用已启动的需求 worker，不再重复新开。
 
 需求 worker 的任务说明必须包含：
 
 - 用户原始诉求和补充上下文。
 - 当前已知事实与假设。
-- 要读取的 bundled subskills。
+- 要调用的 helper skills。
 - 本阶段必须输出的结构。
 - 不允许进入原型、PRD、技术方案或排期。
 
-如果当前环境不支持子 agent，降级为同一模型内的角色化流程，并在 `notes/requirements.md` 记录：
+只有在当前工具环境不支持新开 worker，或用户明确要求不要新开时，才允许降级为同一模型内的角色化流程，并在 `notes/requirements.md` 记录：
 
-- 未派发真实子 agent 的原因。
+- 未派发真实 worker 的原因：工具不支持 / 用户明确禁止 / 其他。
+- 如果是阶段内调整，记录复用了哪个已启动 worker。
 - 采用的角色化 worker 流程。
-- 使用和未使用的 subskill。
+- 使用和未使用的 helper skill。
 - 主 PM 验收结论。
 
 ## 阶段引用白名单
@@ -34,14 +35,14 @@
 需求 worker 只能读取以下输入：
 
 - `references/demand-worker-standards.md`。
-- `subskills/problem-statement/SKILL.md`。
-- `subskills/jobs-to-be-done/SKILL.md`。
-- `subskills/discovery-interview-prep/SKILL.md`。
-- `subskills/pol-probe/SKILL.md`。
-- `subskills/user-story/SKILL.md`。
-- `subskills/user-story-splitting/SKILL.md`。
-- `subskills/epic-breakdown-advisor/SKILL.md`。
-- `subskills/prd-development/SKILL.md`。
+- 全局 `problem-statement` skill。
+- 全局 `jobs-to-be-done` skill。
+- 全局 `discovery-interview-prep` skill。
+- 全局 `pol-probe` skill。
+- 全局 `user-story` skill。
+- 全局 `user-story-splitting` skill。
+- 全局 `epic-breakdown-advisor` skill。
+- 全局 `prd-development` skill。
 - 用户提供的原始上下文、补充回答和已确认材料。
 
 需求 worker 不得读取或套用以下阶段文档：
@@ -53,11 +54,11 @@
 
 如果用户明确要求参考竞品、开源框架或行业最佳实践，需求 worker 只能把外部信息转成待验证假设、风险、后置项或验证动作，不得直接扩展 MVP 范围。
 
-## 需求阶段必须读取的子技能
+## 需求阶段必须调用的 Helper Skills
 
-8 个技能都必须 bundle，但不是每次全量调用。需求 worker 必须记录“已用 / 未用 / 未用原因”。
+8 个技能都必须先从 `subskills/` 同步到全局 skills 目录，再按正常 skill 名称调用。不是每次全量调用；需求 worker 必须记录“已用 / 未用 / 未用原因”。
 
-| 子技能 | 何时使用 | 作用 | 是否必用 |
+| Helper skill | 何时使用 | 作用 | 是否必用 |
 | --- | --- | --- | --- |
 | `problem-statement` | 需求模糊、用户先讲方案、老板意见或一句话想法 | 重写问题，明确用户、目标、阻碍、原因和影响 | 模糊需求必用 |
 | `jobs-to-be-done` | 用户只讲功能、页面或模块 | 把功能语言拉回真实任务、痛点和收益 | 功能诉求必用 |
@@ -96,15 +97,15 @@
 |  | 做 / 先验证 / 后置 / 不做 |  | 高/中/低 |  |
 
 ### 4. 需求清单草案
-| 需求编号 | 用户/角色 | 问题陈述 | JTBD | 用户目标 | 功能候选 | 价值/痛点代价 | 证据等级 | 是否值得做 | 优先级 | 进入一期原因 | 依赖与风险 | 验收信号 | 使用的子技能 |
+| 需求编号 | 用户/角色 | 问题陈述 | JTBD | 用户目标 | 功能候选 | 价值/痛点代价 | 证据等级 | 是否值得做 | 优先级 | 进入一期原因 | 依赖与风险 | 验收信号 | 使用的 helper skill |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 ### 5. 风险与验证清单
-| 假设/风险 | 影响 | 验证方式 | 触发决策 | 使用的子技能 |
+| 假设/风险 | 影响 | 验证方式 | 触发决策 | 使用的 helper skill |
 | --- | --- | --- | --- | --- |
 
-### 6. 子技能调用记录
-| 子技能 | 已用/未用 | 使用原因或未用原因 | 关键输出 |
+### 6. Helper Skill 调用记录
+| Helper skill | 已用/未用 | 使用原因或未用原因 | 关键输出 |
 | --- | --- | --- | --- |
 
 ### 7. 下一阶段准入结论
@@ -132,7 +133,7 @@
 - 进入一期原因。
 - 依赖与风险。
 - 验收信号。
-- 使用的子技能。
+- 使用的 helper skill。
 
 ## 主 PM 验收门槛
 
@@ -142,7 +143,7 @@
 - 没有 JTBD，不把功能诉求当成需求。
 - 没有“是否值得做”判断，不进入 MVP 范围。
 - 没有需求清单，不进入交互架构或原型设计。
-- 子技能未调用且未记录原因，不允许完成需求阶段。
+- helper skill 未调用且未记录原因，不允许完成需求阶段。
 - 如果判断为“先验证”，必须给出验证动作或说明为什么暂不验证。
 - 如果判断为“后置”或“不做”，必须说明原因，避免后续又偷偷进入原型。
 
@@ -154,5 +155,5 @@
 - 是否值得做判断摘要。
 - 需求清单表。
 - 暂不做/先验证/后置项。
-- 子技能使用记录摘要。
+- helper skill 使用记录摘要。
 - 下一步：确认后才进入范围表和交互架构。

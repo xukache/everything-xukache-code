@@ -26,6 +26,7 @@ pm-work/
         README.md
       notes/
         requirements.md
+        stage-workers.md
       assets/
 ```
 
@@ -38,12 +39,13 @@ Markdown 文件是迭代、评审和 diff 的事实源。HTML 文件用于阅读
 必须包含：
 
 - `README.md`：交付索引、版本状态、文档地图、职责边界。
-- `requirements-list.md`：需求阶段确认版需求清单，记录问题陈述、JTBD、是否值得做、优先级、风险、验收信号和子技能调用记录。
+- `requirements-list.md`：需求阶段确认版需求清单，记录问题陈述、JTBD、是否值得做、优先级、风险、验收信号和 helper skill 调用记录。
 - `prd.md`：正式产品需求文档。
 - `flow.md`：Mermaid 源码和流程规则。
 - `dev-handoff.md`：产品侧开发交接文档。
 - `final-delivery.md`：最终确认版交付说明。
 - `notes/requirements.md`：需求沟通笔记和决策记忆。
+- `notes/stage-workers.md`：阶段 worker 调用、降级、主 PM 验收和用户确认记录。
 
 规则：
 
@@ -73,12 +75,13 @@ Markdown 文件是迭代、评审和 diff 的事实源。HTML 文件用于阅读
 - 原始诉求和业务背景。
 - 问题定义。
 - 需求 worker 调用记录和是否值得做判断。
+- 方案架构、原型设计和文档交付 worker 的调用摘要。
 - 当前流程。
 - 外部参考扫描：来源链接、隐藏需求、对 MVP 的影响、拒绝扩大的内容。
 - 范围选择：必须有、后置、不做、风险。
 - 交互架构：角色入口、功能关系、菜单结构、页面职责、动作位置、状态流。
 - 原型交互覆盖：必须有功能、原型页面、入口/控件、用户动作、成功反馈、状态/数据变化、异常路径、验收场景。
-- 原型设计主题和 bundled `ui-ux-pro-max` 补充输入。
+- 原型设计主题和全局 `ui-ux-pro-max` 补充输入。
 - 原型打磨记录：`impeccable` 可用性、主动定位/安装/恢复动作、检查结果、修正内容、未采纳建议和原因。
 - 业务规则和异常。
 - 算法或数据参与点。
@@ -104,18 +107,18 @@ Markdown 文件是迭代、评审和 diff 的事实源。HTML 文件用于阅读
 6. 暂停等待用户确认主题。用户未确认前，不得进入 HTML 原型生成。
 7. 读取被确认的主题文件。
 8. 把主题应用到原型布局、CSS、组件和交互状态中。
-9. 仅在需要时使用 bundled `ui-ux-pro-max` 补充 UX、布局、图表、可访问性和响应式建议。
+9. 仅在需要时使用全局 `ui-ux-pro-max` 补充 UX、布局、图表、可访问性和响应式建议。
 10. 在 `notes/requirements.md` 中记录交互架构摘要、原型交互覆盖矩阵、设计方向确认表单、候选主题、用户确认结果、产品语境、被选中的主题、样例预览路径、选择原因和补充建议。
-11. 原型初稿完成后，读取 `references/impeccable-polish-gate.md`，优先使用 bundled `subskills/impeccable` 做可用性、视觉层级、响应式、可访问性和交互状态打磨。
-12. 如果 bundled `impeccable` 不可用，先主动定位本地 skill、尝试安装或使用 `npx impeccable` / 项目脚本；只有解决失败并记录原因后，才允许按人工降级清单审阅。
+11. 原型初稿完成后，读取 `references/impeccable-polish-gate.md`，先同步 bundled `impeccable` 到全局 skills 目录，再执行 `impeccable audit` 和 `impeccable polish`。
+12. 如果全局 `impeccable` 不可用，先主动同步、安装或使用 `npx impeccable` / 项目脚本；只有解决失败并记录原因后，才允许按人工降级清单审阅。
 
 需要补充建议时，使用：
 
 ```bash
-python skills/pm/pm-workflow/subskills/ui-ux-pro-max/scripts/search.py "<product type> <industry> <style keywords>" --design-system -p "<Project Name>" -f markdown
+python skills/pm/pm-workflow/scripts/sync_subskills.py --skill ui-ux-pro-max
 ```
 
-优先使用 bundled 子技能。只有 `subskills/ui-ux-pro-max` 缺失或不可用时，才使用当前环境中的其他可用路径。不要用它的输出替换 `assets/design-themes/` 中已经匹配的主题。
+同步后按全局 `ui-ux-pro-max` skill 调用。需要脚本时优先使用全局 skill 目录中的脚本；全局脚本不存在时，才回退到 bundled 副本脚本。不要用它的输出替换 `assets/design-themes/` 中已经匹配的主题。
 
 只提取以下补充建议：
 

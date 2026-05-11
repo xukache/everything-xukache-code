@@ -4,14 +4,14 @@
 
 目标是输出产品级详规：让研发、测试、设计和业务评审方不靠猜也能理解要做什么、为什么做、做到什么程度算通过。文档仍然停在产品职责边界内；除非用户明确改变任务，否则不要定义最终数据库结构、正式 API 契约、技术选型、迭代排期或系统架构。
 
-`pm-workflow` 在 `subskills/` 下内置了方法类子技能。需要更细结构时，优先读取这些 bundled 版本，再回退到用户本机安装的技能：
+`pm-workflow` 在 `subskills/` 下内置了方法类 helper skills。需要更细结构时，先运行或等价执行 `python skills/pm/pm-workflow/scripts/sync_subskills.py` 同步到全局 skills 目录，再按正常 skill 名称调用：
 
-- `subskills/prd-development/SKILL.md`：PRD 深度和需求结构。
-- `subskills/user-story/SKILL.md`：用户故事和 Gherkin 验收标准。
-- `subskills/epic-hypothesis/SKILL.md`：战略上下文、目标结果和验证假设。
-- `subskills/user-story-mapping/SKILL.md`：流程拆解和版本切片。
+- `prd-development`：PRD 深度和需求结构。
+- `user-story`：用户故事和 Gherkin 验收标准。
+- `epic-hypothesis`：战略上下文、目标结果和验证假设。
+- `user-story-mapping`：流程拆解和版本切片。
 
-这些子技能只提供方法参考；最终输出必须遵守本文档标准。
+这些 helper skills 只提供方法参考；最终输出必须遵守本文档标准。
 
 ## 生产级完成规则
 

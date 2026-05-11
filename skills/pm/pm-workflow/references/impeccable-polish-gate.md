@@ -12,7 +12,7 @@
 ## 原型打磨记录
 
 - Impeccable 可用性：
-- 执行方式：skill / npx impeccable / 项目脚本 / 人工降级
+- 执行方式：impeccable audit / impeccable polish / npx impeccable / 项目脚本 / 人工降级
 - 主动解决动作：
 - 检查范围：
 - 发现问题：
@@ -25,18 +25,18 @@
 
 如果看起来无法使用 `impeccable`，不要停在“未安装”。按顺序尝试：
 
-1. 先检查 bundled 版本：`skills/pm/pm-workflow/subskills/impeccable/SKILL.md`。
-2. 如果存在，读取它，并按其中的 setup、preflight、critique、audit、polish 或产品 UI 评审说明执行。相对引用和脚本从 `subskills/impeccable/` 解析。
-3. 检查当前会话可用 skill 列表中是否有 `impeccable`。
-4. 检查常见本地路径：
+1. 先运行或等价执行 `python skills/pm/pm-workflow/scripts/sync_subskills.py --skill impeccable`，把 bundled `impeccable` 同步到全局 skills 目录。
+2. 检查当前会话可用 skill 列表中是否有 `impeccable`。
+3. 按全局 `impeccable` skill 执行 `impeccable audit`，再执行 `impeccable polish`。
+4. 如果全局 skill 仍不可用，检查常见本地路径：
    - `C:\Users\<user>\.agents\skills\impeccable\SKILL.md`
    - `C:\Users\<user>\.codex\skills\impeccable\SKILL.md`
    - `<repo>/.agents/skills/impeccable/SKILL.md`
    - `<repo>/skills/impeccable/SKILL.md`
-5. 如果找到本地 `SKILL.md`，读取并按其 setup、preflight、critique、audit、polish 或产品 UI 评审说明执行。
+5. 如果找到本地 `SKILL.md`，同步或安装到全局 skills 目录后，再按 `audit` 和 `polish` 执行。
 6. 如果 bundled 和本地版本都不存在，且当前环境提供 `skill-installer`，先尝试安装 `impeccable`，再回到本关卡。
 7. 如果项目或环境支持命令执行，尝试合适的 `npx impeccable` 命令或本地 wrapper。
-8. 如果 bundled 解析、安装或命令执行因为网络、权限、包管理器缺失或工具不可用而失败，记录明确阻塞原因，再使用下面的人工降级清单。
+8. 如果全局同步、安装或命令执行因为网络、权限、包管理器缺失或工具不可用而失败，记录明确阻塞原因，再使用下面的人工降级清单。
 
 除非需要用户提供凭据、审批、私有源权限或受策略限制，否则不要先要求用户自己解决安装问题。
 
@@ -44,12 +44,11 @@
 
 选择最轻但足够的模式：
 
-- `critique`：原型已经存在，需要先做 UX/设计评审。
 - `audit`：主要风险是可访问性、响应式、性能或技术 UI 质量。
 - `polish`：设计方向已经确认，只需要最终打磨。
 - `shape`：原型结构仍缺少确认过的设计 brief；正常情况下这一步应在 HTML 生成前完成。
 
-对 `pm-workflow`，原型生成后的默认方式是先 `critique`，再做有针对性的 `polish` 修正。不要用 `craft` 新增功能范围。
+对 `pm-workflow`，原型生成后的默认方式是先 `audit`，再做有针对性的 `polish` 修正。不要用 `craft` 新增功能范围。
 
 ## 范围保护
 
@@ -98,9 +97,8 @@
 
 只有满足以下任一条件，才能交付原型：
 
-- 已运行 `impeccable`，并记录修正或决策。
-- 已找到 bundled `subskills/impeccable`，并遵循其相关评审说明。
-- 已找到本地 `impeccable` skill，并遵循其相关评审说明。
+- 已运行 `impeccable audit` 和 `impeccable polish`，并记录修正或决策。
+- 已将 bundled 或本地 `impeccable` 同步到全局 skills 目录，并执行 `audit` + `polish`。
 - 已尝试安装或命令执行，因已记录原因失败，并完成人工降级清单。
 
 不得把“工具缺失”作为跳过打磨关卡的唯一理由。

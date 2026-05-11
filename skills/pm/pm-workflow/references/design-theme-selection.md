@@ -12,7 +12,7 @@
 - 先读取被确认的主题文件，再写 HTML、CSS 和组件。
 - 已有主题匹配时，必须优先推荐本地精选主题：`assets/design-themes/vben/DESIGN.md` 或 `assets/design-themes/revenuecat/DESIGN.md`，但仍要提供 3-5 个可比较候选主题。
 - 当用户指定品牌、参考站点、截图或具体风格名时，可以使用 `assets/design-themes/open-design/<slug>/DESIGN.md` 中的 Open Design 扩展主题。
-- `ui-ux-pro-max` 只能补充布局、图表、可访问性、响应式和组件细节，不能覆盖已选主题的颜色、字体、圆角、间距、组件气质和整体视觉方向。优先使用 bundled subskill：`subskills/ui-ux-pro-max/SKILL.md`。
+- `ui-ux-pro-max` 只能补充布局、图表、可访问性、响应式和组件细节，不能覆盖已选主题的颜色、字体、圆角、间距、组件气质和整体视觉方向。调用前先将 bundled 副本同步到全局 skills 目录，再按 `ui-ux-pro-max` skill 调用。
 - 每次原型交付都要把设计方向确认表单、候选主题、用户确认结果、主题源文件、样例预览路径和补充建议记录到 `notes/requirements.md` 的“原型设计输入”中。
 - 如果用户说“想看看是什么样子”“有哪些风格”“先看预览”，先输出候选主题和本地 `examples.html` 预览路径；这不是正式原型确认。
 
@@ -183,12 +183,12 @@
 2. 给出 3-5 个候选视觉方向，例如“企业运营工作台”“开发者工具极简风”“医疗数据审阅台”“消费级移动工具”等。
 3. 等用户选定方向后，再生成临时设计摘要。
 4. 可以先查找 Open Design 扩展库中是否有相近视觉方向。
-5. 可以调用 bundled `ui-ux-pro-max` 补充设计系统建议。
+5. 可以调用全局 `ui-ux-pro-max` 补充设计系统建议。
 6. 不要把临时建议写进已有主题文件。
 
 ## `ui-ux-pro-max` 的使用边界
 
-调用时优先读取 `skills/pm/pm-workflow/subskills/ui-ux-pro-max/SKILL.md`，需要检索脚本时优先运行 `skills/pm/pm-workflow/subskills/ui-ux-pro-max/scripts/search.py`。只有 bundled copy 缺失或不可用时，才回退到用户本地安装的同名 skill。
+调用前先运行或等价执行 `python skills/pm/pm-workflow/scripts/sync_subskills.py --skill ui-ux-pro-max`，把 bundled 副本同步到全局 skills 目录。同步后按 `ui-ux-pro-max` skill 调用；需要检索脚本时优先使用全局 skill 目录中的脚本，若全局脚本不存在，再回退到 bundled 副本的脚本。
 
 可以用 `ui-ux-pro-max` 补充：
 
