@@ -4,7 +4,7 @@ description: 面向算法/研发人员的产品经理工作流。用于澄清业
 ---
 # PM Workflow
 
-把业务方的口头需求、零散材料或模糊想法，转成可确认、可演示、可开发、可版本管理的产品交付物：结构化需求上下文、可交互 HTML 原型、PRD、Mermaid 流程图、开发交接文档、需求笔记和版本化索引页。
+把业务方的口头需求、零散材料或模糊想法，转成可确认、可演示、可开发、可版本管理的产品交付物：结构化需求上下文、需求清单、可交互 HTML 原型、PRD、Mermaid 流程图、开发交接文档、需求笔记和版本化索引页。
 
 这个技能默认服务于算法人员、研发人员或技术负责人：你不需要先成为专业产品经理，但需要用产品经理的方式把问题、价值、边界、规则和验收标准问清楚。
 
@@ -13,6 +13,7 @@ description: 面向算法/研发人员的产品经理工作流。用于澄清业
 - 先定义问题，再定义方案：不要一上来实现页面或算法流程，先确认业务问题、目标用户、业务价值和成功指标。
 - 对话式采集需求：主动追问缺失信息，把业务方的自然语言转成可开发的结构化上下文。
 - 资深 PM 深挖：用户给的是功能愿望时，必须追问真实用户、当前流程、最大痛点、失败代价、第一期验收信号和替代方案；不要把“想要某功能”直接写成确认需求。
+- 需求阶段 worker 先行：模糊需求、功能诉求或新产品想法必须先由需求阶段 worker 使用 bundled PM subskills 做问题陈述、JTBD、是否值得做判断和需求清单；主 PM 验收通过后才进入范围、交互架构或原型。
 - 三维度定义细节：需求范围、规则限制、验收标准必须同时存在。
 - 三段式推进：先业务需求沟通梳理，再产品原型和相关文档输出，最后做原型和文档版本管理。
 - 功能先成系统，再成页面：进入视觉原型前，必须确认功能之间的依赖关系、主流程、异常流程、状态流转、页面职责、菜单命名和关键操作位置。
@@ -39,6 +40,8 @@ description: 面向算法/研发人员的产品经理工作流。用于澄清业
 - 下一步说明：回答后才能进入问题定义、范围表或交付目录。
 
 首轮澄清时禁止初始化目录、写入 `requirements.md`、输出 MVP 范围表、生成 PRD 或制作原型，除非用户明确要求先创建工作区。
+
+当进入需求梳理时，主 PM 必须先读取 `references/demand-worker-standards.md`，并按其规则派发需求阶段 worker。若当前环境支持子 agent，使用真实子 agent；若不支持，降级为角色化 worker 流程并记录原因。需求阶段必须产出需求清单；没有需求清单，不得进入交互架构或原型设计。
 
 当用户已经列出功能点但没有讲清功能之间怎么配合时，先把功能点转成待验证的工作流假设，并追问：
 
@@ -69,19 +72,33 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 - 目标结果：希望用户完成什么动作，业务指标如何改善。
 - 已知约束：系统边界、数据来源、权限、合规、时效、成本、算法能力边界。
 
-如果用户只提供模糊想法或功能愿望，先按 `references/discovery-intake.md` 做问题陈述、JTBD、证据分层、真实痛点深挖和阶段门槛判断；信息不足时，再按 `references/discovery-playbook.md` 的问题库追问。优先问会影响产品形态、功能交互和开发边界的问题。
+**需求阶段 worker 编排**
 
-当需求涉及平台、工具、系统、算法工作台、数据流程、内部管理端、审核台、标注台或其他成熟领域时，在初步问题定义之后、MVP 范围确认之前，按 `references/discovery-intake.md` 的 External Reference Lens 和 `references/discovery-playbook.md` 的外部参考扫描规则执行网络/GitHub 搜索。搜索目标是发现用户可能遗漏的角色、状态、异常、权限、数据质量、审计或人工兜底需求。
+在用户输入仍处于模糊想法、功能愿望、复杂 Epic 或新产品方向时，必须先执行需求阶段 worker：
 
-外部参考扫描必须遵守最小边界原则：
+1. 主 PM 读取 `references/demand-worker-standards.md`。
+2. 主 PM 派发需求 worker，要求其优先读取 bundled subskills：
+   - `subskills/problem-statement/SKILL.md`
+   - `subskills/jobs-to-be-done/SKILL.md`
+   - `subskills/discovery-interview-prep/SKILL.md`
+   - `subskills/pol-probe/SKILL.md`
+   - `subskills/user-story/SKILL.md`
+   - `subskills/user-story-splitting/SKILL.md`
+   - `subskills/epic-breakdown-advisor/SKILL.md`
+   - `subskills/prd-development/SKILL.md`
+3. 需求 worker 输出问题陈述、JTBD、是否值得做判断、需求清单草案、风险/验证清单和子技能调用记录。
+4. 主 PM 审核 worker 输出，修正过度推断、标注假设，向用户输出需求确认稿。
+5. 用户确认需求清单后，才能进入范围表和交互架构。
 
-- 最多选 3-5 个高可信来源，优先官方文档、成熟开源仓库、主流产品文档或被广泛使用的框架。
-- 搜索发现只能作为启发输入，默认记录为 `待验证假设`、`后置` 或 `风险待确认`。
-- 不得因为某个开源框架有复杂能力，就把插件市场、复杂权限、自动化工作流、技术架构、部署方案或高级配置纳入第一期。
-- 只有当用户确认某个发现直接解决当前核心痛点时，才允许进入 `必须有`。
-- 若当前环境无法联网，记录未执行原因，不阻塞需求澄清。
+需求 worker 不是每次都全量使用 8 个技能，但必须记录每个技能“已用 / 未用 / 未用原因”。没有调用记录，不得完成需求阶段。
+
+需求阶段执行引用白名单：只读取 `references/demand-worker-standards.md` 和上述 8 个 bundled subskills。不要在需求阶段读取交互架构、原型设计、文档交付、流程图、HTML 模板或视觉打磨相关 references。旧版 discovery reference 不再作为阶段 1 的直接输入，避免同一阶段出现两套规则。
+
+若确实需要行业参考或竞品启发，只能作为需求 worker 的验证动作建议或主 PM 的最小补充输入，且必须记录为 `待验证假设`、`先验证`、`后置` 或 `风险待确认`。不得因为外部产品有复杂能力，就把插件市场、复杂权限、自动化工作流、技术架构、部署方案或高级配置纳入第一期。
 
 把已确认或暂定确认的关键信息同步沉淀到 `notes/requirements.md`，包括问题定义、范围取舍、业务规则、算法参与点、验收标准和后续决策项。
+
+需求阶段结束前，必须同步沉淀或生成 `requirements-list.md`。需求清单必须包含需求编号、用户/角色、问题陈述、JTBD、用户目标、功能候选、价值/痛点代价、证据等级、是否值得做、优先级、进入一期原因、依赖与风险、验收信号和使用的子技能。
 
 **暂停确认 1：问题定义**
 
@@ -100,9 +117,11 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 
 若 `目标用户 / 当前流程 / 核心痛点 / 失败代价 / 成功指标或验收信号` 中任意两项仍不清楚，不得进入范围表；继续追问或标注“暂定继续”的风险。
 
+若缺少 `问题陈述 / JTBD / 是否值得做判断 / 需求清单 / 子技能调用记录` 中任意一项，不得进入范围表；继续派发需求 worker、追问用户或标注为待验证。
+
 ### 阶段 2：产品原型和相关文档输出
 
-只有在问题定义已被用户确认，或用户明确允许“基于当前假设继续”时，才能进入本阶段。否则继续停留在阶段 1，按 `references/discovery-intake.md` 补齐问题陈述、JTBD、证据分层和交付准备度。
+只有在问题定义已被用户确认，或用户明确允许“基于当前假设继续”时，才能进入本阶段。否则继续停留在阶段 1，按 `references/demand-worker-standards.md` 补齐问题陈述、JTBD、是否值得做判断、需求清单和子技能调用记录。
 
 基于已确认的问题定义，输出产品方案草案：
 
@@ -258,6 +277,7 @@ python skills/pm/pm-workflow/scripts/scaffold_iteration.py --root output/pm-work
 
 其他正式交付物：
 
+- `requirements-list.md`：需求阶段确认版需求清单，记录问题陈述、JTBD、是否值得做、优先级、风险、验收信号和子技能调用记录。
 - `final-delivery.md`：评审通过后的确认版交付说明。
 - `notes/requirements.md`：业务沟通和中间关键信息沉淀。
 
@@ -282,6 +302,7 @@ pm-work/
   product-slug/
     v20260509-mvp/
       README.md
+      requirements-list.md
       prd.md
       flow.md
       dev-handoff.md
@@ -316,6 +337,9 @@ pm-work/
 
 - 是否已确认问题定义，而不是只复述解决方案。
 - 是否已追问真实痛点、当前流程、失败代价和第一期验收信号，而不是只收集功能点。
+- 是否已执行需求阶段 worker，且记录每个需求类 subskill 的使用或未用原因。
+- 是否已输出并确认需求清单，而不是只有功能列表。
+- 是否已判断每个功能候选“做 / 先验证 / 后置 / 不做”，并说明证据等级和原因。
 - 是否有 `本次不做`，避免范围失控。
 - 是否每条关键规则都有对应验收标准。
 - 是否已确认功能关系、菜单结构、页面职责、关键动作位置和状态流转。
@@ -327,6 +351,7 @@ pm-work/
 - 是否每个关键页面动作都有动作级验收标准、状态变化和异常反馈。
 - 是否已完成 `impeccable` 原型打磨；如果起初不可用，是否已主动定位/安装/恢复，且记录尝试过程；是否未借打磨新增未经确认的业务范围。
 - 是否 `prd.md`、`flow.md`、`dev-handoff.md`、`final-delivery.md` 与 HTML 展示一致，没有孤立文档和过期描述。
+- 是否 `requirements-list.md` 与 PRD 范围、交互架构和原型覆盖一致。
 - 是否正式文档达到产品级详规，不是只有章节名、空表或待补充占位。
 - 是否流程图使用 Mermaid 源码，并沉淀在 `flow.md`。
 - 是否 `flow.html` 默认显示渲染后的 Mermaid SVG 画布，且支持离线查看、拖拽、缩放、重置、适配视图和源码切换。
@@ -336,14 +361,11 @@ pm-work/
 
 ## 参考资料
 
-- 需求追问与澄清：`references/discovery-playbook.md`
-- 需求梳理入口与阶段门槛：`references/discovery-intake.md`
-- 交互架构与菜单确认：`references/interaction-architecture.md`
-- 原型设计主题选择：`references/design-theme-selection.md`
-- 原型完整交互标准：`references/prototype-interaction-standards.md`
-- Impeccable 原型打磨关卡：`references/impeccable-polish-gate.md`
-- 生产级文档标准：`references/production-document-standards.md`
-- 离线流程图 viewer 标准：`references/flow-viewer-standards.md`
-- HTML 原型与 PRD 交付标准：`references/artifact-standards.md`
-- 页面右下角 PRD 浮标模板：`references/html-prd-template.md`
+按阶段读取 reference，不要跨阶段预读：
+
+- 阶段 1 需求 worker 唯一入口：`references/demand-worker-standards.md`
+- 阶段 2.5 交互架构：`references/interaction-architecture.md`
+- 阶段 3 原型主题与交互：`references/design-theme-selection.md`、`references/prototype-interaction-standards.md`、`references/html-prd-template.md`
+- 阶段 3 原型打磨：`references/impeccable-polish-gate.md`
+- 阶段 4 文档交付：`references/production-document-standards.md`、`references/flow-viewer-standards.md`、`references/artifact-standards.md`
 - Bundled 子技能目录：`subskills/README.md`

@@ -70,6 +70,7 @@ def index_html(product: str, iteration: str) -> str:
     <section class="grid" aria-label="交付物入口">
       <a href="prototype.html"><strong>交互原型入口</strong><span>全量演示 must-have 功能、动作反馈、状态变化和 PRD 浮标。</span></a>
       <a href="prototype/example-page.html"><strong>多页面原型模板</strong><span>当单页无法承载完整交互时，将页面拆入 prototype/ 目录。</span></a>
+      <a href="requirements-list.md"><strong>需求清单</strong><span>记录问题陈述、JTBD、是否值得做、优先级、风险和验收信号。</span></a>
       <a href="prd.html"><strong>PRD 文档</strong><span>汇总背景、范围、规则、流程和验收标准。</span></a>
       <a href="flow.html"><strong>Mermaid 流程图</strong><span>展示主流程、状态流转和异常分支；源文件见 flow.md。</span></a>
       <a href="dev-handoff.html"><strong>开发交接</strong><span>记录需求侧实体、页面动作、规则和验收清单。</span></a>
@@ -660,6 +661,7 @@ def readme_md(product: str, iteration: str) -> str:
 | 文档 | Markdown | HTML |
 | --- | --- | --- |
 | PRD | [prd.md](prd.md) | [prd.html](prd.html) |
+| 需求清单 | [requirements-list.md](requirements-list.md) | - |
 | Mermaid 流程图 | [flow.md](flow.md) | [flow.html](flow.html) |
 | 开发交接 | [dev-handoff.md](dev-handoff.md) | [dev-handoff.html](dev-handoff.html) |
 | 最终交付说明 | [final-delivery.md](final-delivery.md) | [final-delivery.html](final-delivery.html) |
@@ -676,6 +678,12 @@ def readme_md(product: str, iteration: str) -> str:
 
 - 在问题定义、范围确认和原型评审后填写已确认范围；未确认前只记录为需求笔记中的假设。
 
+## 需求阶段完成线
+
+- 需求阶段必须先完成 worker 输出和主 PM 验收。
+- [requirements-list.md](requirements-list.md) 是需求清单源文件；没有确认版需求清单，不进入交互架构或原型设计。
+- 每条需求都必须包含问题陈述、JTBD、是否值得做判断、证据等级、优先级、风险和验收信号。
+
 ## 原型交互覆盖要求
 
 - `prototype.html` 是原型入口页；复杂交互拆入 `prototype/` 目录。
@@ -690,6 +698,81 @@ def readme_md(product: str, iteration: str) -> str:
 ## 后续决策项
 
 - 列出仍会影响开发拆解、验收或排期的问题。
+"""
+
+
+def requirements_list_md(product: str, iteration: str) -> str:
+    return f"""# {product} 需求清单 - {iteration}
+
+状态：待评审
+
+## 1. 需求阶段结论
+
+| 项 | 内容 |
+| --- | --- |
+| 需求阶段 worker | 已派发 / 角色化降级 / 未执行 |
+| 主 PM 验收结论 | 通过 / 需补充 / 不通过 |
+| 是否允许进入范围表 | 是 / 否 |
+| 是否允许进入交互架构 | 是 / 否 |
+| 主要未决问题 |  |
+
+## 2. 子技能调用记录
+
+| 子技能 | 已用/未用 | 使用原因或未用原因 | 关键输出 |
+| --- | --- | --- | --- |
+| problem-statement |  | 模糊需求第一闸门 |  |
+| jobs-to-be-done |  | 功能诉求转真实任务 |  |
+| discovery-interview-prep |  | 证据不足或需访谈 |  |
+| pol-probe |  | 高风险假设或是否该做不确定 |  |
+| user-story |  | 需求进入可交付表达 |  |
+| user-story-splitting |  | 需求过大需拆小 |  |
+| epic-breakdown-advisor |  | 复杂 Epic 或长流程拆解 |  |
+| prd-development |  | PRD 准备度检查 |  |
+
+## 3. 问题陈述
+
+```text
+用户：
+想完成：
+当前阻碍：
+可能原因：
+造成影响：
+```
+
+## 4. JTBD
+
+| 角色 | 功能性任务 | 当前替代方案 | 痛点 | 痛点代价 | 期望收益 |
+| --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |
+
+## 5. 是否值得做判断
+
+| 功能候选 | 判断 | 理由 | 证据等级 | 建议动作 |
+| --- | --- | --- | --- | --- |
+|  | 做 / 先验证 / 后置 / 不做 |  | 高/中/低 |  |
+
+## 6. 需求清单
+
+| 需求编号 | 用户/角色 | 问题陈述 | JTBD | 用户目标 | 功能候选 | 价值/痛点代价 | 证据等级 | 是否值得做 | 优先级 | 进入一期原因 | 依赖与风险 | 验收信号 | 使用的子技能 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| REQ-001 |  |  |  |  |  |  | 高/中/低 | 做 / 先验证 / 后置 / 不做 | P0/P1/P2 |  |  |  |  |
+
+## 7. 风险与验证清单
+
+| 假设/风险 | 影响 | 验证方式 | 触发决策 | 使用的子技能 |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
+
+## 8. 主 PM 验收记录
+
+| 检查项 | 结果 | 说明 |
+| --- | --- | --- |
+| 是否有问题陈述 | 是/否 |  |
+| 是否有 JTBD | 是/否 |  |
+| 是否有是否值得做判断 | 是/否 |  |
+| 是否形成需求清单 | 是/否 |  |
+| 是否记录子技能调用情况 | 是/否 |  |
+| 是否需要继续追问 | 是/否 |  |
 """
 
 
@@ -1117,6 +1200,21 @@ Because:
 This causes:
 ```
 
+## 需求阶段 worker 调用记录
+
+- 真实子 agent 是否派发：
+- 若未派发，降级原因：
+- 主 PM 验收结论：
+- 使用的子技能：
+- 未使用的子技能及原因：
+- 关键输出链接：[requirements-list.md](../requirements-list.md)
+
+## 是否值得做判断
+
+| 功能候选 | 判断 | 理由 | 证据等级 | 建议动作 |
+| --- | --- | --- | --- | --- |
+|  | 做 / 先验证 / 后置 / 不做 |  | 高/中/低 |  |
+
 ## JTBD / 真实任务
 
 - Functional job：
@@ -1268,6 +1366,7 @@ def main() -> int:
     write_if_missing(base / "dev-handoff.html", simple_doc_html(args.product, args.iteration, "开发交接", "dev-handoff.md", "开发交接只表达需求侧建议，不替代技术方案或排期。"))
     write_if_missing(base / "final-delivery.html", simple_doc_html(args.product, args.iteration, "最终交付说明", "final-delivery.md", "评审通过后在 final-delivery.md 中记录确认范围和后续决策项。"))
     write_if_missing(base / "README.md", readme_md(args.product, args.iteration))
+    write_if_missing(base / "requirements-list.md", requirements_list_md(args.product, args.iteration))
     write_if_missing(base / "prd.md", prd_md(args.product, args.iteration))
     write_if_missing(base / "flow.md", flow_md(args.product, args.iteration))
     write_if_missing(base / "dev-handoff.md", dev_handoff_md(args.product, args.iteration))

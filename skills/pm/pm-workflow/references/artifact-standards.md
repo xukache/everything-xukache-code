@@ -11,6 +11,7 @@ pm-work/
   product-slug/
     vYYYYMMDD-iteration-slug/
       README.md
+      requirements-list.md
       prd.md
       flow.md
       dev-handoff.md
@@ -37,6 +38,7 @@ Markdown 文件是迭代、评审和 diff 的事实源。HTML 文件用于阅读
 必须包含：
 
 - `README.md`：交付索引、版本状态、文档地图、职责边界。
+- `requirements-list.md`：需求阶段确认版需求清单，记录问题陈述、JTBD、是否值得做、优先级、风险、验收信号和子技能调用记录。
 - `prd.md`：正式产品需求文档。
 - `flow.md`：Mermaid 源码和流程规则。
 - `dev-handoff.md`：产品侧开发交接文档。
@@ -70,6 +72,7 @@ Markdown 文件是迭代、评审和 diff 的事实源。HTML 文件用于阅读
 
 - 原始诉求和业务背景。
 - 问题定义。
+- 需求 worker 调用记录和是否值得做判断。
 - 当前流程。
 - 外部参考扫描：来源链接、隐藏需求、对 MVP 的影响、拒绝扩大的内容。
 - 范围选择：必须有、后置、不做、风险。
