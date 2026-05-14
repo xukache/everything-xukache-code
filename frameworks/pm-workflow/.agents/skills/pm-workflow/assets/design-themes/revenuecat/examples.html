@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RevenueCat Theme Examples</title>
+  <style>
+    :root { --bg:#fff; --cloud:#f9f9fb; --text:#1f1f47; --body:#171a1c; --sub:#6c7693; --line:#eaedf6; --primary:#576cdb; --green:#57dba4; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:16px/1.5 "Helvetica Neue", Arial, sans-serif; }
+    .preview-switcher { position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 28px; background:rgba(255,255,255,.94); border-bottom:1px solid var(--line); backdrop-filter:blur(10px); }
+    .preview-title { display:flex; flex-direction:column; gap:2px; min-width:220px; }
+    .preview-title span { color:var(--sub); font-size:13px; }
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+    .tab { border:1px solid var(--line); background:#fff; color:var(--body); border-radius:999px; min-height:36px; padding:0 14px; cursor:pointer; font:inherit; }
+    .tab.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+    .sample-page { display:none; min-height:calc(100vh - 65px); }
+    .sample-page.active { display:block; }
+    h1, h2, h3, p { margin:0; }
+    h1 { font:500 56px/1.08 "Object Sans", system-ui, sans-serif; letter-spacing:-.045em; }
+    h2 { font:500 24px/1.25 "Object Sans", system-ui, sans-serif; letter-spacing:-.02em; }
+    h3 { font-size:16px; }
+    p { color:var(--sub); }
+    .button { border:0; background:var(--primary); color:#fff; border-radius:9999px; padding:14px 24px; font-weight:650; }
+    .link { color:var(--body); text-decoration:none; font-weight:500; }
+    .tag { display:inline-block; color:var(--primary); border:1px solid var(--line); padding:6px 12px; border-radius:999px; font-size:13px; margin-bottom:18px; }
+    .page-header { display:flex; align-items:center; justify-content:space-between; padding:24px 40px; border-bottom:1px solid var(--line); }
+    .container { width:min(1180px,calc(100vw - 40px)); margin:0 auto; padding:64px 0 84px; display:grid; gap:56px; }
+    .hero { display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+    .grid.two { grid-template-columns:1fr 1fr; }
+    .panel { background:var(--cloud); border:1px solid var(--line); border-radius:0; padding:24px; min-height:164px; }
+    .elevated { background:#fff; border-radius:16px; box-shadow:0 4px 20px rgba(71,92,133,.18), 0 30px 60px rgba(144,138,208,.08); padding:24px; }
+    .metric { font-size:52px; color:var(--text); letter-spacing:-.05em; line-height:1; }
+    .fake-ui { display:grid; gap:12px; }
+    .row { min-height:44px; border:1px solid var(--line); background:#fff; display:flex; align-items:center; justify-content:space-between; padding:0 14px; }
+    .product-shot { min-height:360px; background:linear-gradient(92deg, rgb(90,115,242) -14%, rgb(77,77,77) 56%, rgb(87,219,164) 105%); border-radius:32px; padding:28px; display:grid; align-content:end; }
+    .shot-card { background:#fff; border-radius:16px; padding:22px; box-shadow:0 18px 50px rgba(31,31,71,.18); }
+    .admin-shell { display:grid; grid-template-columns:230px 1fr; min-height:calc(100vh - 65px); background:var(--cloud); }
+    .sidebar { background:#fff; border-right:1px solid var(--line); padding:18px; }
+    .sidebar a { display:block; color:var(--sub); text-decoration:none; padding:10px 8px; border-bottom:1px solid var(--line); }
+    .workspace { padding:28px; display:grid; gap:22px; }
+    table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line); }
+    th, td { padding:14px; border-bottom:1px solid var(--line); text-align:left; }
+    th { color:var(--text); background:var(--cloud); }
+    .chart { height:240px; border:1px solid var(--line); background:#fff; padding:20px; display:flex; align-items:end; gap:14px; }
+    .bar { flex:1; background:var(--primary); opacity:.75; }
+    pre { background:#111827; color:#eef2ff; border-radius:16px; padding:20px; overflow:auto; }
+    .phone-wrap { min-height:calc(100vh - 65px); display:grid; place-items:center; background:var(--cloud); padding:42px 20px; }
+    .phone { width:330px; min-height:650px; border:1px solid var(--line); border-radius:34px; padding:18px; background:#fff; box-shadow:0 30px 70px rgba(31,31,71,.12); }
+    .phone-screen { min-height:612px; border-radius:24px; background:#fff; display:grid; gap:16px; align-content:start; }
+    .editorial { width:min(980px,calc(100vw - 40px)); margin:0 auto; padding:64px 0 90px; display:grid; gap:24px; }
+    @media (max-width:900px) {
+      .preview-switcher { align-items:flex-start; flex-direction:column; padding:14px 18px; }
+      .tabs { justify-content:flex-start; }
+      .hero, .grid, .grid.two, .admin-shell { grid-template-columns:1fr; }
+      .sidebar { display:none; }
+      h1 { font-size:38px; }
+      .page-header { padding:20px; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="preview-switcher">
+    <div class="preview-title"><strong>RevenueCat 主题预览</strong><span>切换查看不同产品类型的完整页面</span></div>
+    <div class="tabs" role="tablist" aria-label="产品类型示例">
+      <button class="tab active" data-target="saas">SaaS 产品页</button>
+      <button class="tab" data-target="brand">品牌主页</button>
+      <button class="tab" data-target="admin">后台管理系统</button>
+      <button class="tab" data-target="dashboard">数据分析看板</button>
+      <button class="tab" data-target="developer">开发者工具/文档页</button>
+      <button class="tab" data-target="mobile">移动/消费产品</button>
+      <button class="tab" data-target="editorial">内容/编辑型页面</button>
+    </div>
+  </aside>
+
+  <section class="sample-page active" data-sample="saas">
+    <header class="page-header"><strong>Subscriptly</strong><nav><a class="link">Product</a>&nbsp;&nbsp;<a class="link">Pricing</a>&nbsp;&nbsp;<a class="link">Docs</a></nav><button class="button">Start for free</button></header>
+    <main class="container">
+      <section class="hero"><div><span class="tag">SaaS 产品页</span><h1>Build and grow with precise product systems</h1><p style="margin:22px 0 0">白底、深紫文本和单一强调色，展示订阅、集成、事件流和增长指标。</p></div><div class="elevated fake-ui"><div class="metric">5.8M</div><p>events processed</p><div class="row"><span>Subscriptions</span><strong>Healthy</strong></div><div class="row"><span>Integrations</span><strong>12 active</strong></div></div></section>
+      <section class="grid"><article class="panel"><h2>定价与订阅</h2><p>用白底、精密分割和单一主按钮表达产品价值。</p></article><article class="panel"><h2>集成能力</h2><p>展示 SDK、Webhook、事件流和合作平台。</p></article><article class="panel"><h2>轻量控制台</h2><p>少量操作入口和关键数据保持清晰。</p></article></section>
+    </main>
+  </section>
+
+  <section class="sample-page" data-sample="brand">
+    <header class="page-header"><strong>Revenue Intelligence</strong><a class="link">Talk to sales</a></header>
+    <main class="container"><section class="hero"><div><span class="tag">品牌主页</span><h1>可信、明亮、精密的产品叙事</h1><p style="margin:22px 0 26px">用克制排版、产品截图和明确 CTA 表达产品可信感。</p><button class="button">View product</button></div><div class="product-shot"><div class="shot-card"><h2>Revenue health</h2><div class="metric">98.7%</div><p>renewal quality score</p></div></div></section><section class="grid"><article class="panel"><h2>清晰承诺</h2><p>价值表达具体、直接。</p></article><article class="panel"><h2>产品证据</h2><p>页面重点落在界面和数据上。</p></article><article class="panel"><h2>行动路径</h2><p>主 CTA 始终突出。</p></article></section></main>
+  </section>
+
+  <section class="sample-page" data-sample="admin">
+    <div class="admin-shell"><aside class="sidebar"><strong>Console</strong><a>概览</a><a>客户</a><a>订阅</a><a>集成</a><a>设置</a></aside><main class="workspace"><div><span class="tag">后台管理系统</span><h1>订阅运营控制台</h1><p>轻量工作台保留品牌精密感，同时展示关键业务状态。</p></div><div class="grid"><article class="panel"><h2>活跃订阅</h2><div class="metric">12.4k</div></article><article class="panel"><h2>试用用户</h2><div class="metric">824</div></article><article class="panel"><h2>风险客户</h2><div class="metric">31</div></article></div><table><thead><tr><th>客户</th><th>方案</th><th>状态</th><th>操作</th></tr></thead><tbody><tr><td>Northstar Labs</td><td>Pro</td><td>Healthy</td><td>View</td></tr><tr><td>Acme Studio</td><td>Business</td><td>Review</td><td>Open</td></tr></tbody></table></main></div>
+  </section>
+
+  <section class="sample-page" data-sample="dashboard">
+    <main class="container"><div><span class="tag">数据分析看板</span><h1>Revenue performance overview</h1><p style="margin-top:14px">指标、趋势和状态说明保持白底、高留白、低噪声。</p></div><div class="grid"><article class="panel"><h2>Renewal health</h2><div class="metric">98.7%</div></article><article class="panel"><h2>Trials</h2><div class="metric">124</div></article><article class="panel"><h2>Churn risk</h2><div class="metric">Low</div></article></div><div class="chart"><div class="bar" style="height:42%"></div><div class="bar" style="height:62%"></div><div class="bar" style="height:58%"></div><div class="bar" style="height:78%"></div><div class="bar" style="height:88%"></div><div class="bar" style="height:72%"></div></div></main>
+  </section>
+
+  <section class="sample-page" data-sample="developer">
+    <header class="page-header"><strong>Developer Docs</strong><button class="button">Get API key</button></header>
+    <main class="container"><section class="hero"><div><span class="tag">开发者工具/文档页</span><h1>Integrate subscriptions without losing clarity</h1><p style="margin-top:20px">端点、参数、示例和状态解释以精密层级组织。</p></div><pre>curl https://api.example.com/v1/events \
+  -H "Authorization: Bearer sk_live..." \
+  -d event=subscription.renewed</pre></section><section class="grid"><article class="panel"><h2>API 文档</h2><p>端点、参数和示例保持干净层级。</p></article><article class="panel"><h2>SDK 集成</h2><p>用代码片段降低接入成本。</p></article><article class="panel"><h2>事件调试</h2><p>错误、重试和证据链以浅色结构呈现。</p></article></section></main>
+  </section>
+
+  <section class="sample-page" data-sample="mobile">
+    <main class="phone-wrap"><div class="phone"><div class="phone-screen"><span class="tag">移动/消费产品</span><h2>订阅账户</h2><p>当前方案 Pro，续费状态健康。</p><div class="elevated"><h3>Next renewal</h3><div class="metric">Jun 18</div><p>$24.00 monthly</p></div><div class="panel"><h3>Active benefits</h3><p>Analytics, integrations, priority support.</p></div><button class="button">Manage plan</button></div></div></main>
+  </section>
+
+  <section class="sample-page" data-sample="editorial">
+    <main class="editorial"><div><span class="tag">内容/编辑型页面</span><h1>Customer stories and integration guides</h1><p style="margin-top:16px">方正容器、深色标题和浅色分割组织案例、方案页和决策材料。</p></div><div class="grid"><article class="panel"><h2>案例文章</h2><p>用客户结果和数据证据组织故事。</p></article><article class="panel"><h2>能力说明</h2><p>用精密层级拆解复杂概念。</p></article><article class="panel"><h2>决策材料</h2><p>适合方案页、集成说明和评审材料。</p></article></div></main>
+  </section>
+
+  <script>
+    document.querySelectorAll('.tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach((item) => item.classList.toggle('active', item === tab));
+        document.querySelectorAll('.sample-page').forEach((sample) => sample.classList.toggle('active', sample.dataset.sample === tab.dataset.target));
+      });
+    });
+  </script>
+</body>
+</html>

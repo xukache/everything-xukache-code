@@ -1,0 +1,16 @@
+{
+  "project_name": "{{PRODUCT_NAME}}",
+  "current_stage": "init",
+  "recommended_next": "analyze",
+  "artifacts": {
+    "init": ["docs/project-config.md"],
+    "analyze": [],
+    "architect": [],
+    "design": [],
+    "plan": [],
+    "deliver": []
+  },
+  "reviews": {},
+  "notes": []
+}
+

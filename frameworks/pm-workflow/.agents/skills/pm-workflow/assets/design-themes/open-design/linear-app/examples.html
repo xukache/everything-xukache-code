@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Linear App Theme Examples</title>
+  <style>
+    :root { --bg:#08090b; --panel:#111217; --panel2:#181a21; --text:#f4f4f5; --sub:#a1a1aa; --line:#2a2d36; --primary:#8b5cf6; --green:#22c55e; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:14px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .preview-switcher { position:sticky; top:0; z-index:20; display:flex; justify-content:space-between; gap:16px; padding:12px 18px; background:rgba(8,9,11,.92); border-bottom:1px solid var(--line); backdrop-filter:blur(10px); }
+    .preview-title span { display:block; color:var(--sub); font-size:12px; }
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+    .tab { border:1px solid var(--line); background:var(--panel); color:var(--sub); border-radius:8px; min-height:34px; padding:0 10px; cursor:pointer; font:inherit; }
+    .tab.active { background:var(--primary); color:white; border-color:var(--primary); }
+    .sample-page { display:none; min-height:calc(100vh - 59px); }
+    .sample-page.active { display:block; }
+    h1,h2,h3,p { margin:0; }
+    h1 { font-size:46px; line-height:1.05; letter-spacing:-.045em; }
+    h2 { font-size:20px; }
+    p { color:var(--sub); }
+    .button { border:1px solid var(--line); background:var(--text); color:#09090b; border-radius:8px; min-height:36px; padding:0 14px; font-weight:700; }
+    .page-header { height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 min(42px,5vw); border-bottom:1px solid var(--line); background:var(--panel); }
+    .container { width:min(1120px,calc(100vw - 40px)); margin:0 auto; padding:52px 0 76px; display:grid; gap:28px; }
+    .hero { display:grid; grid-template-columns:1fr 1fr; gap:36px; align-items:center; }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px; min-height:144px; }
+    .mock { background:linear-gradient(180deg,var(--panel2),#0d0e13); border:1px solid var(--line); border-radius:18px; padding:18px; display:grid; gap:10px; min-height:340px; }
+    .row { display:flex; align-items:center; gap:10px; min-height:42px; padding:0 12px; background:var(--panel2); border:1px solid var(--line); border-radius:8px; }
+    .dot { width:8px; height:8px; border-radius:50%; background:var(--primary); }
+    .admin { display:grid; grid-template-columns:236px 1fr; min-height:calc(100vh - 59px); }
+    .sidebar { background:var(--panel); border-right:1px solid var(--line); padding:18px; }
+    .sidebar a { display:block; color:var(--sub); padding:10px 0; }
+    .workspace { padding:24px; display:grid; gap:18px; }
+    table { width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--line); }
+    th,td { padding:13px; border-bottom:1px solid var(--line); text-align:left; }
+    .metric { font-size:40px; font-weight:780; letter-spacing:-.04em; }
+    pre { background:#050507; color:#f4f4f5; border:1px solid var(--line); border-radius:12px; padding:18px; overflow:auto; }
+    .phone-stage { min-height:calc(100vh - 59px); display:grid; place-items:center; padding:40px 20px; background:radial-gradient(circle at 50% 0,#22163d,var(--bg) 44%); }
+    .phone { width:330px; min-height:640px; border:1px solid var(--line); border-radius:34px; background:var(--panel); padding:18px; display:grid; gap:14px; align-content:start; }
+    @media(max-width:900px){.preview-switcher{flex-direction:column}.tabs{justify-content:flex-start}.hero,.grid,.admin{grid-template-columns:1fr}.sidebar{display:none}h1{font-size:34px}}
+  </style>
+</head>
+<body>
+  <aside class="preview-switcher"><div class="preview-title"><strong>Linear App 主题预览</strong><span>切换查看不同产品类型的完整页面</span></div><div class="tabs"><button class="tab active" data-target="admin">后台管理系统</button><button class="tab" data-target="brand">品牌主页</button><button class="tab" data-target="saas">SaaS 产品页</button><button class="tab" data-target="dashboard">数据分析看板</button><button class="tab" data-target="developer">开发者工具/文档页</button><button class="tab" data-target="mobile">移动/消费产品</button><button class="tab" data-target="editorial">内容/编辑型页面</button></div></aside>
+  <section class="sample-page active" data-sample="admin"><div class="admin"><aside class="sidebar"><strong>LinearOps</strong><a>Inbox</a><a>Issues</a><a>Roadmap</a><a>Cycles</a></aside><main class="workspace"><h1>队列型工作台</h1><section class="grid"><article class="card"><h2>Open issues</h2><div class="metric">248</div></article><article class="card"><h2>Cycle progress</h2><div class="metric">72%</div></article><article class="card"><h2>Blocked</h2><div class="metric">9</div></article></section><table><thead><tr><th>Issue</th><th>Status</th><th>Owner</th></tr></thead><tbody><tr><td>Review queue latency</td><td>In progress</td><td>Ops</td></tr><tr><td>Role audit</td><td>Todo</td><td>Admin</td></tr></tbody></table></main></div></section>
+  <section class="sample-page" data-sample="brand"><header class="page-header"><strong>FocusFlow</strong><button class="button">Get started</button></header><main class="container"><section class="hero"><div><h1>Workflows that stay focused when teams move fast</h1><p style="margin-top:18px">沉稳暗色、聚焦产品叙事，适合开发者或生产力工具。</p></div><div class="mock"><div class="row"><span class="dot"></span><p>Plan next cycle</p></div><div class="row"><span class="dot"></span><p>Review blocked issues</p></div><div class="row"><span class="dot"></span><p>Ship release notes</p></div></div></section></main></section>
+  <section class="sample-page" data-sample="saas"><main class="container"><h1>SaaS 产品页</h1><section class="grid"><article class="card"><h2>Planning</h2><p>用简短模块表达能力。</p></article><article class="card"><h2>Tracking</h2><p>状态和负责人清晰。</p></article><article class="card"><h2>Automation</h2><p>快捷操作不打断流程。</p></article></section></main></section>
+  <section class="sample-page" data-sample="dashboard"><main class="container"><h1>低噪声数据看板</h1><section class="grid"><article class="card"><h2>Velocity</h2><div class="metric">42</div></article><article class="card"><h2>Scope change</h2><div class="metric">8%</div></article><article class="card"><h2>Cycle health</h2><div class="metric">Good</div></article></section><div class="mock"><div class="row"><span class="dot"></span><p>Frontend tasks completed</p></div><div class="row"><span class="dot"></span><p>Design review pending</p></div><div class="row"><span class="dot"></span><p>Release candidate ready</p></div></div></main></section>
+  <section class="sample-page" data-sample="developer"><header class="page-header"><strong>CLI Docs</strong><button class="button">Copy command</button></header><main class="container"><section class="hero"><div><h1>Commands, logs, issues and changelog in one surface</h1><p style="margin-top:18px">开发者工具页保持低噪声和高扫描效率。</p></div><pre>linear issue create --team OPS
+linear cycle status --current</pre></section></main></section>
+  <section class="sample-page" data-sample="mobile"><main class="phone-stage"><div class="phone"><h2>今日任务</h2><p>适合任务清单、通知流和轻量协作预览。</p><article class="card"><h3>Review PRD</h3><p>Due today</p></article><article class="card"><h3>Resolve blocker</h3><p>Owner: Design</p></article><button class="button">Complete</button></div></main></section>
+  <section class="sample-page" data-sample="editorial"><main class="container"><h1>Changelog and roadmap</h1><section class="grid"><article class="card"><h2>Release note</h2><p>版本说明清晰。</p></article><article class="card"><h2>Roadmap</h2><p>阶段目标明确。</p></article><article class="card"><h2>Decision log</h2><p>保留上下文。</p></article></section></main></section>
+  <script>document.querySelectorAll('.tab').forEach((tab)=>tab.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach((item)=>item.classList.toggle('active',item===tab));document.querySelectorAll('.sample-page').forEach((sample)=>sample.classList.toggle('active',sample.dataset.sample===tab.dataset.target));}));</script>
+</body>
+</html>
