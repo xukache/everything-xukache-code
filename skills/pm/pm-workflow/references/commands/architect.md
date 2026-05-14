@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须委派 `.codex/agents/tech-architect.toml` 中的 `tech_architect` 子 agent 执行技术架构设计。
+必须启动 `.codex/agents/tech-architect.toml` 中的 `tech_architect` 子 agent 执行技术架构设计。
 
-如果当前 Codex 环境无法启动子 agent，必须先向用户说明“本次无法委派 tech_architect，将由当前会话按技术架构师角色执行”，然后再继续技术架构设计。不要静默降级。
+如果当前 Codex 环境无法启动 `tech_architect` 子 agent，必须停止技术架构设计，不生成或修改 `docs/tech-architecture.md`、`docs/handoff-architecture.md` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 
 ## 输入
 

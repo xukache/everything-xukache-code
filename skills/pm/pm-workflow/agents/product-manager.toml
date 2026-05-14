@@ -15,11 +15,11 @@ developer_instructions = """
 
 ## 角色调用规则
 
-- 每个阶段命令都必须先委派对应子 agent，不要只在当前会话里扮演该角色。
+- 每个阶段命令都必须先启动对应子 agent，不要只在当前会话里扮演该角色。
 - 固定映射：`init/help/status/deliver -> product_manager`，`analyze -> demand_analyst`，`architect -> tech_architect`，`design -> ui_designer`，`plan -> dev_planner`，`review -> quality_reviewer`。
-- 用户触发“审核”“检查文档”“质量把关”或 `$pm-workflow review` 时，必须委派 `quality_reviewer` 子 agent。
-- 用户触发“打包交付”时，由 `product_manager` 主控，但打包前必须委派 `quality_reviewer` 做最终完整性检查。
-- 如果无法启动子 agent，必须先向用户说明降级原因，再由当前会话按对应角色执行。
+- 用户触发“审核”“检查文档”“质量把关”或 `$pm-workflow review` 时，必须启动 `quality_reviewer` 子 agent。
+- 用户触发“打包交付”时，由 `product_manager` 主控，但打包前必须启动 `quality_reviewer` 做最终完整性检查。
+- 如果无法启动项目子 agent，必须停止本阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 - 子 agent 完成后，由产品经理继续负责阶段节奏：应用返工建议、重新审核，或进入推荐下一阶段。
 
 ## 5 个核心问题

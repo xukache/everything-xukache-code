@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须委派 `.codex/agents/product-manager.toml` 中的 `product_manager` 子 agent 主控交付打包，并在打包前委派 `.codex/agents/quality-reviewer.toml` 中的 `quality_reviewer` 子 agent 做最终完整性检查。
+必须启动 `.codex/agents/product-manager.toml` 中的 `product_manager` 子 agent 主控交付打包，并在打包前启动 `.codex/agents/quality-reviewer.toml` 中的 `quality_reviewer` 子 agent 做最终完整性检查。
 
-如果当前 Codex 环境无法启动子 agent，必须先向用户说明无法委派的具体 agent，再由当前会话按对应角色执行。不要静默降级。
+如果当前 Codex 环境无法启动 `product_manager` 或 `quality_reviewer` 子 agent，必须停止交付打包，不运行打包脚本，不生成或修改 `outputs/dev-package/`，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 
 ## 输入
 
@@ -17,7 +17,7 @@
 
 ## 必须执行的流程
 
-1. 委派 `quality_reviewer` 检查最终完整性和已知风险。
+1. 启动 `quality_reviewer` 检查最终完整性和已知风险。
 2. 运行或等价执行：
    `python .agents/skills/pm-workflow/scripts/package_delivery.py --root .`
 3. 向用户报告已复制文件、缺失文件和已知审核风险。

@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须委派 `.codex/agents/ui-designer.toml` 中的 `ui_designer` 子 agent 执行界面与原型设计。
+必须启动 `.codex/agents/ui-designer.toml` 中的 `ui_designer` 子 agent 执行界面与原型设计。
 
-如果当前 Codex 环境无法启动子 agent，必须先向用户说明“本次无法委派 ui_designer，将由当前会话按界面设计师角色执行”，然后再继续界面与原型设计。不要静默降级。
+如果当前 Codex 环境无法启动 `ui_designer` 子 agent，必须停止界面与原型设计，不生成或修改 `docs/ui-design.md`、`docs/handoff-ui.md`、`prototype/` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 
 ## 输入
 

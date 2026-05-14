@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须委派 `.codex/agents/quality-reviewer.toml` 中的 `quality_reviewer` 子 agent 执行审核。脚本只生成审核草稿，质量审核官必须解释草稿并补充专业判断。
+必须启动 `.codex/agents/quality-reviewer.toml` 中的 `quality_reviewer` 子 agent 执行审核。脚本只生成审核草稿，质量审核官必须解释草稿并补充专业判断。
 
-如果当前 Codex 环境无法启动子 agent，必须先向用户说明“本次无法委派 quality_reviewer，将由当前会话按质量审核官角色执行”，然后再继续审核。不要静默降级。
+如果当前 Codex 环境无法启动 `quality_reviewer` 子 agent，必须停止审核，不生成或修改 `docs/review-{stage}.md` 和 `docs/workflow-state.json`，不运行审核脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 
 ## 输入
 

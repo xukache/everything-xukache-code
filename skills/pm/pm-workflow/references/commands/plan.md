@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须委派 `.codex/agents/dev-planner.toml` 中的 `dev_planner` 子 agent 执行开发任务规划。
+必须启动 `.codex/agents/dev-planner.toml` 中的 `dev_planner` 子 agent 执行开发任务规划。
 
-如果当前 Codex 环境无法启动子 agent，必须先向用户说明“本次无法委派 dev_planner，将由当前会话按开发规划师角色执行”，然后再继续开发规划。不要静默降级。
+如果当前 Codex 环境无法启动 `dev_planner` 子 agent，必须停止开发任务规划，不生成或修改 `docs/dev-tasks.md` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 
 ## 输入
 

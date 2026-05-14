@@ -38,9 +38,9 @@ user-invocable: true
 
 ## Agent 调度规则
 
-每个阶段都必须先委派对应的 `.codex/agents/*.toml` 子 agent。不要只由当前会话扮演角色；如果当前 Codex 环境无法启动子 agent，必须先向用户说明降级原因，再由当前会话按对应角色执行。
+每个阶段都必须先启动对应的 `.codex/agents/*.toml` 子 agent。不要只由当前会话扮演角色。若当前 Codex 环境无法启动项目子 agent，必须停止本阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 
-| 命令 | 必须委派的 agent | 配置文件 |
+| 命令 | 必须启动的 agent | 配置文件 |
 |---|---|---|
 | `init` | `product_manager` | `.codex/agents/product-manager.toml` |
 | `help` | `product_manager` | `.codex/agents/product-manager.toml` |
@@ -50,7 +50,7 @@ user-invocable: true
 | `design` | `ui_designer` | `.codex/agents/ui-designer.toml` |
 | `plan` | `dev_planner` | `.codex/agents/dev-planner.toml` |
 | `review` | `quality_reviewer` | `.codex/agents/quality-reviewer.toml` |
-| `deliver` | `product_manager`，并在打包前委派 `quality_reviewer` 做最终完整性检查 | `.codex/agents/product-manager.toml`, `.codex/agents/quality-reviewer.toml` |
+| `deliver` | `product_manager`，并在打包前启动 `quality_reviewer` 做最终完整性检查 | `.codex/agents/product-manager.toml`, `.codex/agents/quality-reviewer.toml` |
 
 自然语言路由示例：
 
@@ -249,7 +249,7 @@ python .agents/skills/pm-workflow/scripts/package_delivery.py --root .
 
 阶段说明：[references/commands/review.md](references/commands/review.md)
 
-用户触发审核时，必须委派 `.codex/agents/quality-reviewer.toml` 中的 `quality_reviewer` 子 agent。若当前环境无法启动子 agent，必须先向用户说明降级原因，再由当前会话按质量审核官角色执行；不要静默降级。
+用户触发审核时，必须启动 `.codex/agents/quality-reviewer.toml` 中的 `quality_reviewer` 子 agent。若当前环境无法启动项目子 agent，必须停止审核，不生成或修改审核报告，不运行审核脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 
 运行：
 

@@ -4,9 +4,9 @@
 
 ## 响应要求
 
-必须委派 `.codex/agents/product-manager.toml` 中的 `product_manager` 子 agent 展示菜单并引导用户选择阶段。
+必须启动 `.codex/agents/product-manager.toml` 中的 `product_manager` 子 agent 展示菜单并引导用户选择阶段。
 
-如果当前 Codex 环境无法启动子 agent，必须先向用户说明“本次无法委派 product_manager，将由当前会话按产品经理角色执行”，然后再展示菜单。不要静默降级。
+如果当前 Codex 环境无法启动 `product_manager` 子 agent，必须停止菜单引导，不修改任何产物，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 
 按阶段展示命令菜单：
 

@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须委派 `.codex/agents/product-manager.toml` 中的 `product_manager` 子 agent 执行初始化。
+必须启动 `.codex/agents/product-manager.toml` 中的 `product_manager` 子 agent 执行初始化。
 
-如果当前 Codex 环境无法启动子 agent，必须先向用户说明“本次无法委派 product_manager，将由当前会话按产品经理角色执行”，然后再继续初始化。不要静默降级。
+如果当前 Codex 环境无法启动 `product_manager` 子 agent，必须停止初始化，不生成或修改 `docs/project-config.md` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 
 ## 输入
 

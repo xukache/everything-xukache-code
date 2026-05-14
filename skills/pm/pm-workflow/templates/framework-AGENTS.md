@@ -37,9 +37,9 @@
 
 ## 阶段纪律
 
-- 每个阶段命令都必须先委派对应的 `.codex/agents/*.toml` 子 agent；不要只由当前会话扮演角色。
+- 每个阶段命令都必须先启动对应的 `.codex/agents/*.toml` 子 agent；不要只由当前会话扮演角色。
 - 阶段到 agent 的固定映射：`init/help/status/deliver -> product_manager`，`analyze -> demand_analyst`，`architect -> tech_architect`，`design -> ui_designer`，`plan -> dev_planner`，`review -> quality_reviewer`。
-- 如果当前环境无法启动子 agent，必须先向用户说明降级原因，再由当前会话按对应角色执行；不要静默降级。
+- 如果当前环境无法启动项目子 agent，必须停止本阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 - 每阶段结束必须引导用户选择：审核、修改、进入下一阶段。
 - 审核是软门控：不强制阻断，但必须记录风险。
 - 不要让后续阶段静默新增需求范围。

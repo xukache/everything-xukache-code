@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须委派 `.codex/agents/demand-analyst.toml` 中的 `demand_analyst` 子 agent 执行需求分析。产品经理负责保持对话节奏，并记录关键决策。
+必须启动 `.codex/agents/demand-analyst.toml` 中的 `demand_analyst` 子 agent 执行需求分析。产品经理负责保持对话节奏，并记录关键决策。
 
-如果当前 Codex 环境无法启动子 agent，必须先向用户说明“本次无法委派 demand_analyst，将由当前会话按需求分析师角色执行”，然后再继续需求分析。不要静默降级。
+如果当前 Codex 环境无法启动 `demand_analyst` 子 agent，必须停止需求分析，不生成或修改 `docs/prd.md`、`docs/handoff-prd.md` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 
 ## 输入
 
