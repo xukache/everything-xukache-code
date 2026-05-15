@@ -124,6 +124,7 @@ project-root/
     dev-tasks.md
     review-{stage}.md
   prototype/
+    directions/
     index.html
     pages/
     layout/
@@ -188,7 +189,7 @@ project-root/
 
 阶段说明：[references/commands/design.md](references/commands/design.md)
 
-界面设计师先做上游前置审查，再基于 `assets/design-themes/` 推荐 2-3 个有明显差异的设计方向。等待用户选择；只有在用户明确授权时，才默认使用第一推荐。
+界面设计师先做上游前置审查，再基于 `assets/design-themes/` 推荐 2-3 个有明显差异的设计方向。每个候选方向必须生成一个可打开的首页 demo，放在 `prototype/directions/`，并在 `docs/ui-design.md` 中给出预览路径。等待用户选择；只有在用户明确授权时，才默认使用第一推荐。
 
 产物：
 
@@ -200,6 +201,7 @@ project-root/
 
 - 单页面产品：`prototype/index.html` 是完整可交互原型，复用页面结构放在 `prototype/layout/`。
 - 多页面系统：`prototype/index.html` 是入口，页面放在 `prototype/pages/`，复用页面结构放在 `prototype/layout/`，可复用组件示例放在 `prototype/components/`，资源放在 `prototype/assets/`。
+- 方向候选：`prototype/directions/` 存放 2-3 个首页 demo，`prototype/directions/index.html` 是预览索引；它只用于方向选择，不替代最终完整原型。
 
 原型必须覆盖 P0 点击路径、成功/失败/空/加载状态、关键异常和主要响应式视口。`prototype/layout/` 必须沉淀可复用页面结构，避免界面实现只能在原型中成立、实际开发时无法稳定复现。
 
@@ -207,6 +209,7 @@ project-root/
 
 | 路径 | 职责 |
 |---|---|
+| `prototype/directions/` | 设计方向首页 demo 和预览索引。 |
 | `prototype/index.html` | 原型入口、全局导航、关键流程起点。 |
 | `prototype/pages/` | 多页面系统的独立业务页面。 |
 | `prototype/layout/` | 应用外壳、导航、页头、侧栏、内容网格、表单页骨架、状态页骨架等可复用页面结构。 |

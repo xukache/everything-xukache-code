@@ -165,6 +165,7 @@ def create_structure(root: Path, product_name: str) -> None:
     dirs = [
         root / "docs",
         root / "prototype",
+        root / "prototype" / "directions",
         root / "prototype" / "pages",
         root / "prototype" / "layout",
         root / "prototype" / "components",

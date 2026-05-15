@@ -48,6 +48,7 @@ python .agents/skills/pm-workflow/scripts/review_stage.py --root . --stage <init
 - 需求功能编号到开发任务。
 - 数据库字段到接口参数。
 - 界面页面元素到接口或本地状态支撑。
+- design 阶段还必须检查每个候选设计方向是否有可打开的首页 demo，并通过 prototype/directions/index.html 提供预览索引；只有文字方向说明不通过。
 
 ## 返工轮次
 

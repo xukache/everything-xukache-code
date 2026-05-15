@@ -6,6 +6,7 @@
 
 ```text
 prototype/
+  directions/
   index.html
   layout/
   assets/
@@ -15,6 +16,7 @@ prototype/
 
 ```text
 prototype/
+  directions/
   index.html
   pages/
   layout/
@@ -26,6 +28,7 @@ prototype/
 
 | 路径 | 职责 | 产物要求 |
 |---|---|---|
+| `prototype/directions/` | 设计方向首页 demo | 每个候选方向必须有一个可打开的首页 demo；`index.html` 汇总 2-3 个预览入口，供用户选择方向。 |
 | `prototype/index.html` | 原型入口、全局导航、关键流程起点 | 必须能进入所有 P0 原型路径；多页面系统必须链接到 `pages/` 中的具体页面。 |
 | `prototype/pages/` | 独立业务页面 | 多页面系统的每个主要页面单独存放；页面结构必须引用或遵循 `layout/` 中的复用布局。 |
 | `prototype/layout/` | 可复用页面结构 | 沉淀应用外壳、导航、页头、侧栏、内容网格、表单页骨架、状态页骨架等结构，保证后续开发能稳定复现。 |

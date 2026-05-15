@@ -20,7 +20,12 @@ STAGE_ARTIFACTS: dict[str, list[str]] = {
     "init": ["docs/project-config.md"],
     "analyze": ["docs/prd.md", "docs/handoff-prd.md"],
     "architect": ["docs/tech-architecture.md", "docs/handoff-architecture.md"],
-    "design": ["docs/ui-design.md", "docs/handoff-ui.md", "prototype/index.html"],
+    "design": [
+        "docs/ui-design.md",
+        "docs/handoff-ui.md",
+        "prototype/directions/index.html",
+        "prototype/index.html",
+    ],
     "plan": ["docs/dev-tasks.md"],
     "deliver": [
         "docs/project-config.md",
@@ -179,7 +184,7 @@ def executability_score(contents: str, stage: str, has_placeholder: bool) -> int
         "init": ["下一步", "工作量", "核心场景"],
         "analyze": ["验收", "P0", "不做"],
         "architect": ["接口", "数据库", "部署"],
-        "design": ["原型", "状态", "prototype"],
+        "design": ["原型", "状态", "prototype", "directions"],
         "plan": ["T001", "验证方式", "前置依赖"],
         "deliver": ["AGENTS", "dev-tasks", "prototype"],
     }[stage]
@@ -288,7 +293,7 @@ def build_rework(stage: str, result: str, scores: dict, round_no: int) -> str:
         "init": "补齐五个核心问题、核心场景、参考产品、特殊要求和工作量粗估。",
         "analyze": "补齐 P0/P1/P2、Mx-Fx 功能编号、业务规则、不做清单和验收标准。",
         "architect": "补齐需求到数据库、字段、接口、部署配置和技术风险的映射。",
-        "design": "补齐 2-3 个设计方向、页面清单、需求到界面映射和原型路径。",
+        "design": "补齐 2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、页面清单、需求到界面映射和完整原型路径。",
         "plan": "补齐 Txxx 任务、前置依赖、涉及文件、执行指令、验证方式和边缘情况。",
         "deliver": "补齐缺失文档、审核报告、AGENTS.md 和 prototype 后重新打包。",
     }

@@ -23,9 +23,11 @@ description: "界面设计师使用：选择设计方向、编写界面与体验
 
 1. 先做上游前置审查，发现歧义先报告。
 2. 推荐 2-3 个差异化设计方向。
-3. 等用户选择，或在用户明确授权后使用第一推荐。
-4. 设计页面清单、布局、组件、状态和流程。
-5. 构建高保真 HTML 原型。
+3. 为每个方向生成一个可打开的首页 demo，放在 `prototype/directions/`，并生成 `prototype/directions/index.html` 作为预览索引。
+4. 在 `docs/ui-design.md` 中写清每个方向的 demo 路径；没有 demo 的方向不得交给用户选择。
+5. 等用户选择，或在用户明确授权后使用第一推荐。
+6. 设计页面清单、布局、组件、状态和流程。
+7. 基于选定方向构建完整高保真 HTML 原型。
 
 ## 原型结构
 
@@ -33,6 +35,7 @@ description: "界面设计师使用：选择设计方向、编写界面与体验
 
 ```text
 prototype/
+  directions/
   index.html
   layout/
   assets/
@@ -42,6 +45,7 @@ prototype/
 
 ```text
 prototype/
+  directions/
   index.html
   pages/
   layout/
@@ -53,6 +57,7 @@ prototype/
 
 | 路径 | 职责 | 产物要求 |
 |---|---|---|
+| `prototype/directions/` | 设计方向首页 demo | 每个候选方向必须有一个可打开的首页 demo；`index.html` 汇总 2-3 个预览入口，供用户选择方向。 |
 | `prototype/index.html` | 原型入口、全局导航、关键流程起点 | 必须能进入所有 P0 原型路径；多页面系统必须链接到 `pages/` 中的具体页面。 |
 | `prototype/pages/` | 独立业务页面 | 多页面系统的每个主要页面单独存放；页面结构必须引用或遵循 `layout/` 中的复用布局。 |
 | `prototype/layout/` | 可复用页面结构 | 沉淀应用外壳、导航、页头、侧栏、内容网格、表单页骨架、状态页骨架等结构，保证后续开发能稳定复现。 |
@@ -64,6 +69,7 @@ prototype/
 ## 检查表
 
 - P0 功能是否都有可点击路径。
+- 设计方向是否都有可打开的首页 demo，而不是只有文字说明。
 - 是否沉淀了可复用布局，并能支撑后续开发稳定复现。
 - 成功、失败、空、加载状态是否覆盖。
 - 页面是否符合真实工作流。

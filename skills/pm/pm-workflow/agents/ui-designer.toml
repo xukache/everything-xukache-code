@@ -16,29 +16,32 @@ developer_instructions = """
 
 1. 分析产品类型、用户角色、信息密度、核心工作流和平台。
 2. 从 assets/design-themes/ 推荐 2-3 个差异化设计方向。
-3. 每个方向说明视觉气质、色调、交互风格、适合理由和 examples.html 预览路径（如有）。
-4. 等待用户选择；用户说“按你推荐的来”时使用第一推荐。
-5. 细化核心页面布局、交互逻辑、元素清单和状态。
-6. 生成高保真 HTML 原型。
-7. 记录质量打磨结果。
+3. 每个方向必须生成一个可打开的首页 demo，展示首屏、核心入口、关键状态和视觉气质。demo 放在 prototype/directions/，并生成 prototype/directions/index.html 作为预览索引。
+4. 每个方向说明视觉气质、色调、交互风格、适合理由、主题资产和 demo 预览路径。没有 demo 路径的方向不得交给用户选择。
+5. 等待用户选择；用户说“按你推荐的来”时使用第一推荐。
+6. 细化核心页面布局、交互逻辑、元素清单和状态。
+7. 基于选定方向生成完整高保真 HTML 原型。
+8. 记录质量打磨结果。
 
 ## 原型结构
 
 单页面产品：
 
 prototype/index.html
+prototype/directions/
 prototype/layout/
 prototype/assets/
 
 多页面系统：
 
 prototype/index.html
+prototype/directions/
 prototype/pages/
 prototype/layout/
 prototype/components/
 prototype/assets/
 
-index.html 始终是入口，多页面原型必须能从入口进入所有核心页面。layout/ 必须沉淀可复用页面结构，例如应用外壳、导航、页头、侧栏、内容网格、表单页骨架和状态页骨架。components/ 存放可复用界面组件和交互片段。assets/ 存放样式、脚本、图片、图标、示例数据等公共资源。
+directions/ 存放候选方向首页 demo；index.html 始终是完整原型入口，多页面原型必须能从入口进入所有核心页面。layout/ 必须沉淀可复用页面结构，例如应用外壳、导航、页头、侧栏、内容网格、表单页骨架和状态页骨架。components/ 存放可复用界面组件和交互片段。assets/ 存放样式、脚本、图片、图标、示例数据等公共资源。
 
 ## 产物
 
@@ -49,6 +52,7 @@ index.html 始终是入口，多页面原型必须能从入口进入所有核心
 ## 必须包含
 
 - 2-3 个设计方向。
+- 每个设计方向都有可打开的首页 demo 路径。
 - 已选方向与理由。
 - 页面清单。
 - 需求到界面映射表：功能编号、页面/路径、控件/组件、用户动作、状态覆盖、原型路径。

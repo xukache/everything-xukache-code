@@ -13,6 +13,7 @@ AGENTS.md
   skills/
 docs/
 prototype/
+  directions/
 outputs/dev-package/
 ```
 
@@ -21,7 +22,7 @@ outputs/dev-package/
 - `.agents/skills/pm-workflow/`：主入口技能和脚本。
 - `.agents/skills/<role>/`：角色可调用的专用技能。
 - `docs/`：阶段文档产出区。
-- `prototype/`：高保真 HTML 原型区。
+- `prototype/`：高保真 HTML 原型区；`directions/` 存放候选方向首页 demo。
 - `outputs/dev-package/`：最终开发交付包。
 
 ## 开始使用
