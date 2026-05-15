@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 from pathlib import Path
 
@@ -23,6 +24,7 @@ DOC_TEMPLATES = [
     ("tech-architecture/templates/handoff-architecture.md", "handoff-architecture.md"),
     ("ui-prototype-design/templates/ui-design.md", "ui-design.md"),
     ("ui-prototype-design/templates/handoff-ui.md", "handoff-ui.md"),
+    ("ui-prototype-design/templates/prototype-review.md", "prototype-review.md"),
     ("dev-task-planning/templates/dev-tasks.md", "dev-tasks.md"),
 ]
 
@@ -125,6 +127,36 @@ def copy_repo_scoped_skills(root: Path) -> list[str]:
     return copied
 
 
+def impeccable_source_candidates() -> list[Path]:
+    candidates: list[Path] = []
+    for env_name in ["CODEX_HOME", "AGENTS_HOME"]:
+        env_value = os.environ.get(env_name)
+        if env_value:
+            candidates.append(Path(env_value) / "skills" / "impeccable")
+    home = Path.home()
+    candidates.extend(
+        [
+            home / ".codex" / "skills" / "impeccable",
+            home / ".agents" / "skills" / "impeccable",
+        ]
+    )
+    return candidates
+
+
+def copy_impeccable_skill(root: Path) -> tuple[list[str], list[str]]:
+    target = root / ".agents" / "skills" / "impeccable"
+    if target.exists():
+        return [], []
+
+    for src in impeccable_source_candidates():
+        if (src / "SKILL.md").exists():
+            copy_tree_if_missing(src, target)
+            return [str(target.relative_to(root))], []
+
+    searched = [str(path) for path in impeccable_source_candidates()]
+    return [], searched
+
+
 def write_plugin_manifest(root: Path) -> bool:
     manifest = """{
   "name": "pm-workflow",
@@ -170,8 +202,14 @@ def create_structure(root: Path, product_name: str) -> None:
         root / "prototype" / "layout",
         root / "prototype" / "components",
         root / "prototype" / "assets",
+        root / "prototype" / "review",
+        root / "prototype" / "review" / "screenshots",
+        root / "prototype" / "review" / "screenshots" / "desktop",
+        root / "prototype" / "review" / "screenshots" / "tablet",
+        root / "prototype" / "review" / "screenshots" / "mobile",
         root / "outputs" / "dev-package",
         root / ".codex" / "agents",
+        root / ".agents" / "context",
         root / ".agents" / "skills",
     ]
     for directory in dirs:
@@ -218,11 +256,13 @@ job_max_runtime_seconds = 1800
 
     copied_agents = copy_agents(root)
     copied_skills = copy_repo_scoped_skills(root)
+    copied_impeccable, missing_impeccable_sources = copy_impeccable_skill(root)
+    copied_skills.extend(copied_impeccable)
     if write_plugin_manifest(root):
         created.append(".codex-plugin/plugin.json")
 
     print(f"Project structure created: {root}")
-    print("Created or confirmed directories: docs/, prototype/, outputs/dev-package/, .codex/agents/, .agents/skills/")
+    print("Created or confirmed directories: docs/, prototype/, prototype/review/screenshots/, outputs/dev-package/, .codex/agents/, .agents/context/, .agents/skills/")
     if created:
         print("Template files created:")
         for item in created:
@@ -243,6 +283,12 @@ job_max_runtime_seconds = 1800
             print(f"  + {item}")
     else:
         print("Repo-scoped skills already existed or source role skills were unavailable.")
+
+    if missing_impeccable_sources:
+        print("Missing required Impeccable skill source. Searched:")
+        for item in missing_impeccable_sources:
+            print(f"  - {item}")
+        print("Design stage must stop until .agents/skills/impeccable/ is available.")
 
     print("Next step: start Codex in this directory, then describe your product idea or say `开始分析需求`.")
 

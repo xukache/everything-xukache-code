@@ -17,6 +17,8 @@
 - `.codex/agents/` 存放 6 个角色配置。
 - `.agents/skills/pm-workflow/` 是主入口技能。
 - `.agents/skills/*/` 中的角色技能提供方法和检查表。
+- `.agents/skills/impeccable/` 是界面原型自审、审美审查和打磨技能。
+- `.agents/context/` 存放 Impeccable 使用的产品和设计上下文。
 - `docs/` 是阶段文档产出区。
 - `prototype/` 是高保真 HTML 原型区。
 - `outputs/dev-package/` 是最终交付包。
@@ -45,6 +47,7 @@
 - 不要让后续阶段静默新增需求范围。
 - 功能编号必须从需求文档贯穿到架构、界面和开发任务。
 - 原型必须能演示 P0 功能的关键路径和状态。
+- 界面设计师交付完整原型前，必须完成 Playwright 截图和 Impeccable 自审，并写入 `docs/prototype-review.md`。
 - 交付后停止，不要默认进入研发实现。
 
 ## 脚本路径

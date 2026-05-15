@@ -44,4 +44,5 @@ python skills/pm/pm-workflow/scripts/review_stage.py --root <project-root> --sta
 - 是否存在待补充、待办占位或空表。
 - 是否存在跨阶段新增范围。
 - design 阶段是否为每个候选方向生成可打开的首页 demo，并提供 `prototype/directions/index.html` 预览索引。
+- design 阶段是否提供 `docs/prototype-review.md`、`prototype/review/screenshots/`、Playwright 三视口截图和 Impeccable 审查修正记录。
 - 三轮仍不通过时是否明确提醒风险。

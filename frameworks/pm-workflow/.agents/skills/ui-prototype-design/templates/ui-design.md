@@ -99,3 +99,17 @@ prototype/
 
 - 已修正：
 - 未采纳：
+
+## 原型自审
+
+- 自审报告：`docs/prototype-review.md`
+- 截图目录：`prototype/review/screenshots/`
+- Impeccable 上下文：`.agents/context/PRODUCT.md`, `.agents/context/DESIGN.md`
+
+| 审查项 | 要求 | 状态 |
+|---|---|---|
+| Playwright 截图 | 候选 demo 和完整原型页面覆盖 desktop/tablet/mobile | 待确认 |
+| Impeccable critique | 审美、视觉层级、信息架构、AI 味、认知负荷 | 待确认 |
+| Impeccable audit | 可访问性、性能、响应式、语义结构、反模式 | 待确认 |
+| Impeccable adapt | 桌面、平板、移动适配 | 待确认 |
+| Impeccable polish | 最终综合打磨 | 待确认 |

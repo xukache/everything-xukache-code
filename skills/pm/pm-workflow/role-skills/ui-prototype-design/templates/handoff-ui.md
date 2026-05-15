@@ -12,6 +12,8 @@
 - 多页面目录：`prototype/pages/`
 - 复用布局：`prototype/layout/`
 - 公共资源：`prototype/assets/`
+- 原型自审：`docs/prototype-review.md`
+- 截图证据：`prototype/review/screenshots/`
 
 ## 复用布局说明
 
@@ -28,3 +30,9 @@
 ## 开发注意事项
 
 - 待补充
+
+## 自审遗留问题
+
+| 问题 | 影响 | 是否阻塞开发 |
+|---|---|---|
+| 待补充 | 待补充 | 待补充 |

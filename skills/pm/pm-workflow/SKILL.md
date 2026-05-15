@@ -97,6 +97,8 @@ project-root/
         templates/           # 框架、初始化、状态和交付模板
         assets/
         agents/openai.yaml
+      impeccable/
+        SKILL.md
       demand-analysis/
         SKILL.md
         templates/
@@ -121,6 +123,7 @@ project-root/
     handoff-architecture.md
     ui-design.md
     handoff-ui.md
+    prototype-review.md
     dev-tasks.md
     review-{stage}.md
   prototype/
@@ -130,11 +133,13 @@ project-root/
     layout/
     components/
     assets/
+    review/
+      screenshots/
   outputs/
     dev-package/
 ```
 
-`AGENTS.md` 是项目级总控说明。`.codex/agents/` 是 6 个角色配置。`.agents/skills/` 是当前项目内可调用的技能。角色阶段模板放在对应角色技能的 `templates/` 目录中；`docs/` 只放运行时生成的阶段产物。`prototype/` 是高保真网页原型区。`outputs/dev-package/` 是最终开发交付包。
+`AGENTS.md` 是项目级总控说明。`.codex/agents/` 是 6 个角色配置。`.agents/skills/` 是当前项目内可调用的技能，其中 `impeccable/` 是界面原型自审和打磨能力。角色阶段模板放在对应角色技能的 `templates/` 目录中；`docs/` 只放运行时生成的阶段产物。`prototype/` 是高保真网页原型区。`outputs/dev-package/` 是最终开发交付包。
 
 ## 阶段流程
 
@@ -195,6 +200,7 @@ project-root/
 
 - `docs/ui-design.md`
 - `docs/handoff-ui.md`
+- `docs/prototype-review.md`
 - `prototype/`
 
 原型结构：
@@ -204,6 +210,8 @@ project-root/
 - 方向候选：`prototype/directions/` 存放 2-3 个首页 demo，`prototype/directions/index.html` 是预览索引；它只用于方向选择，不替代最终完整原型。
 
 原型必须覆盖 P0 点击路径、成功/失败/空/加载状态、关键异常和主要响应式视口。`prototype/layout/` 必须沉淀可复用页面结构，避免界面实现只能在原型中成立、实际开发时无法稳定复现。
+
+完整原型交付前，界面设计师必须完成 Playwright + Impeccable 自审：生成 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`，运行 Impeccable context loader，用 Playwright 覆盖 desktop/tablet/mobile 截图，对候选 demo 和完整原型执行 `critique`、`audit`、`adapt` 以及必要的 `layout`、`typeset`、`clarify`、`animate`、`harden`、`polish`，并把审查、修正和复查结果写入 `docs/prototype-review.md`。
 
 原型目录职责：
 
@@ -215,6 +223,7 @@ project-root/
 | `prototype/layout/` | 应用外壳、导航、页头、侧栏、内容网格、表单页骨架、状态页骨架等可复用页面结构。 |
 | `prototype/components/` | 按钮组、表单控件、卡片、列表、弹窗、状态块等可复用组件和交互片段。 |
 | `prototype/assets/` | 样式、脚本、图片、图标、示例数据等公共资源。 |
+| `prototype/review/screenshots/` | Playwright 原型自审截图证据，按 desktop/tablet/mobile 存放。 |
 
 结束时询问用户：审核界面设计、修改设计/原型，还是开始开发规划。
 

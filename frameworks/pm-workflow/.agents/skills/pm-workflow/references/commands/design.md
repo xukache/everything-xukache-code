@@ -14,6 +14,7 @@
 - `docs/tech-architecture.md`
 - 已确认的产品约束、品牌线索和用户偏好
 - `assets/design-themes/`
+- `.agents/skills/impeccable/`
 
 ## 必须执行的流程
 
@@ -24,7 +25,14 @@
 5. 等待用户选择方向；只有用户明确授权“按你推荐的继续”时，才使用第一推荐。
 6. 用户选择方向后，基于选定方向产出完整 `docs/ui-design.md` 和 `docs/handoff-ui.md`。
 7. 在 `prototype/` 下构建完整 HTML 原型。完整原型可以复用或重构候选 demo，但不能只停留在候选 demo。
-8. 更新 `docs/workflow-state.json`，记录阶段产物，并把 `recommended_next` 设置为 `review design` 或 `plan`。
+8. 生成 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`，运行 `node .agents/skills/impeccable/scripts/load-context.mjs`，完整读取上下文。
+9. 使用 Playwright 打开候选 demo 和完整原型页面，覆盖 desktop 1440x900、tablet 834x1112、mobile 390x844 三个视口，截图保存到 `prototype/review/screenshots/`。
+10. 使用 Impeccable 执行专项审查和修正：候选方向至少运行 `critique`、`audit`；完整原型运行 `critique`、`audit`、`adapt`，并按问题使用 `layout`、`typeset`、`clarify`、`animate`、`harden`；最后运行 `polish`。
+11. 最多两轮自审修正；仍未解决的问题写入遗留问题。
+12. 产出 `docs/prototype-review.md`，记录页面清单、视口清单、截图路径、控制台错误、Impeccable 审查结论、已修正项、遗留问题和复查结果。
+13. 更新 `docs/workflow-state.json`，记录阶段产物，并把 `recommended_next` 设置为 `review design` 或 `plan`。
+
+如果 `.agents/skills/impeccable/SKILL.md` 不存在，必须停止 design 阶段并提示补齐 Impeccable repo-scoped skill；不要用普通 UI 审查代替。
 
 ## 原型结构
 
@@ -48,6 +56,8 @@ prototype/
   layout/
   components/
   assets/
+  review/
+    screenshots/
 ```
 
 目录职责：
@@ -60,6 +70,7 @@ prototype/
 | `prototype/layout/` | 可复用页面结构 | 沉淀应用外壳、导航、页头、侧栏、内容网格、表单页骨架、状态页骨架等结构，保证后续开发能稳定复现。 |
 | `prototype/components/` | 可复用界面组件和交互片段 | 存放按钮组、表单控件、卡片、列表、弹窗、状态块等组件示例，并标注使用场景和状态。 |
 | `prototype/assets/` | 公共资源 | 存放样式、脚本、图片、图标、示例数据等资源；页面不得依赖散落在目录外的资源。 |
+| `prototype/review/screenshots/` | 原型自审截图证据 | 按 desktop、tablet、mobile 存放 Playwright 截图；每个候选 demo 和主要原型页面都要覆盖。 |
 
 ## 必须具备的追溯关系
 

@@ -19,6 +19,7 @@ CORE_DOCS = [
     "handoff-architecture.md",
     "ui-design.md",
     "handoff-ui.md",
+    "prototype-review.md",
     "dev-tasks.md",
     "workflow-state.json",
 ]

@@ -21,6 +21,7 @@
 | `handoff-architecture.md` | 架构交接摘要 |
 | `ui-design.md` | 界面与体验设计文档 |
 | `handoff-ui.md` | 界面交接摘要 |
+| `prototype-review.md` | 高保真原型自审报告 |
 | `dev-tasks.md` | 开发任务清单 |
 | `review-*.md` | 阶段审核报告 |
 | `prototype/` | 高保真 HTML 原型 |

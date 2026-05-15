@@ -10,10 +10,12 @@ AGENTS.md
   config.toml
   agents/
 .agents/
+  context/
   skills/
 docs/
 prototype/
   directions/
+  review/screenshots/
 outputs/dev-package/
 ```
 
@@ -21,8 +23,10 @@ outputs/dev-package/
 - `.codex/agents/`：产品经理、需求分析师、技术架构师、界面设计师、开发规划师、质量审核官。
 - `.agents/skills/pm-workflow/`：主入口技能和脚本。
 - `.agents/skills/<role>/`：角色可调用的专用技能。
+- `.agents/skills/impeccable/`：界面原型自审和打磨技能。
+- `.agents/context/`：Impeccable 使用的产品和设计上下文。
 - `docs/`：阶段文档产出区。
-- `prototype/`：高保真 HTML 原型区；`directions/` 存放候选方向首页 demo。
+- `prototype/`：高保真 HTML 原型区；`directions/` 存放候选方向首页 demo，`review/screenshots/` 存放自审截图。
 - `outputs/dev-package/`：最终开发交付包。
 
 ## 开始使用

@@ -23,6 +23,7 @@ STAGE_ARTIFACTS: dict[str, list[str]] = {
     "design": [
         "docs/ui-design.md",
         "docs/handoff-ui.md",
+        "docs/prototype-review.md",
         "prototype/directions/index.html",
         "prototype/index.html",
     ],
@@ -120,11 +121,31 @@ def score_stage(root: Path, stage: str) -> dict:
     expected = STAGE_ARTIFACTS[stage]
     present = [item for item in expected if (root / item).exists()]
     missing = [item for item in expected if item not in present]
+    required_count = len(expected)
+    present_count = len(present)
+    if stage == "design":
+        required_count += 2
+        screenshots_dir = root / "prototype" / "review" / "screenshots"
+        screenshot_files = []
+        if screenshots_dir.exists():
+            screenshot_files = [
+                path
+                for path in screenshots_dir.rglob("*")
+                if path.is_file() and path.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}
+            ]
+        if screenshot_files:
+            present_count += 1
+        else:
+            missing.append("prototype/review/screenshots/")
+        if (root / ".agents" / "skills" / "impeccable" / "SKILL.md").exists():
+            present_count += 1
+        else:
+            missing.append(".agents/skills/impeccable/SKILL.md")
     contents = "\n\n".join(read_text(root / item) for item in expected)
     has_placeholder = any(pattern in contents for pattern in PLACEHOLDER_PATTERNS)
     total_chars = len(contents.strip())
 
-    completeness = 10 if not missing else max(1, round(10 * len(present) / max(len(expected), 1)))
+    completeness = 10 if not missing else max(1, round(10 * present_count / max(required_count, 1)))
     if has_placeholder:
         completeness = min(completeness, 6)
 
@@ -184,7 +205,7 @@ def executability_score(contents: str, stage: str, has_placeholder: bool) -> int
         "init": ["下一步", "工作量", "核心场景"],
         "analyze": ["验收", "P0", "不做"],
         "architect": ["接口", "数据库", "部署"],
-        "design": ["原型", "状态", "prototype", "directions"],
+        "design": ["原型", "状态", "prototype", "directions", "impeccable", "screenshots"],
         "plan": ["T001", "验证方式", "前置依赖"],
         "deliver": ["AGENTS", "dev-tasks", "prototype"],
     }[stage]
@@ -293,7 +314,7 @@ def build_rework(stage: str, result: str, scores: dict, round_no: int) -> str:
         "init": "补齐五个核心问题、核心场景、参考产品、特殊要求和工作量粗估。",
         "analyze": "补齐 P0/P1/P2、Mx-Fx 功能编号、业务规则、不做清单和验收标准。",
         "architect": "补齐需求到数据库、字段、接口、部署配置和技术风险的映射。",
-        "design": "补齐 2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、页面清单、需求到界面映射和完整原型路径。",
+        "design": "补齐 2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、docs/prototype-review.md、Playwright 截图证据、Impeccable 审查记录、页面清单、需求到界面映射和完整原型路径。",
         "plan": "补齐 Txxx 任务、前置依赖、涉及文件、执行指令、验证方式和边缘情况。",
         "deliver": "补齐缺失文档、审核报告、AGENTS.md 和 prototype 后重新打包。",
     }

@@ -17,6 +17,7 @@ description: "界面设计师使用：选择设计方向、编写界面与体验
 
 - `docs/ui-design.md`
 - `docs/handoff-ui.md`
+- `docs/prototype-review.md`
 - `prototype/`
 
 ## 设计流程
@@ -28,6 +29,35 @@ description: "界面设计师使用：选择设计方向、编写界面与体验
 5. 等用户选择，或在用户明确授权后使用第一推荐。
 6. 设计页面清单、布局、组件、状态和流程。
 7. 基于选定方向构建完整高保真 HTML 原型。
+8. 使用 Playwright 对候选 demo 和完整原型逐页截图，覆盖 desktop/tablet/mobile。
+9. 使用 Impeccable 做专项审查和修正，最多两轮。
+10. 写入 `docs/prototype-review.md`，记录截图证据、审查结论、修正项和遗留问题。
+
+## Impeccable 使用清单
+
+开始自审前必须确认 `.agents/skills/impeccable/SKILL.md` 存在；不存在时停止，不做普通降级。
+
+1. 生成 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`。
+2. 运行 `node .agents/skills/impeccable/scripts/load-context.mjs`，完整读取输出。
+3. 对候选方向 demo 使用 `critique` 和 `audit`，确认方向差异、视觉质量、AI 味和基础技术质量。
+4. 对完整原型使用 `critique`、`audit`、`adapt`。
+5. 根据问题选择 `layout`、`typeset`、`clarify`、`animate`、`harden` 修正。
+6. 功能路径、状态和响应式完成后，用 `polish` 做最终打磨。
+7. 在 `docs/prototype-review.md` 中逐项记录每个 Impeccable 功能的目标、发现和处理结果。
+
+功能用途：
+
+| 功能 | 用途 |
+|---|---|
+| `critique` | 审美、视觉层级、信息架构、AI 味、认知负荷、启发式审查 |
+| `audit` | 可访问性、性能、响应式、语义结构、反模式检测 |
+| `adapt` | 桌面、平板、移动适配 |
+| `layout` | 间距、对齐、节奏、布局稳定性 |
+| `typeset` | 字体层级、行高、可读性、文字拥挤 |
+| `clarify` | 按钮、空状态、错误提示、说明文字 |
+| `animate` | 动效、状态过渡、交互反馈 |
+| `harden` | 长文本、空数据、错误、加载、异常路径 |
+| `polish` | 最终综合打磨 |
 
 ## 原型结构
 
@@ -51,6 +81,8 @@ prototype/
   layout/
   components/
   assets/
+  review/
+    screenshots/
 ```
 
 目录职责：
@@ -70,6 +102,8 @@ prototype/
 
 - P0 功能是否都有可点击路径。
 - 设计方向是否都有可打开的首页 demo，而不是只有文字说明。
+- 是否有 Playwright 截图证据并覆盖 desktop/tablet/mobile。
+- 是否完成 Impeccable 审查、修正和复查记录。
 - 是否沉淀了可复用布局，并能支撑后续开发稳定复现。
 - 成功、失败、空、加载状态是否覆盖。
 - 页面是否符合真实工作流。

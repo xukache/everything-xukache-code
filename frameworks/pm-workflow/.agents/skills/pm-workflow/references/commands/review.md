@@ -24,6 +24,7 @@
    - 对完整性、清晰度、一致性、可执行性评分
    - 模拟下游角色使用产物
    - 做结构化追溯对账
+   - design 阶段额外核对 `docs/prototype-review.md`、`prototype/review/screenshots/`、Playwright 三视口截图和 Impeccable 审查修正记录
 5. 如果阶段未通过，给出具体返工指令，并询问用户现在修复还是带风险继续推进。
 6. 如果这是第三轮未通过，必须明确告知风险，并建议先停止推进、修复产物。
 
