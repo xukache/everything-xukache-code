@@ -41,6 +41,9 @@
 
 - 每个阶段命令都必须先启动对应的 `.codex/agents/*.toml` 子 agent；不要只由当前会话扮演角色。
 - 阶段到 agent 的固定映射：`init/help/status/deliver -> product_manager`，`analyze -> demand_analyst`，`architect -> tech_architect`，`design -> ui_designer`，`plan -> dev_planner`，`review -> quality_reviewer`。
+- 每个阶段开始都先输出阶段开场卡：当前用户情况、推荐方案、为什么这样选、接下来产出什么。
+- 进入需求分析前，`docs/workflow-state.json` 中的 `clarification.status` 默认必须是 `user_confirmed`，且 `user_confirmation_required=false`。
+- 需求分析先产出 PRD 草稿和待用户回答问题；用户回答后再完善最终稿，并自动触发 `quality_reviewer` 审核 analyze。
 - 如果当前环境无法启动项目子 agent，必须停止本阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 - 每阶段结束必须引导用户选择：审核、修改、进入下一阶段。
 - 审核是软门控：不强制阻断，但必须记录风险。

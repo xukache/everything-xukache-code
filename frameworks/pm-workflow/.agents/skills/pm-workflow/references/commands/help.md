@@ -12,7 +12,7 @@
 
 | 命令 | 自然语言说法 | 产物 |
 |---|---|---|
-| `init` | 我想做一个... | `docs/project-config.md` |
+| `init` | 我想做一个... / 澄清需求 | `docs/project-config.md` |
 | `analyze` | 开始分析需求 | `docs/prd.md`, `docs/handoff-prd.md` |
 | `architect` | 开始设计技术架构 | `docs/tech-architecture.md`, `docs/handoff-architecture.md` |
 | `design` | 开始界面原型设计 | `docs/ui-design.md`, `docs/handoff-ui.md`, `prototype/` |

@@ -42,6 +42,8 @@ python skills/pm/pm-workflow/scripts/review_stage.py --root <project-root> --sta
 
 - 平均分是否 >= 8，且单项是否都 >= 6。
 - 是否存在待补充、待办占位或空表。
+- init 阶段是否已经在 `workflow-state.json` 中达到 `clarification.status=user_confirmed`，且 6 项澄清标准均完成。
+- analyze 阶段是否为 `文档状态：final`，并且没有未回答的阻塞问题。
 - 是否存在跨阶段新增范围。
 - design 阶段是否为每个候选方向生成可打开的首页 demo，并提供 `prototype/directions/index.html` 预览索引。
 - design 阶段是否提供 `docs/prototype-review.md`、`prototype/review/screenshots/`、Playwright 三视口截图和 Impeccable 审查修正记录。

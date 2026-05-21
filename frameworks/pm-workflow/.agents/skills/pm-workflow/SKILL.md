@@ -15,7 +15,7 @@ user-invocable: true
 
 | 命令 | 自然语言触发 | 主角色 | 产物 |
 |---|---|---|---|
-| `init` | `$pm-workflow`、"我想做一个..." | 产品经理 | `docs/project-config.md` |
+| `init` | `$pm-workflow`、"我想做一个..."、"澄清需求"、"需求澄清" | 产品经理 | `docs/project-config.md` |
 | `analyze` | "开始分析需求"、"需求分析" | 需求分析师 | `docs/prd.md`, `docs/handoff-prd.md` |
 | `architect` | "开始设计技术架构"、"技术架构" | 技术架构师 | `docs/tech-architecture.md`, `docs/handoff-architecture.md` |
 | `design` | "开始界面设计"、"开始界面原型设计" | 界面设计师 | `docs/ui-design.md`, `docs/handoff-ui.md`, `prototype/` |
@@ -32,9 +32,11 @@ user-invocable: true
 1. **无参数**：读取 [references/commands/help.md](references/commands/help.md)，展示命令菜单，并询问用户要进入哪个阶段。
 2. **首词命中命令**：读取 `references/commands/` 下对应的阶段说明并执行；命令后的内容作为目标或上下文。
 3. **首词没有命中命令**：把完整输入当作产品想法，进入 `init`。
-4. **自然语言命中触发词**：即使没有明确命令，也进入对应阶段。
-5. **每阶段结束后**：必须请用户选择下一步：审核、修改当前阶段、进入推荐下一阶段。
-6. **审核是软门控**：审核意见用于引导流程，但不强制阻断下一命令。若用户选择带风险继续，必须把风险记录到 `docs/workflow-state.json` 或下一阶段文档。
+4. **自然语言命中触发词**：即使没有明确命令，也进入对应阶段；"澄清需求"、"需求澄清"、模糊产品想法都进入 `init` 内的需求澄清协议。
+5. **进入 analyze 前的默认硬门槛**：`docs/workflow-state.json` 中 `clarification.status` 必须为 `user_confirmed`。若用户强行跳过，必须把风险写入 `notes` 和下一阶段文档，并保留 `user_confirmation_required=true`。
+6. **每阶段开始时**：先输出“阶段开场卡”，说明当前用户情况、推荐方案、选择原因、接下来会产出什么。
+7. **每阶段结束后**：必须请用户选择下一步：审核、修改当前阶段、进入推荐下一阶段。
+8. **审核是软门控**：审核意见用于引导流程，但不强制阻断下一命令。若用户选择带风险继续，必须把风险记录到 `docs/workflow-state.json` 或下一阶段文档。
 
 ## Agent 调度规则
 
@@ -55,6 +57,7 @@ user-invocable: true
 自然语言路由示例：
 
 - "我想做一个记录每天读书笔记的网站" -> `init`
+- "澄清需求" / "需求澄清" -> `init`
 - "开始分析需求" -> `analyze`
 - "开始设计技术架构" -> `architect`
 - "开始界面原型设计" -> `design`
@@ -96,6 +99,8 @@ project-root/
         scripts/
         templates/           # 框架、初始化、状态和交付模板
         assets/
+        bundled-skills/
+          impeccable/        # 随 pm-workflow 分发的第三方界面审查技能
         agents/openai.yaml
       impeccable/
         SKILL.md
@@ -139,7 +144,7 @@ project-root/
     dev-package/
 ```
 
-`AGENTS.md` 是项目级总控说明。`.codex/agents/` 是 6 个角色配置。`.agents/skills/` 是当前项目内可调用的技能，其中 `impeccable/` 是界面原型自审和打磨能力。角色阶段模板放在对应角色技能的 `templates/` 目录中；`docs/` 只放运行时生成的阶段产物。`prototype/` 是高保真网页原型区。`outputs/dev-package/` 是最终开发交付包。
+`AGENTS.md` 是项目级总控说明。`.codex/agents/` 是 6 个角色配置。`.agents/skills/` 是当前项目内可调用的技能，其中 `impeccable/` 是界面原型自审和打磨能力。`pm-workflow/bundled-skills/impeccable/` 是随本技能一起分发的第三方技能副本，脚手架会优先从这里复制到项目的 `.agents/skills/impeccable/`，避免用户只安装 pm-workflow 时缺少依赖。角色阶段模板放在对应角色技能的 `templates/` 目录中；`docs/` 只放运行时生成的阶段产物。`prototype/` 是高保真网页原型区。`outputs/dev-package/` 是最终开发交付包。
 
 ## 阶段流程
 
@@ -147,7 +152,35 @@ project-root/
 
 阶段说明：[references/commands/init.md](references/commands/init.md)
 
-产品经理询问五个核心问题：
+产品经理先执行需求澄清协议，再沉淀五个核心问题。用户第一次输入产品想法时，必须先输出欢迎语：
+
+```text
+🤖 AI产品开发工作室已就绪
+朋友你好！我是你的产品经理，会带着你一步步把想法变成现实。
+你提到的「xxx」是个很好的产品，xxx。不过在落地之前，我想先帮你理清楚几个关键问题。
+先确认一下我理解的对不对：
+你说的 xxx 产品，核心就是：xxx
+```
+
+随后只问 3-5 个最关键的问题，必须用普通用户能懂的话，并允许用户“不用一次性全回答，想到什么说什么就行”。问题默认覆盖：
+
+1. 你想在什么设备或平台上用？
+2. 除了核心功能，还有特别想要的功能吗？
+3. 有没有用过类似产品觉得不错或不喜欢？如环境允许，AI 主动搜索 2-4 个类似产品作参考；如无法联网，说明无法实时搜索，并用本地经验示例且标记待确认。
+4. 这个产品只给自己用，还是分享给别人一起用？
+
+澄清完成标准固定为 6 项：
+
+1. 产品给谁用。
+2. 解决什么场景问题。
+3. 用户想达成什么结果。
+4. 首版平台与使用设备。
+5. MVP 必须做和暂不做边界。
+6. 无阻塞开放问题。
+
+只有 6 项均有答案，并且用户确认“我理解得对”，才能把 `docs/workflow-state.json` 中 `clarification.status` 更新为 `user_confirmed`，把 `user_confirmation_required` 设为 `false`，并推荐进入 `analyze`。内部判断通过、文档已写好、审核通过都不等于用户确认。
+
+产品经理继续补齐五个核心问题：
 
 1. 产品是什么，解决什么问题，谁会使用？
 2. 面向什么平台：网页、应用、桌面端、小程序或其他载体？
@@ -157,13 +190,20 @@ project-root/
 
 产物：`docs/project-config.md`。
 
-结束时询问用户：审核初始化、修改配置，还是开始需求分析。
+结束时若澄清未完成，继续围绕缺口提问；若澄清完成但未确认，请用户确认理解是否正确；只有用户确认后，才询问：审核初始化、修改配置，还是开始需求分析。
 
 ### 阶段 01：需求分析
 
 阶段说明：[references/commands/analyze.md](references/commands/analyze.md)
 
-需求分析师执行四轮引导：
+需求分析师开始前先输出阶段开场卡，并检查 `clarification.status=user_confirmed`。如果未确认，先交还产品经理继续澄清；用户坚持继续时必须记录风险。
+
+需求分析师执行两步式需求分析：
+
+1. 先根据已确认的 `project-config.md` 生成 PRD 草稿，标记 `文档状态：draft`，并在 `待用户回答问题` 中列出完成最终稿必须回答的问题。
+2. 产品经理把这些问题抛给用户。用户回答后，需求分析师回填并完善 `docs/prd.md` 和 `docs/handoff-prd.md`，把 `文档状态` 改为 `final`，清空阻塞问题，再自动调用 `quality_reviewer` 审核 `analyze`。
+
+PRD 草稿和最终稿都使用四轮引导框架：
 
 1. 用户角色与场景。
 2. 功能模块与依赖。
@@ -172,11 +212,13 @@ project-root/
 
 每个功能必须获得 `M{模块号}-F{功能号}` 编号。`docs/prd.md` 必须包含需求追溯表。`docs/handoff-prd.md` 总结架构和界面设计需要的输入。
 
-结束时询问用户：审核需求、修改需求文档，还是开始技术架构。
+草稿阶段不触发审核；最终稿完成后必须自动运行 `review analyze`，再询问用户：修改需求文档，还是开始技术架构。
 
 ### 阶段 02：技术架构
 
 阶段说明：[references/commands/architect.md](references/commands/architect.md)
+
+技术架构师开始前先输出阶段开场卡，用小白能听懂的话说明推荐技术路线和原因。例如：如果产品是微信小程序内使用，优先考虑微信原生小程序 + 微信云开发；如果是网页、App 或桌面软件，再根据平台、用户体量、商业化计划、迭代方向和维护成本比较技术栈。
 
 技术架构师使用五维度决策框架：
 

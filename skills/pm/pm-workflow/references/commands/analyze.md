@@ -11,16 +11,23 @@
 ## 输入
 
 - `docs/project-config.md`
+- `docs/workflow-state.json`
 - 当前对话中用户补充的澄清信息
 
 ## 必须执行的流程
 
-1. 执行四轮引导：用户角色与场景、功能模块、优先级与边界、规则与验收。
-2. 为每个功能分配 `M{模块号}-F{功能号}` 格式的编号。
-3. 将功能划分为 P0、P1 或 P2。
-4. 明确记录不做项和范围边界。
-5. 写入或更新 `docs/prd.md` 和 `docs/handoff-prd.md`。
-6. 更新 `docs/workflow-state.json`，记录阶段产物，并把 `recommended_next` 设置为 `review analyze` 或 `architect`。
+1. 先输出阶段开场卡：当前用户情况、推荐方案、为什么这样选、接下来产出什么。
+2. 检查 `clarification.status` 是否为 `user_confirmed`。未确认时默认停止需求分析，交回产品经理继续澄清；用户坚持跳过时必须记录风险。
+3. 先生成 PRD 草稿，标记 `文档状态：draft`，并列出 `待用户回答问题`。
+4. 把问题抛给用户，等用户回答后再完善最终稿。
+5. 最终稿必须把 `文档状态` 改为 `final`，清空阻塞的 `待用户回答问题`。
+6. 执行四轮引导：用户角色与场景、功能模块、优先级与边界、规则与验收。
+7. 为每个功能分配 `M{模块号}-F{功能号}` 格式的编号。
+8. 将功能划分为 P0、P1 或 P2。
+9. 明确记录不做项和范围边界。
+10. 写入或更新 `docs/prd.md` 和 `docs/handoff-prd.md`。
+11. 更新 `docs/workflow-state.json`，记录阶段产物；草稿阶段把 `recommended_next` 设置为 `answer analyze questions`，最终稿阶段设置为 `review analyze`。
+12. 最终稿完成后自动启动 `quality_reviewer` 执行 `$pm-workflow review analyze`。
 
 ## 必须具备的追溯关系
 
@@ -28,4 +35,4 @@
 
 ## 收尾引导
 
-结束时询问用户：是否要先做需求审核、修改需求文档，还是开始技术架构设计。
+草稿阶段结束时只抛出待用户回答问题。最终稿审核后询问用户：修改需求文档，还是开始技术架构设计。

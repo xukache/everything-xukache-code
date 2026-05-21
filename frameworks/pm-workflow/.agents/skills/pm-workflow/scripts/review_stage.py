@@ -60,6 +60,24 @@ DOWNSTREAM_ROLE = {
 PLACEHOLDER_PATTERNS = ["待补充", "TODO", "[TODO]", "{{"]
 
 
+def default_clarification() -> dict:
+    return {
+        "status": "not_started",
+        "summary": "",
+        "missing_context": [],
+        "materials_needed": [],
+        "completion_criteria": {
+            "target_user": False,
+            "scenario_problem": False,
+            "desired_outcome": False,
+            "first_platform": False,
+            "mvp_boundary": False,
+            "no_blocking_questions": False,
+        },
+        "user_confirmed_at": None,
+    }
+
+
 def read_text(path: Path) -> str:
     if not path.exists() or path.is_dir():
         return ""
@@ -85,7 +103,10 @@ def load_state(root: Path) -> dict:
         return {
             "project_name": root.name,
             "current_stage": "init",
-            "recommended_next": "analyze",
+            "recommended_next": "clarify init",
+            "clarification": default_clarification(),
+            "pending_user_questions": [],
+            "user_confirmation_required": True,
             "artifacts": {},
             "reviews": {},
             "notes": [],
@@ -96,7 +117,10 @@ def load_state(root: Path) -> dict:
         return {
             "project_name": root.name,
             "current_stage": "init",
-            "recommended_next": "analyze",
+            "recommended_next": "clarify init",
+            "clarification": default_clarification(),
+            "pending_user_questions": [],
+            "user_confirmation_required": True,
             "artifacts": {},
             "reviews": {},
             "notes": ["workflow-state.json was invalid JSON when review ran."],
@@ -118,6 +142,7 @@ def extract_ids(text: str, prefix: str) -> set[str]:
 
 
 def score_stage(root: Path, stage: str) -> dict:
+    state = load_state(root)
     expected = STAGE_ARTIFACTS[stage]
     present = [item for item in expected if (root / item).exists()]
     missing = [item for item in expected if item not in present]
@@ -144,17 +169,33 @@ def score_stage(root: Path, stage: str) -> dict:
     contents = "\n\n".join(read_text(root / item) for item in expected)
     has_placeholder = any(pattern in contents for pattern in PLACEHOLDER_PATTERNS)
     total_chars = len(contents.strip())
+    init_not_confirmed = stage == "init" and not clarification_confirmed(state)
+    analyze_has_open_questions = stage == "analyze" and has_blocking_analyze_questions(state, read_text(root / "docs" / "prd.md"))
+
+    if init_not_confirmed:
+        missing.append("docs/workflow-state.json: clarification.status=user_confirmed")
+    if analyze_has_open_questions:
+        missing.append("docs/prd.md: 待用户回答问题未清空或文档仍为 draft")
 
     completeness = 10 if not missing else max(1, round(10 * present_count / max(required_count, 1)))
     if has_placeholder:
         completeness = min(completeness, 6)
+    if init_not_confirmed or analyze_has_open_questions:
+        completeness = min(completeness, 5)
 
     clarity = 9 if total_chars > 2500 and not has_placeholder else 6 if total_chars > 800 else 3
     if has_placeholder:
         clarity = min(clarity, 5)
+    if analyze_has_open_questions:
+        clarity = min(clarity, 5)
 
     consistency, consistency_note = consistency_score(root, stage)
+    if init_not_confirmed:
+        consistency = min(consistency, 5)
+        consistency_note = "需求澄清尚未获得用户确认，不能视为初始化完成。"
     executability = executability_score(contents, stage, has_placeholder)
+    if init_not_confirmed or analyze_has_open_questions:
+        executability = min(executability, 5)
 
     scores = {
         "completeness": completeness,
@@ -167,7 +208,32 @@ def score_stage(root: Path, stage: str) -> dict:
     scores["missing"] = missing
     scores["has_placeholder"] = has_placeholder
     scores["consistency_note"] = consistency_note
+    scores["init_not_confirmed"] = init_not_confirmed
+    scores["analyze_has_open_questions"] = analyze_has_open_questions
     return scores
+
+
+def clarification_confirmed(state: dict) -> bool:
+    clarification = state.get("clarification") or {}
+    criteria = clarification.get("completion_criteria") or {}
+    all_criteria_done = bool(criteria) and all(bool(value) for value in criteria.values())
+    return (
+        clarification.get("status") == "user_confirmed"
+        and not state.get("user_confirmation_required", True)
+        and all_criteria_done
+    )
+
+
+def has_blocking_analyze_questions(state: dict, prd: str) -> bool:
+    pending = state.get("pending_user_questions") or []
+    if pending:
+        return True
+    if re.search(r"当前状态[：:]\s*draft", prd, re.IGNORECASE):
+        return True
+    if "用户问题是否已回答：否" in prd or "用户问题是否已回答: 否" in prd:
+        return True
+    unanswered_blocking_row = re.search(r"\|[^|\n]+未回答[^|\n]*\|[^|\n]*是[^|\n]*\|", prd)
+    return bool("## 待用户回答问题" in prd and unanswered_blocking_row)
 
 
 def consistency_score(root: Path, stage: str) -> tuple[int, str]:
@@ -297,6 +363,10 @@ def build_issues(scores: dict, round_no: int) -> str:
         issues.append("- 缺失阶段产物：" + ", ".join(scores["missing"]))
     if scores["has_placeholder"]:
         issues.append("- 文档仍包含“待补充”或 TODO，占位内容需要替换为真实决策。")
+    if scores.get("init_not_confirmed"):
+        issues.append("- 需求澄清尚未获得用户确认，`init` 不能判定完成。")
+    if scores.get("analyze_has_open_questions"):
+        issues.append("- PRD 仍是草稿或存在待用户回答问题，不能触发 analyze 通过。")
     if scores["consistency"] < 6:
         issues.append("- 跨阶段追溯不足，需求功能编号没有完整映射到当前阶段产物。")
     if scores["executability"] < 6:
@@ -312,7 +382,7 @@ def build_rework(stage: str, result: str, scores: dict, round_no: int) -> str:
 
     suggestions = {
         "init": "补齐五个核心问题、核心场景、参考产品、特殊要求和工作量粗估。",
-        "analyze": "补齐 P0/P1/P2、Mx-Fx 功能编号、业务规则、不做清单和验收标准。",
+        "analyze": "先让用户回答 PRD 草稿中的待确认问题，再补齐 P0/P1/P2、Mx-Fx 功能编号、业务规则、不做清单和验收标准，并把文档状态改为 final。",
         "architect": "补齐需求到数据库、字段、接口、部署配置和技术风险的映射。",
         "design": "补齐 2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、docs/prototype-review.md、Playwright 截图证据、Impeccable 审查记录、页面清单、需求到界面映射和完整原型路径。",
         "plan": "补齐 Txxx 任务、前置依赖、涉及文件、执行指令、验证方式和边缘情况。",
@@ -335,6 +405,9 @@ def update_review_state(root: Path, stage: str, round_no: int, result: str, repo
     state = load_state(root)
     state.setdefault("artifacts", {})
     state.setdefault("reviews", {})
+    state.setdefault("clarification", default_clarification())
+    state.setdefault("pending_user_questions", [])
+    state.setdefault("user_confirmation_required", True)
     state["current_stage"] = stage
     state["recommended_next"] = f"review {stage}" if result != "通过" else NEXT_STAGE[stage]
     state["artifacts"][stage] = STAGE_ARTIFACTS[stage]

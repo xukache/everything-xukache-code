@@ -12,6 +12,7 @@ from pathlib import Path
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 AGENT_DIR = SKILL_ROOT / "agents"
 ROLE_SKILLS_DIR = SKILL_ROOT / "role-skills"
+BUNDLED_SKILLS_DIR = SKILL_ROOT / "bundled-skills"
 REPO_SKILLS_DIR = SKILL_ROOT.parent
 
 TEMPLATE_DIR = SKILL_ROOT / "templates"
@@ -127,8 +128,18 @@ def copy_repo_scoped_skills(root: Path) -> list[str]:
     return copied
 
 
+def bundled_skill_source(name: str) -> Path | None:
+    candidate = BUNDLED_SKILLS_DIR / name
+    if (candidate / "SKILL.md").exists():
+        return candidate
+    return None
+
+
 def impeccable_source_candidates() -> list[Path]:
-    candidates: list[Path] = []
+    candidates: list[Path] = [BUNDLED_SKILLS_DIR / "impeccable"]
+    bundled = bundled_skill_source("impeccable")
+    if bundled is not None and bundled not in candidates:
+        candidates.append(bundled)
     for env_name in ["CODEX_HOME", "AGENTS_HOME"]:
         env_value = os.environ.get(env_name)
         if env_value:
@@ -181,6 +192,7 @@ def write_plugin_manifest(root: Path) -> bool:
     "capabilities": ["Interactive", "Write"],
     "defaultPrompt": [
       "我想做一个产品，帮我从需求开始梳理",
+      "澄清需求",
       "开始分析需求",
       "审核一下当前阶段"
     ],
@@ -288,9 +300,9 @@ job_max_runtime_seconds = 1800
         print("Missing required Impeccable skill source. Searched:")
         for item in missing_impeccable_sources:
             print(f"  - {item}")
-        print("Design stage must stop until .agents/skills/impeccable/ is available.")
+        print("Design stage must stop until .agents/skills/impeccable/ is available. The pm-workflow package should normally include bundled-skills/impeccable/.")
 
-    print("Next step: start Codex in this directory, then describe your product idea or say `开始分析需求`.")
+    print("Next step: start Codex in this directory, then describe your product idea or say `澄清需求`.")
 
 
 def main() -> int:

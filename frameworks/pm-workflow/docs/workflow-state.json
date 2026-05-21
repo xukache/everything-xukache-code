@@ -1,9 +1,35 @@
 {
   "project_name": "未命名产品",
   "current_stage": "init",
-  "recommended_next": "analyze",
+  "recommended_next": "clarify init",
+  "clarification": {
+    "status": "not_started",
+    "summary": "",
+    "missing_context": [
+      "目标用户",
+      "核心场景",
+      "用户想达成的结果",
+      "首版平台与使用设备",
+      "MVP 必做和暂不做边界",
+      "阻塞开放问题"
+    ],
+    "materials_needed": [],
+    "completion_criteria": {
+      "target_user": false,
+      "scenario_problem": false,
+      "desired_outcome": false,
+      "first_platform": false,
+      "mvp_boundary": false,
+      "no_blocking_questions": false
+    },
+    "user_confirmed_at": null
+  },
+  "pending_user_questions": [],
+  "user_confirmation_required": true,
   "artifacts": {
-    "init": ["docs/project-config.md"],
+    "init": [
+      "docs/project-config.md"
+    ],
     "analyze": [],
     "architect": [],
     "design": [],
@@ -13,4 +39,3 @@
   "reviews": {},
   "notes": []
 }
-

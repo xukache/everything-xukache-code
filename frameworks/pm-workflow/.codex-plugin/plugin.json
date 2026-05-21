@@ -21,6 +21,7 @@
     "capabilities": ["Interactive", "Write"],
     "defaultPrompt": [
       "我想做一个产品，帮我从需求开始梳理",
+      "澄清需求",
       "开始分析需求",
       "审核一下当前阶段"
     ],
