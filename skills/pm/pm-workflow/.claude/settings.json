@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python .claude/skills/pm-workflow/scripts/*.py:*)",
+      "Bash(python .agents/skills/pm-workflow/scripts/*.py:*)",
+      "Bash(npx impeccable *)",
+      "Bash(node .claude/skills/impeccable/scripts/*.mjs:*)",
+      "Bash(node .agents/skills/impeccable/scripts/*.mjs:*)"
+    ],
+    "deny": [
+      "Bash(git reset --hard:*)",
+      "Bash(git checkout --:*)"
+    ]
+  }
+}

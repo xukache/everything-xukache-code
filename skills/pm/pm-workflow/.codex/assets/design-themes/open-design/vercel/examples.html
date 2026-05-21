@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vercel Theme Examples</title>
+  <style>
+    :root { --bg:#fff; --text:#000; --sub:#666; --line:#eaeaea; --panel:#fafafa; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:14px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .preview-switcher { position:sticky; top:0; z-index:20; display:flex; justify-content:space-between; gap:16px; padding:12px 18px; background:rgba(255,255,255,.94); border-bottom:1px solid var(--line); backdrop-filter:blur(10px); }
+    .preview-title span { display:block; color:var(--sub); font-size:12px; }
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+    .tab { border:1px solid var(--line); background:white; color:var(--text); border-radius:6px; min-height:34px; padding:0 10px; cursor:pointer; font:inherit; }
+    .tab.active { background:#000; color:white; border-color:#000; }
+    .sample-page { display:none; min-height:calc(100vh - 59px); }
+    .sample-page.active { display:block; }
+    h1,h2,p { margin:0; }
+    h1 { font-size:56px; line-height:1.02; letter-spacing:-.05em; }
+    h2 { font-size:20px; letter-spacing:-.02em; }
+    p { color:var(--sub); }
+    .button { border:1px solid #000; background:#000; color:white; border-radius:6px; min-height:38px; padding:0 16px; font-weight:650; }
+    .page-header { height:68px; display:flex; align-items:center; justify-content:space-between; padding:0 min(48px,5vw); border-bottom:1px solid var(--line); }
+    .container { width:min(1120px,calc(100vw - 40px)); margin:0 auto; padding:64px 0 82px; display:grid; gap:42px; }
+    .hero { display:grid; grid-template-columns:1fr 1fr; gap:42px; align-items:center; }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+    .card { background:white; padding:22px; min-height:152px; }
+    .preview { background:#000; color:white; border-radius:12px; padding:24px; min-height:340px; display:grid; align-content:end; }
+    .mono, pre { font-family:"SFMono-Regular", Consolas, monospace; background:#000; color:white; border-radius:8px; padding:16px; overflow:auto; }
+    .admin { display:grid; grid-template-columns:230px 1fr; min-height:calc(100vh - 59px); }
+    .sidebar { border-right:1px solid var(--line); padding:20px; }
+    .sidebar a { display:block; padding:10px 0; color:var(--sub); }
+    .workspace { padding:28px; display:grid; gap:20px; }
+    table { width:100%; border-collapse:collapse; border:1px solid var(--line); }
+    th,td { padding:14px; border-bottom:1px solid var(--line); text-align:left; }
+    .metric { font-size:42px; font-weight:750; letter-spacing:-.04em; }
+    .phone-stage { min-height:calc(100vh - 59px); display:grid; place-items:center; background:var(--panel); padding:40px 20px; }
+    .phone { width:330px; min-height:640px; border:1px solid var(--line); border-radius:34px; background:white; padding:18px; display:grid; gap:16px; align-content:start; }
+    @media(max-width:900px){.preview-switcher{flex-direction:column}.tabs{justify-content:flex-start}.hero,.grid,.admin{grid-template-columns:1fr}.sidebar{display:none}h1{font-size:38px}}
+  </style>
+</head>
+<body>
+  <aside class="preview-switcher"><div class="preview-title"><strong>Vercel 主题预览</strong><span>切换查看不同产品类型的完整页面</span></div><div class="tabs"><button class="tab active" data-target="developer">开发者工具/文档页</button><button class="tab" data-target="brand">品牌主页</button><button class="tab" data-target="saas">SaaS 产品页</button><button class="tab" data-target="admin">后台管理系统</button><button class="tab" data-target="dashboard">数据分析看板</button><button class="tab" data-target="mobile">移动/消费产品</button><button class="tab" data-target="editorial">内容/编辑型页面</button></div></aside>
+  <section class="sample-page active" data-sample="developer"><header class="page-header"><strong>DeployKit</strong><button class="button">Deploy</button></header><main class="container"><section class="hero"><div><h1>Ship fast with a clean developer surface</h1><p style="margin-top:18px">命令、构建状态、文档入口和部署结果保持极简。</p></div><pre>npm run build
+vercel deploy --prod
+status: ready</pre></section><section class="grid"><article class="card"><h2>Build logs</h2><p>清楚显示步骤和状态。</p></article><article class="card"><h2>API routes</h2><p>端点与部署绑定。</p></article><article class="card"><h2>Docs</h2><p>快速进入集成说明。</p></article></section></main></section>
+  <section class="sample-page" data-sample="brand"><header class="page-header"><strong>Edge Studio</strong><button class="button">Start</button></header><main class="container"><section class="hero"><div><h1>Build at the speed of your ideas</h1><p style="margin-top:18px">黑白极简、强留白、精准标题。</p></div><div class="preview"><h2>Production preview</h2><p style="color:#aaa">edge.example.com</p></div></section></main></section>
+  <section class="sample-page" data-sample="saas"><header class="page-header"><strong>Launch Cloud</strong><button class="button">View pricing</button></header><main class="container"><h1>SaaS 产品页</h1><section class="grid"><article class="card"><h2>Projects</h2><p>项目和环境清晰组织。</p></article><article class="card"><h2>Domains</h2><p>域名状态明确。</p></article><article class="card"><h2>Teams</h2><p>协作入口克制。</p></article></section></main></section>
+  <section class="sample-page" data-sample="admin"><div class="admin"><aside class="sidebar"><strong>Dashboard</strong><a>Projects</a><a>Deployments</a><a>Domains</a><a>Settings</a></aside><main class="workspace"><h1>项目控制台</h1><section class="grid"><article class="card"><h2>Ready</h2><div class="metric">28</div></article><article class="card"><h2>Building</h2><div class="metric">4</div></article><article class="card"><h2>Failed</h2><div class="metric">1</div></article></section><table><thead><tr><th>项目</th><th>环境</th><th>状态</th></tr></thead><tbody><tr><td>web-app</td><td>prod</td><td>ready</td></tr><tr><td>docs</td><td>preview</td><td>building</td></tr></tbody></table></main></div></section>
+  <section class="sample-page" data-sample="dashboard"><main class="container"><h1>性能看板</h1><section class="grid"><article class="card"><h2>Edge requests</h2><div class="metric">8.4M</div></article><article class="card"><h2>Latency</h2><div class="metric">42ms</div></article><article class="card"><h2>Errors</h2><div class="metric">0.04%</div></article></section></main></section>
+  <section class="sample-page" data-sample="mobile"><main class="phone-stage"><div class="phone"><h2>发布通知</h2><p>可用于极简内容、发布、订阅和个人工作流。</p><article class="card"><h2>Ready</h2><p>mobile-preview.vercel.app</p></article><button class="button">Open preview</button></div></main></section>
+  <section class="sample-page" data-sample="editorial"><main class="container"><h1>发布说明与技术博客</h1><section class="grid"><article class="card"><h2>Changelog</h2><p>按版本记录。</p></article><article class="card"><h2>Launch note</h2><p>聚焦能力更新。</p></article><article class="card"><h2>Guide</h2><p>清晰解释用法。</p></article></section></main></section>
+  <script>document.querySelectorAll('.tab').forEach((tab)=>tab.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach((item)=>item.classList.toggle('active',item===tab));document.querySelectorAll('.sample-page').forEach((sample)=>sample.classList.toggle('active',sample.dataset.sample===tab.dataset.target));}));</script>
+</body>
+</html>
