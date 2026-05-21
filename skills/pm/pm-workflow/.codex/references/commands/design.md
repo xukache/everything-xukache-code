@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须启动 `.codex/agents/ui-designer.toml` 中的 `ui_designer` 子 agent 执行界面与原型设计。
+必须启动当前 CLI 结构下的界面设计子 agent 执行界面与原型设计：Codex 使用 `.codex/agents/ui-designer.toml`，Claude Code 使用 `.claude/agents/ui-designer.md`。
 
-如果当前 Codex 环境无法启动 `ui_designer` 子 agent，必须停止界面与原型设计，不生成或修改 `docs/ui-design.md`、`docs/handoff-ui.md`、`prototype/` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
+如果当前环境无法启动界面设计子 agent，必须停止界面与原型设计，不生成或修改 `docs/ui-design.md`、`docs/handoff-ui.md`、`prototype/` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
 
 ## 输入
 
@@ -14,25 +14,29 @@
 - `docs/tech-architecture.md`
 - 已确认的产品约束、品牌线索和用户偏好
 - `assets/design-themes/`
-- `.agents/skills/impeccable/`
+- Codex: `.agents/skills/impeccable/`
+- Claude Code: `.claude/skills/impeccable/`
 
 ## 必须执行的流程
 
 1. 先做上游前置审查。发现需求文档或技术架构歧义时要报告，不要猜测。
 2. 从 `assets/design-themes/` 推荐 2-3 个真正有差异的设计方向。
 3. 必须为每个设计方向生成一个可打开的首页 demo，用真实业务语境展示首屏、核心入口、关键状态和视觉气质。demo 放在 `prototype/directions/`，并生成 `prototype/directions/index.html` 作为预览索引。
-4. 在 `docs/ui-design.md` 中记录每个方向的说明和 demo 预览路径。没有 demo 路径的方向不得交给用户选择。
-5. 等待用户选择方向；只有用户明确授权“按你推荐的继续”时，才使用第一推荐。
-6. 用户选择方向后，基于选定方向产出完整 `docs/ui-design.md` 和 `docs/handoff-ui.md`。
-7. 在 `prototype/` 下构建完整 HTML 原型。完整原型可以复用或重构候选 demo，但不能只停留在候选 demo。
-8. 生成 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`，运行 `node .agents/skills/impeccable/scripts/load-context.mjs`，完整读取上下文。
-9. 使用 Playwright 打开候选 demo 和完整原型页面，覆盖 desktop 1440x900、tablet 834x1112、mobile 390x844 三个视口，截图保存到 `prototype/review/screenshots/`。
-10. 使用 Impeccable 执行专项审查和修正：候选方向至少运行 `critique`、`audit`；完整原型运行 `critique`、`audit`、`adapt`，并按问题使用 `layout`、`typeset`、`clarify`、`animate`、`harden`；最后运行 `polish`。
-11. 最多两轮自审修正；仍未解决的问题写入遗留问题。
-12. 产出 `docs/prototype-review.md`，记录页面清单、视口清单、截图路径、控制台错误、Impeccable 审查结论、已修正项、遗留问题和复查结果。
-13. 更新 `docs/workflow-state.json`，记录阶段产物，并把 `recommended_next` 设置为 `review design` 或 `plan`。
+4. UI 页面可见文案、按钮、导航、空状态和提示语禁止使用 emoji；图标必须使用图标库、SVG 或图片资源，不用 emoji 代替。
+5. 默认字号基准：正文、表单、按钮、列表文本不小于 16px；辅助说明可小于 16px 但不得低于 14px；移动端优先保持 16px 起。
+6. 在 `docs/ui-design.md` 中记录每个方向的说明和 demo 预览路径。没有 demo 路径的方向不得交给用户选择。
+7. 等待用户选择方向；只有用户明确授权“按你推荐的继续”时，才使用第一推荐。
+8. 用户选择方向后，基于选定方向产出完整 `docs/ui-design.md` 和 `docs/handoff-ui.md`。
+9. 在 `prototype/` 下构建完整 HTML 原型。完整原型可以复用或重构候选 demo，但不能只停留在候选 demo。
+10. 如果 UI 阶段新增或调整页面清单、交互路径、字段、状态、技术约束或验收标准，必须同步回写 `docs/prd.md`、`docs/handoff-prd.md` 或 `docs/tech-architecture.md`。
+11. 生成 Impeccable 上下文：Codex 写入 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`；Claude Code 可写入 `.claude/context/PRODUCT.md` 和 `.claude/context/DESIGN.md` 或沿用 `.agents/context/`。按当前 CLI 运行对应的 `impeccable/scripts/load-context.mjs`，完整读取上下文。
+12. 使用 Playwright 打开候选 demo 和完整原型页面，覆盖 desktop 1440x900、tablet 834x1112、mobile 390x844 三个视口，截图保存到 `prototype/review/screenshots/`。
+13. 使用 Impeccable 执行专项审查和修正：候选方向至少运行 `critique`、`audit`；完整原型运行 `critique`、`audit`、`adapt`，并按问题使用 `layout`、`typeset`、`clarify`、`animate`、`harden`；最后运行 `polish`。
+14. 最多两轮自审修正；仍未解决的问题写入遗留问题。
+15. 产出 `docs/prototype-review.md`，记录页面清单、视口清单、截图路径、控制台错误、Impeccable 审查结论、已修正项、遗留问题和复查结果。
+16. 更新 `docs/workflow-state.json`，记录阶段产物和上游同步说明，并把 `recommended_next` 设置为 `review design` 或 `plan`。
 
-如果 `.agents/skills/impeccable/SKILL.md` 不存在，必须停止 design 阶段并提示补齐 Impeccable repo-scoped skill；不要用普通 UI 审查代替。
+如果当前 CLI 结构下的 Impeccable skill 不存在，必须停止 design 阶段并提示补齐 Impeccable skill；不要用普通 UI 审查代替。
 
 ## 原型结构
 

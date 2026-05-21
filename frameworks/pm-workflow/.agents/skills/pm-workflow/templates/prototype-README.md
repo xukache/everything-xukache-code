@@ -41,3 +41,5 @@ prototype/
 | `prototype/review/screenshots/` | 原型自审截图证据 | 按 desktop、tablet、mobile 存放 Playwright 截图；每个候选 demo 和主要原型页面都要覆盖。 |
 
 界面设计师应根据真实需求动态决定页面数量和结构，但必须沉淀可复用布局，避免原型结构在实际开发中无法稳定复现。原型必须覆盖 P0 功能的可点击路径、成功、失败、空状态、关键异常和主要响应式视口。完整原型交付前必须完成 Playwright 截图和 Impeccable 自审，结果记录到 `docs/prototype-review.md`。
+
+UI 可见文案、按钮、导航、空状态和提示语禁止使用 emoji；图标必须使用图标库、SVG 或图片资源。正文、表单、按钮、列表文本默认不小于 16px，辅助说明不得低于 14px。

@@ -21,3 +21,6 @@ Use the two-step process:
 
 Every feature needs an `M{module}-F{feature}` ID, priority, boundary, rule, and acceptance signal.
 
+Base the PRD on high-frequency real needs, target users, usage triggers, and the start-to-finish usage flow. Mark low-frequency, flashy, duplicate, or cognitively expensive ideas as merge, defer, or delete. Every P0 feature must map to a high-frequency scenario and flow step.
+
+If the final PRD changes product positioning, target users, platform, scope, or MVP boundaries, update `docs/project-config.md` and add a note to `docs/workflow-state.json` describing the upstream sync.

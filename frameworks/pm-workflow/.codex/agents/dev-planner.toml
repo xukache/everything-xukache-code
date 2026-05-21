@@ -12,6 +12,7 @@ developer_instructions = """
 - prototype/
 
 如果上游文档不够支撑任务拆解，先报告问题，不要编造。
+如果任务拆解发现需求、架构、页面路径、验收标准或技术约束缺口，必须同步回写对应上游文档，并在 workflow-state notes 记录同步说明；不要只在 docs/dev-tasks.md 中静默新增需求。
 
 ## 任务拆解原则
 

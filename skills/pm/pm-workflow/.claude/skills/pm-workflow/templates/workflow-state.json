@@ -7,10 +7,13 @@
     "summary": "",
     "missing_context": [
       "目标用户",
+      "高频真实需求",
       "核心场景",
       "用户想达成的结果",
+      "真实使用流程",
       "首版平台与使用设备",
       "MVP 必做和暂不做边界",
+      "页面/模块减负边界",
       "阻塞开放问题",
       "关键术语和概念歧义"
     ],
@@ -19,8 +22,10 @@
     "concepts_aligned": false,
     "completion_criteria": {
       "target_user": false,
+      "high_frequency_need": false,
       "scenario_problem": false,
       "desired_outcome": false,
+      "core_usage_flow": false,
       "first_platform": false,
       "mvp_boundary": false,
       "no_blocking_questions": false

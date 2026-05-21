@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须启动 `.codex/agents/demand-analyst.toml` 中的 `demand_analyst` 子 agent 执行需求分析。产品经理负责保持对话节奏，并记录关键决策。
+必须启动当前 CLI 结构下的需求分析子 agent 执行需求分析：Codex 使用 `.codex/agents/demand-analyst.toml`，Claude Code 使用 `.claude/agents/demand-analyst.md`。产品经理负责保持对话节奏，并记录关键决策。
 
-如果当前 Codex 环境无法启动 `demand_analyst` 子 agent，必须停止需求分析，不生成或修改 `docs/prd.md`、`docs/handoff-prd.md` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
+如果当前环境无法启动需求分析子 agent，必须停止需求分析，不生成或修改 `docs/prd.md`、`docs/handoff-prd.md` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
 
 ## 输入
 
@@ -25,9 +25,10 @@
 7. 为每个功能分配 `M{模块号}-F{功能号}` 格式的编号。
 8. 将功能划分为 P0、P1 或 P2。
 9. 明确记录不做项和范围边界。
-10. 写入或更新 `docs/prd.md` 和 `docs/handoff-prd.md`。
-11. 更新 `docs/workflow-state.json`，记录阶段产物；草稿阶段把 `recommended_next` 设置为 `answer analyze questions`，最终稿阶段设置为 `review analyze`。
-12. 最终稿完成后自动启动 `quality_reviewer` 执行 `$pm-workflow review analyze`。
+10. 如 PRD 最终稿改变了产品定位、目标用户、平台、范围或 MVP 边界，必须同步回写 `docs/project-config.md`。
+11. 写入或更新 `docs/prd.md` 和 `docs/handoff-prd.md`。
+12. 更新 `docs/workflow-state.json`，记录阶段产物和上游同步说明；草稿阶段把 `recommended_next` 设置为 `answer analyze questions`，最终稿阶段设置为 `review analyze`。
+13. 最终稿完成后自动启动 `quality_reviewer` 执行 `$pm-workflow review analyze`。
 
 ## 必须具备的追溯关系
 

@@ -12,6 +12,8 @@
 - 多页面目录：`prototype/pages/`
 - 复用布局：`prototype/layout/`
 - 公共资源：`prototype/assets/`
+- 高频页面路径：
+- 页面/模块整合原则：
 - 原型自审：`docs/prototype-review.md`
 - 截图证据：`prototype/review/screenshots/`
 
@@ -23,9 +25,9 @@
 
 ## 页面与功能覆盖
 
-| 功能编号 | 原型页面 | 关键控件 | 需要开发实现的状态 |
-|---|---|---|---|
-| M1-F1 | prototype/index.html | 待补充 | 成功/失败/空/加载 |
+| 功能编号 | 高频流程位置 | 原型页面 | 关键控件 | 需要开发实现的状态 |
+|---|---|---|---|---|
+| M1-F1 | 待补充 | prototype/index.html | 待补充 | 成功/失败/空/加载 |
 
 ## 开发注意事项
 

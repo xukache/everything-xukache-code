@@ -13,6 +13,8 @@ description: "技术架构师使用：产出技术选型、数据模型、接口
 - `docs/handoff-prd.md`
 - 用户提供的技术约束
 
+如果架构设计改变需求、平台、范围、功能编号或技术约束，必须同步回写 `docs/prd.md` 和 `docs/handoff-prd.md`，并在 `docs/workflow-state.json` 的 `notes` 记录同步说明。
+
 ## 输出
 
 - `docs/tech-architecture.md`
@@ -36,6 +38,7 @@ description: "技术架构师使用：产出技术选型、数据模型、接口
 - 接口方法、路径、参数、返回值和权限。
 - 本地开发和部署方案。
 - 需求功能编号到数据、接口、部署影响的映射。
+- 上游同步记录：如因架构调整改变需求或约束，说明已回写的上游文档。
 
 ## 检查表
 

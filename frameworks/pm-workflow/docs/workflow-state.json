@@ -1,16 +1,19 @@
 {
   "project_name": "未命名产品",
   "current_stage": "init",
-  "recommended_next": "review init",
+  "recommended_next": "clarify init",
   "clarification": {
     "status": "not_started",
     "summary": "",
     "missing_context": [
       "目标用户",
+      "高频真实需求",
       "核心场景",
       "用户想达成的结果",
+      "真实使用流程",
       "首版平台与使用设备",
       "MVP 必做和暂不做边界",
+      "页面/模块减负边界",
       "阻塞开放问题",
       "关键术语和概念歧义"
     ],
@@ -19,8 +22,10 @@
     "concepts_aligned": false,
     "completion_criteria": {
       "target_user": false,
+      "high_frequency_need": false,
       "scenario_problem": false,
       "desired_outcome": false,
+      "core_usage_flow": false,
       "first_platform": false,
       "mvp_boundary": false,
       "no_blocking_questions": false
@@ -30,22 +35,13 @@
   "pending_user_questions": [],
   "user_confirmation_required": true,
   "artifacts": {
-    "init": [
-      "docs/project-config.md"
-    ],
+    "init": ["docs/project-config.md"],
     "analyze": [],
     "architect": [],
     "design": [],
     "plan": [],
     "deliver": []
   },
-  "reviews": {
-    "init": {
-      "round": 1,
-      "last_result": "不通过",
-      "report": "docs/review-init.md",
-      "updated_at": "2026-05-21T06:03:31.826810+00:00"
-    }
-  },
+  "reviews": {},
   "notes": []
 }

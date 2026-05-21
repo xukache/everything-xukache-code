@@ -9,7 +9,16 @@ user-invocable: true
 
 把一句模糊的产品想法，逐步变成可评审、可设计、可开发、可交付的施工蓝图。工作室按阶段串行推进，由 6 个角色协作：产品经理、需求分析师、技术架构师、界面设计师、开发规划师、质量审核官。
 
-当前仓库内 `skills/pm/pm-workflow` 是本技能的源码依据。真正给用户进入运行的工作室目录应由脚手架生成，例如 `frameworks/pm-workflow/`，其中主入口位于 `.agents/skills/pm-workflow/`。
+当前仓库内 `skills/pm/pm-workflow` 是本技能的源码依据。真正给用户进入运行的工作室目录应由脚手架生成，例如 `frameworks/pm-workflow/`。Codex 工作室主入口位于 `.agents/skills/pm-workflow/`，Claude Code 工作室主入口位于 `.claude/skills/pm-workflow/`。
+
+## 平台结构
+
+本技能同时维护两套平台结构：
+
+- `.codex/`：Codex 版结构镜像，保留当前 `SKILL.md`、TOML agents、references、scripts、templates、role-skills、assets 和 bundled-skills。
+- `.claude/`：Claude Code 版结构，包含 `CLAUDE.md`、`settings.json`、Markdown subagents、slash commands 和 Claude Code 可识别的 `.claude/skills/`。
+
+根目录现有文件暂时作为兼容入口保留，避免已安装的 Codex skill 和脚手架路径失效。维护时需要同步根目录、`.codex/` 和 `.claude/` 中对应的流程契约。
 
 ## 命令菜单
 
@@ -37,22 +46,23 @@ user-invocable: true
 6. **每阶段开始时**：先输出“阶段开场卡”，说明当前用户情况、推荐方案、选择原因、接下来会产出什么。
 7. **每阶段结束后**：必须请用户选择下一步：审核、修改当前阶段、进入推荐下一阶段。
 8. **审核是软门控**：审核意见用于引导流程，但不强制阻断下一命令。若用户选择带风险继续，必须把风险记录到 `docs/workflow-state.json` 或下一阶段文档。
+9. **上游同步**：任何阶段修改文档时，如果发现需求、平台、范围、功能编号、技术约束、页面路径或验收标准发生变化，必须同步回写对应上游源文档，并在 `docs/workflow-state.json` 的 `notes` 记录同步了哪些文档。
 
 ## Agent 调度规则
 
-除阶段 00 的需求澄清外，每个阶段都必须先启动对应的 `.codex/agents/*.toml` 子 agent。阶段 00 是特殊例外：用户刚输入产品想法时，主 agent 拥有最完整的对话上下文，必须亲自完成欢迎、复述、追问、整理缺口和请用户确认，禁止把“待澄清需求”先总结后交给 `product_manager` 或任何子 agent 继续澄清。若当前 Codex 环境无法启动后续阶段所需的项目子 agent，必须停止对应阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
+除阶段 00 的需求澄清外，每个阶段都必须先启动当前 CLI 结构下对应的项目子 agent：Codex 使用 `.codex/agents/*.toml`，Claude Code 使用 `.claude/agents/*.md`。阶段 00 是特殊例外：用户刚输入产品想法时，主 agent 拥有最完整的对话上下文，必须亲自完成欢迎、复述、追问、整理缺口和请用户确认，禁止把“待澄清需求”先总结后交给 `product_manager` 或任何子 agent 继续澄清。若当前环境无法启动后续阶段所需的项目子 agent，必须停止对应阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
 
 | 命令 | 调度方式 | 配置文件 |
 |---|---|---|
-| `init` | 需求澄清由主 agent 直接完成；用户确认后可由主 agent 写入配置，或启动 `product_manager` 只做文档沉淀和状态维护 | `.codex/agents/product-manager.toml` |
-| `help` | `product_manager` | `.codex/agents/product-manager.toml` |
-| `status` | `product_manager` | `.codex/agents/product-manager.toml` |
-| `analyze` | `demand_analyst` | `.codex/agents/demand-analyst.toml` |
-| `architect` | `tech_architect` | `.codex/agents/tech-architect.toml` |
-| `design` | `ui_designer` | `.codex/agents/ui-designer.toml` |
-| `plan` | `dev_planner` | `.codex/agents/dev-planner.toml` |
-| `review` | `quality_reviewer` | `.codex/agents/quality-reviewer.toml` |
-| `deliver` | `product_manager`，并在打包前启动 `quality_reviewer` 做最终完整性检查 | `.codex/agents/product-manager.toml`, `.codex/agents/quality-reviewer.toml` |
+| `init` | 需求澄清由主 agent 直接完成；用户确认后可由主 agent 写入配置，或启动 `product_manager` 只做文档沉淀和状态维护 | Codex: `.codex/agents/product-manager.toml`; Claude: `.claude/agents/product-manager.md` |
+| `help` | `product_manager` | Codex: `.codex/agents/product-manager.toml`; Claude: `.claude/agents/product-manager.md` |
+| `status` | `product_manager` | Codex: `.codex/agents/product-manager.toml`; Claude: `.claude/agents/product-manager.md` |
+| `analyze` | `demand_analyst` / `demand-analyst` | Codex: `.codex/agents/demand-analyst.toml`; Claude: `.claude/agents/demand-analyst.md` |
+| `architect` | `tech_architect` / `tech-architect` | Codex: `.codex/agents/tech-architect.toml`; Claude: `.claude/agents/tech-architect.md` |
+| `design` | `ui_designer` / `ui-designer` | Codex: `.codex/agents/ui-designer.toml`; Claude: `.claude/agents/ui-designer.md` |
+| `plan` | `dev_planner` / `dev-planner` | Codex: `.codex/agents/dev-planner.toml`; Claude: `.claude/agents/dev-planner.md` |
+| `review` | `quality_reviewer` / `quality-reviewer` | Codex: `.codex/agents/quality-reviewer.toml`; Claude: `.claude/agents/quality-reviewer.md` |
+| `deliver` | `product_manager`，并在打包前启动 `quality_reviewer` 做最终完整性检查 | Codex: `.codex/agents/product-manager.toml`, `.codex/agents/quality-reviewer.toml`; Claude: `.claude/agents/product-manager.md`, `.claude/agents/quality-reviewer.md` |
 
 自然语言路由示例：
 
@@ -68,15 +78,22 @@ user-invocable: true
 
 ## 框架结构
 
-在源码仓库中生成一个可运行的 Codex 工作室框架：
+在源码仓库中生成一个可运行的工作室框架：
 
 ```bash
-python skills/pm/pm-workflow/scripts/scaffold_project.py --root frameworks/pm-workflow --name "<product name>"
+python skills/pm/pm-workflow/scripts/scaffold_project.py --root frameworks/pm-workflow --name "<product name>" --cli auto
 ```
 
-在生成后的框架目录中，脚本路径位于 `.agents/skills/pm-workflow/scripts/`。
+`--cli auto` 会按目标目录选择结构：已有 `.claude/` 时生成 Claude Code 结构；已有 `.codex/` 或 `.agents/` 时生成 Codex 结构；空目录默认 Codex，并提示可用 `--cli claude` 覆盖。显式示例：
 
-脚手架会创建：
+```bash
+python skills/pm/pm-workflow/scripts/scaffold_project.py --root frameworks/pm-workflow --name "<product name>" --cli codex
+python skills/pm/pm-workflow/scripts/scaffold_project.py --root frameworks/pm-workflow-claude --name "<product name>" --cli claude
+```
+
+在生成后的框架目录中，Codex 脚本路径位于 `.agents/skills/pm-workflow/scripts/`，Claude Code 脚本路径位于 `.claude/skills/pm-workflow/scripts/`。
+
+Codex 结构会创建：
 
 ```text
 project-root/
@@ -146,13 +163,15 @@ project-root/
 
 `AGENTS.md` 是项目级总控说明。`.codex/agents/` 是 6 个角色配置。`.agents/skills/` 是当前项目内可调用的技能，其中 `impeccable/` 是界面原型自审和打磨能力。`pm-workflow/bundled-skills/impeccable/` 是随本技能一起分发的第三方技能副本，脚手架会优先从这里复制到项目的 `.agents/skills/impeccable/`，避免用户只安装 pm-workflow 时缺少依赖。角色阶段模板放在对应角色技能的 `templates/` 目录中；`docs/` 只放运行时生成的阶段产物。`prototype/` 是高保真网页原型区。`outputs/dev-package/` 是最终开发交付包。
 
+Claude Code 结构会创建 `.claude/CLAUDE.md`、`.claude/settings.json`、`.claude/agents/*.md`、`.claude/commands/pm-workflow/*.md`、`.claude/skills/pm-workflow/`、`.claude/skills/<role>/` 和 `.claude/skills/impeccable/`。Claude Code 版 Impeccable 必须是 Claude skill 格式，不包含 Codex 专用的 `agents/openai.yaml`。
+
 ## 阶段流程
 
 ### 阶段 00：项目初始化
 
 阶段说明：[references/commands/init.md](references/commands/init.md)
 
-产品经理先执行需求澄清协议，再沉淀五个核心问题。用户第一次输入产品想法时，必须先输出欢迎语：
+产品经理先执行需求澄清协议，再沉淀六个核心问题。用户第一次输入产品想法时，必须先输出欢迎语：
 
 ```text
 🤖 AI产品开发工作室已就绪
@@ -166,33 +185,38 @@ project-root/
 
 在用户确认前，禁止启动 `product_manager`、`demand_analyst` 或其他子 agent 做需求澄清；禁止把“我总结一下再让子 agent 问你”作为默认流程。若后续需要子 agent 做文档沉淀，必须传递完整用户原话、关键问答记录、未确认假设和待补材料，且不得让子 agent 覆盖用户已确认的表达。
 
-随后只问 3-5 个最关键的问题，必须用普通用户能懂的话，并允许用户“不用一次性全回答，想到什么说什么就行”。问题默认覆盖：
+随后只问 3-5 个最关键的问题，必须用普通用户能懂的话，并允许用户“不用一次性全回答，想到什么说什么就行”。问题必须内嵌“高频真实需求”和“真实使用流程”，因为这决定后续需求分析能否识别真需求、剔除伪需求，也决定 UI 页面访问逻辑是否简单易懂。问题默认覆盖：
 
-1. 你想在什么设备或平台上用？
-2. 除了核心功能，还有特别想要的功能吗？
-3. 有没有用过类似产品觉得不错或不喜欢？如环境允许，AI 主动搜索 2-4 个类似产品作参考；如无法联网，说明无法实时搜索，并用本地经验示例且标记待确认。
-4. 这个产品只给自己用，还是分享给别人一起用？
+1. 谁会最常用这个产品？是你自己、某类用户，还是团队里的某个角色？
+2. 他们最频繁、最反复要完成的事情是什么？什么情况下会打开它？
+3. 从打开产品到完成这件事，真实步骤通常是怎样的？现在用什么方式替代？
+4. 你想在什么设备或平台上用？
+5. 除了高频核心流程，还有特别想要的功能吗？哪些可以合并、后置或暂不做，避免页面/模块太多看不懂？
+6. 有没有用过类似产品觉得不错或不喜欢？如环境允许，AI 主动搜索 2-4 个类似产品作参考；如无法联网，说明无法实时搜索，并用本地经验示例且标记待确认。
 
 需求澄清必须包含“术语与概念对齐”。主 agent 遇到用户提到的专业词、行业词、产品形态、技术词或容易多义的普通词时，必须先用白话复述自己的理解，再问用户是不是这个意思；主 agent 自己描述需求时，也要解释关键概念，避免用户表面点头但实际理解不同。典型句式是：“你说的 xxx，我先按 yyy 理解；如果你指的是 zzz，那方案会不一样，我理解得对吗？”
 
-澄清完成标准固定为 6 项：
+澄清完成标准固定为 8 项：
 
 1. 产品给谁用。
-2. 解决什么场景问题。
-3. 用户想达成什么结果。
-4. 首版平台与使用设备。
-5. MVP 必须做和暂不做边界。
-6. 无阻塞开放问题，包括关键术语和概念没有歧义。
+2. 用户真正的高频需求是什么。
+3. 解决什么场景问题。
+4. 用户想达成什么结果。
+5. 用户从开始到结束的真实使用流程是什么。
+6. 首版平台与使用设备。
+7. MVP 必须做和暂不做边界，包括功能整合和页面/模块减负原则。
+8. 无阻塞开放问题，包括关键术语和概念没有歧义。
 
-只有 6 项均有答案、关键术语概念已经对齐，并且用户确认“我理解得对”，才能把 `docs/workflow-state.json` 中 `clarification.status` 更新为 `user_confirmed`，把 `clarification.concepts_aligned` 设为 `true`，把 `user_confirmation_required` 设为 `false`，并推荐进入 `analyze`。内部判断通过、文档已写好、审核通过都不等于用户确认。
+只有 8 项均有答案、关键术语概念已经对齐，并且用户确认“我理解得对”，才能把 `docs/workflow-state.json` 中 `clarification.status` 更新为 `user_confirmed`，把 `clarification.concepts_aligned` 设为 `true`，把 `user_confirmation_required` 设为 `false`，并推荐进入 `analyze`。内部判断通过、文档已写好、审核通过都不等于用户确认。
 
-产品经理继续补齐五个核心问题：
+产品经理继续补齐六个核心问题：
 
 1. 产品是什么，解决什么问题，谁会使用？
 2. 面向什么平台：网页、应用、桌面端、小程序或其他载体？
-3. 用户打开产品后的核心场景是什么？
-4. 有哪些参考产品或反向参考？
-5. 必须包含什么，明确不包含什么？
+3. 用户打开产品后的高频核心场景和真实使用流程是什么？
+4. 用户最反复要完成的真实需求是什么，触发点是什么？
+5. 有哪些参考产品或反向参考？
+6. 必须包含什么，明确不包含什么？哪些能力需要合并或后置来减少用户使用成本？
 
 产物：`docs/project-config.md`。
 
@@ -215,6 +239,8 @@ PRD 草稿和最终稿都使用四轮引导框架：
 2. 功能模块与依赖。
 3. 优先级与边界：P0/P1/P2 和不做项。
 4. 业务规则与验收标准。
+
+需求分析必须先基于 `project-config.md` 中的高频真实需求、使用人群、触发点和真实使用流程判断真需求与伪需求。低频、炫技、重复、增加理解成本或偏离高频路径的需求要标记为合并、后置或删除；P0 功能必须说明对应的高频场景和流程位置。功能模块必须优先合并同类能力，避免把 PRD 写成一长串功能清单。
 
 每个功能必须获得 `M{模块号}-F{功能号}` 编号。`docs/prd.md` 必须包含需求追溯表。`docs/handoff-prd.md` 总结架构和界面设计需要的输入。
 
@@ -242,7 +268,9 @@ PRD 草稿和最终稿都使用四轮引导框架：
 
 阶段说明：[references/commands/design.md](references/commands/design.md)
 
-界面设计师先做上游前置审查，再基于 `assets/design-themes/` 推荐 2-3 个有明显差异的设计方向。每个候选方向必须生成一个可打开的首页 demo，放在 `prototype/directions/`，并在 `docs/ui-design.md` 中给出预览路径。等待用户选择；只有在用户明确授权时，才默认使用第一推荐。
+界面设计师先做上游前置审查，确认高频真实需求和真实使用流程清晰，再基于 `assets/design-themes/` 推荐 2-3 个有明显差异的设计方向。每个候选方向必须生成一个可打开的首页 demo，放在 `prototype/directions/`，并在 `docs/ui-design.md` 中给出预览路径。等待用户选择；只有在用户明确授权时，才默认使用第一推荐。
+
+UI 硬规则：页面可见文案、按钮、导航、空状态和提示语禁止使用 emoji；图标必须使用图标库、SVG 或图片资源，不用 emoji 代替。默认字号基准为正文、表单、按钮、列表文本不小于 16px；辅助说明可小于 16px 但不得低于 14px；移动端优先保持 16px 起。
 
 产物：
 
@@ -259,7 +287,11 @@ PRD 草稿和最终稿都使用四轮引导框架：
 
 原型必须覆盖 P0 点击路径、成功/失败/空/加载状态、关键异常和主要响应式视口。`prototype/layout/` 必须沉淀可复用页面结构，避免界面实现只能在原型中成立、实际开发时无法稳定复现。
 
-完整原型交付前，界面设计师必须完成 Playwright + Impeccable 自审：生成 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`，运行 Impeccable context loader，用 Playwright 覆盖 desktop/tablet/mobile 截图，对候选 demo 和完整原型执行 `critique`、`audit`、`adapt` 以及必要的 `layout`、`typeset`、`clarify`、`animate`、`harden`、`polish`，并把审查、修正和复查结果写入 `docs/prototype-review.md`。
+完整原型交付前，界面设计师必须完成 Playwright + Impeccable 自审：按当前 CLI 结构生成 Impeccable 上下文（Codex 默认 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`，Claude Code 可用 `.claude/context/PRODUCT.md` 和 `.claude/context/DESIGN.md` 或沿用 `.agents/context/`），运行 Impeccable context loader，用 Playwright 覆盖 desktop/tablet/mobile 截图，对候选 demo 和完整原型执行 `critique`、`audit`、`adapt` 以及必要的 `layout`、`typeset`、`clarify`、`animate`、`harden`、`polish`，并把审查、修正和复查结果写入 `docs/prototype-review.md`。
+
+UI 页面访问逻辑必须从真实使用流程推导，页面数量以完成高频路径为准。页面模块不能堆叠过多；能合并的入口、状态、表单、列表、详情必须合并，并在 `docs/ui-design.md` 记录合并理由。不要为了展示完整性把低频功能前置到主路径里。
+
+如果 UI 阶段为了体验合理性调整了页面清单、交互路径、字段、状态、技术约束或验收标准，或发现页面/模块过多、流程不顺，必须同步回写 `docs/prd.md`、`docs/handoff-prd.md`、`docs/project-config.md` 或 `docs/tech-architecture.md`，不能只在 UI 文档或原型里静默新增范围。
 
 原型目录职责：
 
@@ -309,7 +341,7 @@ python .agents/skills/pm-workflow/scripts/package_delivery.py --root .
 
 阶段说明：[references/commands/review.md](references/commands/review.md)
 
-用户触发审核时，必须启动 `.codex/agents/quality-reviewer.toml` 中的 `quality_reviewer` 子 agent。若当前环境无法启动项目子 agent，必须停止审核，不生成或修改审核报告，不运行审核脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
+用户触发审核时，必须启动当前 CLI 结构下的质量审核子 agent：Codex 使用 `.codex/agents/quality-reviewer.toml`，Claude Code 使用 `.claude/agents/quality-reviewer.md`。若当前环境无法启动项目子 agent，必须停止审核，不生成或修改审核报告，不运行审核脚本，并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
 
 运行：
 

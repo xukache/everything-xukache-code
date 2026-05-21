@@ -58,20 +58,52 @@ DOWNSTREAM_ROLE = {
 }
 
 PLACEHOLDER_PATTERNS = ["待补充", "TODO", "[TODO]", "{{"]
+EMOJI_PATTERN = re.compile(
+    "["
+    "\U0001F1E6-\U0001F1FF"
+    "\U0001F300-\U0001FAFF"
+    "\U00002700-\U000027BF"
+    "\U00002600-\U000026FF"
+    "]"
+)
+FONT_SIZE_PATTERN = re.compile(r"font-size\s*:\s*([0-9]+(?:\.[0-9]+)?)px", re.IGNORECASE)
+REQUIRED_CLARIFICATION_CRITERIA = {
+    "target_user": "产品给谁用",
+    "high_frequency_need": "用户真正的高频需求",
+    "scenario_problem": "解决什么场景问题",
+    "desired_outcome": "用户想达成什么结果",
+    "core_usage_flow": "用户从开始到结束的真实使用流程",
+    "first_platform": "首版平台与使用设备",
+    "mvp_boundary": "MVP 必做和暂不做边界，包括功能整合和页面/模块减负原则",
+    "no_blocking_questions": "无阻塞开放问题，包括关键术语和概念没有歧义",
+}
 
 
 def default_clarification() -> dict:
     return {
         "status": "not_started",
         "summary": "",
-        "missing_context": [],
+        "missing_context": [
+            "目标用户",
+            "高频真实需求",
+            "核心场景",
+            "用户想达成的结果",
+            "真实使用流程",
+            "首版平台与使用设备",
+            "MVP 必做和暂不做边界",
+            "页面/模块减负边界",
+            "阻塞开放问题",
+            "关键术语和概念歧义",
+        ],
         "materials_needed": [],
         "terminology": [],
         "concepts_aligned": False,
         "completion_criteria": {
             "target_user": False,
+            "high_frequency_need": False,
             "scenario_problem": False,
             "desired_outcome": False,
+            "core_usage_flow": False,
             "first_platform": False,
             "mvp_boundary": False,
             "no_blocking_questions": False,
@@ -164,29 +196,40 @@ def score_stage(root: Path, stage: str) -> dict:
             present_count += 1
         else:
             missing.append("prototype/review/screenshots/")
-        if (root / ".agents" / "skills" / "impeccable" / "SKILL.md").exists():
+        if (
+            (root / ".agents" / "skills" / "impeccable" / "SKILL.md").exists()
+            or (root / ".claude" / "skills" / "impeccable" / "SKILL.md").exists()
+        ):
             present_count += 1
         else:
-            missing.append(".agents/skills/impeccable/SKILL.md")
+            missing.append(".agents/skills/impeccable/SKILL.md or .claude/skills/impeccable/SKILL.md")
     contents = "\n\n".join(read_text(root / item) for item in expected)
     has_placeholder = any(pattern in contents for pattern in PLACEHOLDER_PATTERNS)
     total_chars = len(contents.strip())
     clarification = state.get("clarification") or {}
     init_concepts_not_aligned = stage == "init" and not bool(clarification.get("concepts_aligned"))
     init_not_confirmed = stage == "init" and not clarification_confirmed(state)
+    init_missing_criteria = missing_clarification_criteria(state) if stage == "init" else []
     analyze_has_open_questions = stage == "analyze" and has_blocking_analyze_questions(state, read_text(root / "docs" / "prd.md"))
+    design_ui_violations = design_ui_rule_violations(root) if stage == "design" else []
 
     if init_not_confirmed:
-        missing.append("docs/workflow-state.json: clarification.status=user_confirmed")
+        if clarification.get("status") != "user_confirmed":
+            missing.append("docs/workflow-state.json: clarification.status=user_confirmed")
+        if state.get("user_confirmation_required", True):
+            missing.append("docs/workflow-state.json: user_confirmation_required=false")
+        if init_missing_criteria:
+            missing.append("docs/workflow-state.json: clarification.completion_criteria 缺失或未完成：" + ", ".join(init_missing_criteria))
     if init_concepts_not_aligned:
         missing.append("docs/workflow-state.json: clarification.concepts_aligned=true")
     if analyze_has_open_questions:
         missing.append("docs/prd.md: 待用户回答问题未清空或文档仍为 draft")
-
+    if design_ui_violations:
+        missing.extend(design_ui_violations)
     completeness = 10 if not missing else max(1, round(10 * present_count / max(required_count, 1)))
     if has_placeholder:
         completeness = min(completeness, 6)
-    if init_not_confirmed or analyze_has_open_questions:
+    if init_not_confirmed or analyze_has_open_questions or design_ui_violations:
         completeness = min(completeness, 5)
 
     clarity = 9 if total_chars > 2500 and not has_placeholder else 6 if total_chars > 800 else 3
@@ -194,13 +237,15 @@ def score_stage(root: Path, stage: str) -> dict:
         clarity = min(clarity, 5)
     if analyze_has_open_questions:
         clarity = min(clarity, 5)
+    if design_ui_violations:
+        clarity = min(clarity, 5)
 
     consistency, consistency_note = consistency_score(root, stage)
     if init_not_confirmed:
         consistency = min(consistency, 5)
         consistency_note = "需求澄清尚未获得用户确认或关键术语概念未对齐，不能视为初始化完成。"
     executability = executability_score(contents, stage, has_placeholder)
-    if init_not_confirmed or analyze_has_open_questions:
+    if init_not_confirmed or analyze_has_open_questions or design_ui_violations:
         executability = min(executability, 5)
 
     scores = {
@@ -217,13 +262,13 @@ def score_stage(root: Path, stage: str) -> dict:
     scores["init_not_confirmed"] = init_not_confirmed
     scores["init_concepts_not_aligned"] = init_concepts_not_aligned
     scores["analyze_has_open_questions"] = analyze_has_open_questions
+    scores["design_ui_violations"] = design_ui_violations
     return scores
 
 
 def clarification_confirmed(state: dict) -> bool:
     clarification = state.get("clarification") or {}
-    criteria = clarification.get("completion_criteria") or {}
-    all_criteria_done = bool(criteria) and all(bool(value) for value in criteria.values())
+    all_criteria_done = not missing_clarification_criteria(state)
     concepts_aligned = bool(clarification.get("concepts_aligned"))
     return (
         clarification.get("status") == "user_confirmed"
@@ -231,6 +276,16 @@ def clarification_confirmed(state: dict) -> bool:
         and all_criteria_done
         and concepts_aligned
     )
+
+
+def missing_clarification_criteria(state: dict) -> list[str]:
+    clarification = state.get("clarification") or {}
+    criteria = clarification.get("completion_criteria") or {}
+    return [
+        label
+        for key, label in REQUIRED_CLARIFICATION_CRITERIA.items()
+        if not bool(criteria.get(key))
+    ]
 
 
 def has_blocking_analyze_questions(state: dict, prd: str) -> bool:
@@ -243,6 +298,89 @@ def has_blocking_analyze_questions(state: dict, prd: str) -> bool:
         return True
     unanswered_blocking_row = re.search(r"\|[^|\n]+未回答[^|\n]*\|[^|\n]*是[^|\n]*\|", prd)
     return bool("## 待用户回答问题" in prd and unanswered_blocking_row)
+
+
+def design_ui_rule_violations(root: Path) -> list[str]:
+    targets: list[Path] = []
+    ui_doc = root / "docs" / "ui-design.md"
+    if ui_doc.exists():
+        targets.append(ui_doc)
+    prototype_dir = root / "prototype"
+    if prototype_dir.exists():
+        for path in prototype_dir.rglob("*"):
+            if path.is_file() and path.suffix.lower() in {".html", ".css", ".js", ".md"}:
+                targets.append(path)
+
+    emoji_hits: list[str] = []
+    small_font_hits: list[str] = []
+    for path in targets:
+        text = read_text(path)
+        if EMOJI_PATTERN.search(text):
+            emoji_hits.append(str(path.relative_to(root)))
+        for line in text.splitlines():
+            if small_font_line_violation(line):
+                small_font_hits.append(str(path.relative_to(root)))
+                break
+
+    violations: list[str] = []
+    if emoji_hits:
+        violations.append("UI 可见内容疑似包含 emoji: " + ", ".join(sorted(set(emoji_hits))[:8]))
+    if small_font_hits:
+        violations.append("UI 主体字号疑似小于 16px: " + ", ".join(sorted(set(small_font_hits))[:8]))
+    return violations
+
+
+def small_font_line_violation(line: str) -> bool:
+    if any(marker in line for marker in ["辅助说明", "不得低于", "不小于", "UI 硬规则"]):
+        return False
+
+    lowered = line.lower()
+    for match in FONT_SIZE_PATTERN.finditer(line):
+        size = float(match.group(1))
+        if size >= 16:
+            continue
+        if size < 14:
+            return True
+
+        selector = css_selector_before_font(lowered, match.start())
+        if selector and any(
+            marker in selector
+            for marker in ["small", "helper", "caption", "hint", "meta", "secondary", "note", "assist"]
+        ):
+            continue
+        if selector and any(
+            marker in selector
+            for marker in [
+                "body",
+                "main",
+                "p",
+                "li",
+                "button",
+                "input",
+                "textarea",
+                "select",
+                "label",
+                "nav",
+                ".btn",
+                ".button",
+                ".list",
+                ".form",
+                ".content",
+                ".body",
+            ]
+        ):
+            return True
+        if not selector and "style=" in lowered:
+            return True
+    return False
+
+
+def css_selector_before_font(lowered_line: str, font_start: int) -> str:
+    before = lowered_line[:font_start]
+    if "{" not in before:
+        return ""
+    after_last_rule = before.rsplit("}", 1)[-1]
+    return after_last_rule.split("{", 1)[0].strip()
 
 
 def consistency_score(root: Path, stage: str) -> tuple[int, str]:
@@ -378,6 +516,8 @@ def build_issues(scores: dict, round_no: int) -> str:
         issues.append("- 关键术语和概念尚未对齐，容易导致 AI 与用户说的是不同东西。")
     if scores.get("analyze_has_open_questions"):
         issues.append("- PRD 仍是草稿或存在待用户回答问题，不能触发 analyze 通过。")
+    if scores.get("design_ui_violations"):
+        issues.append("- UI 原型存在 emoji 或主体字号小于 16px 的问题，需要改为图标资源并提高默认字号。")
     if scores["consistency"] < 6:
         issues.append("- 跨阶段追溯不足，需求功能编号没有完整映射到当前阶段产物。")
     if scores["executability"] < 6:
@@ -392,7 +532,7 @@ def build_rework(stage: str, result: str, scores: dict, round_no: int) -> str:
         return "本阶段已通过，无需返工。可根据用户偏好做非阻塞微调。"
 
     suggestions = {
-        "init": "补齐五个核心问题、核心场景、参考产品、特殊要求和工作量粗估。",
+        "init": "补齐 8 项澄清完成标准、六个核心问题、高频真实需求、真实使用流程、参考产品、功能整合边界和工作量粗估。",
         "analyze": "先让用户回答 PRD 草稿中的待确认问题，再补齐 P0/P1/P2、Mx-Fx 功能编号、业务规则、不做清单和验收标准，并把文档状态改为 final。",
         "architect": "补齐需求到数据库、字段、接口、部署配置和技术风险的映射。",
         "design": "补齐 2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、docs/prototype-review.md、Playwright 截图证据、Impeccable 审查记录、页面清单、需求到界面映射和完整原型路径。",

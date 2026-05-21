@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须启动 `.codex/agents/dev-planner.toml` 中的 `dev_planner` 子 agent 执行开发任务规划。
+必须启动当前 CLI 结构下的开发规划子 agent 执行开发任务规划：Codex 使用 `.codex/agents/dev-planner.toml`，Claude Code 使用 `.claude/agents/dev-planner.md`。
 
-如果当前 Codex 环境无法启动 `dev_planner` 子 agent，必须停止开发任务规划，不生成或修改 `docs/dev-tasks.md` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
+如果当前环境无法启动开发规划子 agent，必须停止开发任务规划，不生成或修改 `docs/dev-tasks.md` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
 
 ## 输入
 
@@ -21,8 +21,9 @@
 2. 将实现工作拆成用户可见、可独立验证的任务。
 3. 每个任务控制在约 5-20 分钟 AI 执行粒度。
 4. 用 `Txxx` 编号明确标注任务依赖。
-5. 写入或更新 `docs/dev-tasks.md`。
-6. 更新 `docs/workflow-state.json`，记录阶段产物，并把 `recommended_next` 设置为 `review plan` 或 `deliver`。
+5. 如果任务拆解发现需求、架构、页面路径、验收标准或技术约束缺口，必须同步回写对应上游文档，不能只在任务中新增需求。
+6. 写入或更新 `docs/dev-tasks.md`。
+7. 更新 `docs/workflow-state.json`，记录阶段产物和上游同步说明，并把 `recommended_next` 设置为 `review plan` 或 `deliver`。
 
 ## 必须具备的追溯关系
 

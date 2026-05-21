@@ -19,8 +19,12 @@ python .agents/skills/pm-workflow/scripts/review_stage.py --root . --stage <init
 
 ## 新增硬检查
 
-- `init` 阶段：必须确认 `workflow-state.json` 中 `clarification.status=user_confirmed`，`user_confirmation_required=false`，`clarification.concepts_aligned=true`，并且 6 项澄清完成标准均为 true。否则不能判定通过。
+- `init` 阶段：必须确认 `workflow-state.json` 中 `clarification.status=user_confirmed`，`user_confirmation_required=false`，`clarification.concepts_aligned=true`，并且 8 项澄清完成标准均为 true。尤其是 `high_frequency_need` 和 `core_usage_flow` 必须完成，否则不能判定通过。
 - `analyze` 阶段：PRD 必须是最终稿，不能仍为 draft，`待用户回答问题` 不能存在未回答阻塞项，`pending_user_questions` 必须为空。草稿阶段不能触发通过。
+- `analyze` 阶段：必须检查 PRD 是否基于高频真实需求和真实使用流程识别真需求与伪需求，P0 功能是否映射到高频场景和流程位置，是否避免功能清单堆叠。
+- `design` 阶段：UI 可见内容不能使用 emoji；正文、表单、按钮、列表文本默认不小于 16px，辅助说明不得低于 14px。
+- `design` 阶段：必须检查页面访问逻辑是否来自真实使用流程，页面数量是否服务高频路径，能合并的入口、状态、表单、列表、详情是否已合并并记录理由。
+- 所有阶段：如果下游文档改变了上游事实，必须检查上游源文档是否同步回写，并查看 workflow-state notes 是否记录同步说明。
 
 ## 三重审核机制
 

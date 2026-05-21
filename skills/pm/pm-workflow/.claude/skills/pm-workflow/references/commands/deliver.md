@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须启动 `.codex/agents/product-manager.toml` 中的 `product_manager` 子 agent 主控交付打包，并在打包前启动 `.codex/agents/quality-reviewer.toml` 中的 `quality_reviewer` 子 agent 做最终完整性检查。
+必须启动当前 CLI 结构下的产品经理子 agent 主控交付打包，并在打包前启动质量审核子 agent 做最终完整性检查：Codex 使用 `.codex/agents/product-manager.toml` 和 `.codex/agents/quality-reviewer.toml`，Claude Code 使用 `.claude/agents/product-manager.md` 和 `.claude/agents/quality-reviewer.md`。
 
-如果当前 Codex 环境无法启动 `product_manager` 或 `quality_reviewer` 子 agent，必须停止交付打包，不运行打包脚本，不生成或修改 `outputs/dev-package/`，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
+如果当前环境无法启动产品经理或质量审核子 agent，必须停止交付打包，不运行打包脚本，不生成或修改 `outputs/dev-package/`，并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
 
 ## 输入
 
@@ -26,4 +26,4 @@
 
 ## 收尾引导
 
-结束时询问用户：检查交付包、修改某份文档，还是从交付包启动单独的 Codex 开发会话。
+结束时询问用户：检查交付包、修改某份文档，还是从交付包启动单独的开发会话。

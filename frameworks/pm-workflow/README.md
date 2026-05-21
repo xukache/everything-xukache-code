@@ -1,6 +1,6 @@
 # 未命名产品 工作室说明
 
-这是一个可直接进入并运行的产品开发工作室目录。
+这是一个可直接进入并运行的产品开发工作室目录。它可以按 Codex 或 Claude Code 结构安装；脚手架会根据 `--cli auto|codex|claude` 选择对应目录。
 
 ## 目录说明
 
@@ -12,6 +12,11 @@ AGENTS.md
 .agents/
   context/
   skills/
+.claude/
+  CLAUDE.md
+  agents/
+  commands/
+  skills/
 docs/
 prototype/
   directions/
@@ -19,12 +24,8 @@ prototype/
 outputs/dev-package/
 ```
 
-- `AGENTS.md`：Codex 项目级总控说明。
-- `.codex/agents/`：产品经理、需求分析师、技术架构师、界面设计师、开发规划师、质量审核官。
-- `.agents/skills/pm-workflow/`：主入口技能和脚本。
-- `.agents/skills/<role>/`：角色可调用的专用技能。
-- `.agents/skills/impeccable/`：界面原型自审和打磨技能。
-- `.agents/context/`：Impeccable 使用的产品和设计上下文。
+- Codex 使用 `AGENTS.md`、`.codex/agents/`、`.agents/skills/pm-workflow/`、`.agents/skills/<role>/`、`.agents/skills/impeccable/` 和 `.agents/context/`。
+- Claude Code 使用 `.claude/CLAUDE.md`、`.claude/agents/`、`.claude/commands/pm-workflow/`、`.claude/skills/pm-workflow/`、`.claude/skills/<role>/` 和 `.claude/skills/impeccable/`。
 - `docs/`：阶段文档产出区。
 - `prototype/`：高保真 HTML 原型区；`directions/` 存放候选方向首页 demo，`review/screenshots/` 存放自审截图。
 - `outputs/dev-package/`：最终开发交付包。
@@ -33,7 +34,7 @@ outputs/dev-package/
 
 1. 在本目录启动开发会话。
 2. 直接输入你的产品想法，例如：`我想做一个每天记录习惯的 App`，或先说 `澄清需求`。
-3. 产品经理会先用普通聊天方式帮你澄清真实需求，等你确认理解无误后，再进入需求、架构、界面、任务规划、审核和打包。
+3. 产品经理会先用普通聊天方式帮你澄清真实需求，重点摸清谁高频使用、用户真正的高频需求、打开产品的触发点和真实使用流程；等你确认理解无误后，再进入需求、架构、界面、任务规划、审核和打包。
 
 常用自然语言：
 
@@ -51,4 +52,14 @@ outputs/dev-package/
 ```bash
 python .agents/skills/pm-workflow/scripts/review_stage.py --root . --stage analyze
 python .agents/skills/pm-workflow/scripts/package_delivery.py --root .
+python .claude/skills/pm-workflow/scripts/review_stage.py --root . --stage analyze
+python .claude/skills/pm-workflow/scripts/package_delivery.py --root .
 ```
+
+## 流程规则
+
+- 下游文档如果改变需求、平台、范围、功能编号、技术约束、页面路径或验收标准，必须同步回写上游源文档，并在 `docs/workflow-state.json` 的 `notes` 记录。
+- 需求分析必须基于高频真实需求和真实使用流程识别真需求与伪需求，合并同类能力，避免功能清单堆叠。
+- UI 页面访问逻辑必须从真实使用流程推导，页面数量以完成高频路径为准，能合并的页面/模块必须合并并记录理由。
+- UI 原型页面可见文案、按钮、导航、空状态和提示语禁止使用 emoji；图标必须使用图标库、SVG 或图片资源。
+- UI 正文、表单、按钮、列表文本默认不小于 16px，辅助说明不得低于 14px。

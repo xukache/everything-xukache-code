@@ -13,6 +13,15 @@ description: "界面设计师使用：选择设计方向、编写界面与体验
 - `docs/tech-architecture.md`
 - `assets/design-themes/`
 
+如果 UI 阶段新增或调整页面清单、交互路径、字段、状态、技术约束或验收标准，或发现页面/模块过多、流程不顺，必须同步回写 `docs/project-config.md`、`docs/prd.md`、`docs/handoff-prd.md` 或 `docs/tech-architecture.md`，并在 `docs/workflow-state.json` 的 `notes` 记录同步说明。
+
+## UI 硬规则
+
+- 页面可见文案、按钮、导航、空状态和提示语禁止使用 emoji。
+- 图标必须使用图标库、SVG 或图片资源，不用 emoji 代替。
+- 正文、表单、按钮、列表文本不小于 16px。
+- 辅助说明可小于 16px 但不得低于 14px；移动端优先保持 16px 起。
+
 ## 输出
 
 - `docs/ui-design.md`
@@ -22,23 +31,26 @@ description: "界面设计师使用：选择设计方向、编写界面与体验
 
 ## 设计流程
 
-1. 先做上游前置审查，发现歧义先报告。
+1. 先做上游前置审查，确认高频真实需求、使用人群和真实使用流程清晰；发现歧义先报告。
 2. 推荐 2-3 个差异化设计方向。
 3. 为每个方向生成一个可打开的首页 demo，放在 `prototype/directions/`，并生成 `prototype/directions/index.html` 作为预览索引。
 4. 在 `docs/ui-design.md` 中写清每个方向的 demo 路径；没有 demo 的方向不得交给用户选择。
 5. 等用户选择，或在用户明确授权后使用第一推荐。
-6. 设计页面清单、布局、组件、状态和流程。
-7. 基于选定方向构建完整高保真 HTML 原型。
-8. 使用 Playwright 对候选 demo 和完整原型逐页截图，覆盖 desktop/tablet/mobile。
-9. 使用 Impeccable 做专项审查和修正，最多两轮。
-10. 写入 `docs/prototype-review.md`，记录截图证据、审查结论、修正项和遗留问题。
+6. 从真实使用流程推导页面访问逻辑，页面数量以完成高频路径为准。
+7. 设计页面清单、布局、组件、状态和流程；页面模块不能堆叠过多，能合并的入口、状态、表单、列表、详情必须合并。
+8. 基于选定方向构建完整高保真 HTML 原型。
+9. 在 `docs/ui-design.md` 记录页面访问逻辑和模块整合理由。
+10. 使用 Playwright 对候选 demo 和完整原型逐页截图，覆盖 desktop/tablet/mobile。
+11. 使用 Impeccable 做专项审查和修正，最多两轮。
+12. 写入 `docs/prototype-review.md`，记录截图证据、审查结论、修正项和遗留问题。
+13. 如 UI 决策改变上游事实，回写上游文档并记录同步说明。
 
 ## Impeccable 使用清单
 
-开始自审前必须确认 `.agents/skills/impeccable/SKILL.md` 存在；不存在时停止，不做普通降级。
+开始自审前必须确认当前 CLI 结构下的 Impeccable skill 存在：Codex 检查 `.agents/skills/impeccable/SKILL.md`，Claude Code 检查 `.claude/skills/impeccable/SKILL.md`；不存在时停止，不做普通降级。
 
-1. 生成 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`。
-2. 运行 `node .agents/skills/impeccable/scripts/load-context.mjs`，完整读取输出。
+1. 生成 Impeccable 上下文：Codex 写入 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`；Claude Code 可写入 `.claude/context/PRODUCT.md` 和 `.claude/context/DESIGN.md` 或沿用 `.agents/context/`。
+2. 运行当前 CLI 结构下的 `impeccable/scripts/load-context.mjs`，完整读取输出。
 3. 对候选方向 demo 使用 `critique` 和 `audit`，确认方向差异、视觉质量、AI 味和基础技术质量。
 4. 对完整原型使用 `critique`、`audit`、`adapt`。
 5. 根据问题选择 `layout`、`typeset`、`clarify`、`animate`、`harden` 修正。
@@ -101,10 +113,13 @@ prototype/
 ## 检查表
 
 - P0 功能是否都有可点击路径。
+- 页面访问逻辑是否来自真实使用流程。
+- 页面数量和模块数量是否服务高频路径，而不是堆叠低频功能。
+- 能合并的入口、状态、表单、列表、详情是否已经合并并记录理由。
 - 设计方向是否都有可打开的首页 demo，而不是只有文字说明。
 - 是否有 Playwright 截图证据并覆盖 desktop/tablet/mobile。
 - 是否完成 Impeccable 审查、修正和复查记录。
 - 是否沉淀了可复用布局，并能支撑后续开发稳定复现。
 - 成功、失败、空、加载状态是否覆盖。
-- 页面是否符合真实工作流。
+- 页面是否符合真实工作流和高频使用习惯。
 - 原型路径是否能映射回需求功能编号。

@@ -10,6 +10,7 @@ developer_instructions = """
 - docs/handoff-prd.md
 
 如果上游需求文档有歧义，先报告给产品经理，不要猜测。
+如果架构设计发现需求、平台、范围、功能编号或技术约束需要调整，必须同步回写 docs/prd.md 和 docs/handoff-prd.md，并在 workflow-state notes 记录同步说明。
 
 ## 阶段开场卡
 

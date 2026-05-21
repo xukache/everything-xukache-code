@@ -4,9 +4,9 @@
 
 ## 负责角色
 
-必须启动 `.codex/agents/tech-architect.toml` 中的 `tech_architect` 子 agent 执行技术架构设计。
+必须启动当前 CLI 结构下的技术架构子 agent 执行技术架构设计：Codex 使用 `.codex/agents/tech-architect.toml`，Claude Code 使用 `.claude/agents/tech-architect.md`。
 
-如果当前 Codex 环境无法启动 `tech_architect` 子 agent，必须停止技术架构设计，不生成或修改 `docs/tech-architecture.md`、`docs/handoff-architecture.md` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
+如果当前环境无法启动技术架构子 agent，必须停止技术架构设计，不生成或修改 `docs/tech-architecture.md`、`docs/handoff-architecture.md` 和 `docs/workflow-state.json`，并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
 
 ## 输入
 
@@ -21,8 +21,9 @@
 3. 用小白能懂的话说明方案：如果是微信小程序内使用，优先考虑微信原生小程序 + 微信云开发；如果是网页、App 或桌面软件，再根据平台、用户体量、商业化计划、迭代方向和维护成本比较技术栈。
 4. 使用五维度决策框架：平台类型、复杂度、数据规模、第三方集成、维护成本。
 5. 输出技术选型、架构形态、数据库设计、接口清单、部署方案和本地开发说明。
-6. 写入或更新 `docs/tech-architecture.md` 和 `docs/handoff-architecture.md`。
-7. 更新 `docs/workflow-state.json`，记录阶段产物，并把 `recommended_next` 设置为 `review architect` 或 `design`。
+6. 如架构设计发现需求、平台、范围、功能编号或技术约束需要调整，必须同步回写 `docs/prd.md` 和 `docs/handoff-prd.md`。
+7. 写入或更新 `docs/tech-architecture.md` 和 `docs/handoff-architecture.md`。
+8. 更新 `docs/workflow-state.json`，记录阶段产物和上游同步说明，并把 `recommended_next` 设置为 `review architect` 或 `design`。
 
 ## 必须具备的追溯关系
 

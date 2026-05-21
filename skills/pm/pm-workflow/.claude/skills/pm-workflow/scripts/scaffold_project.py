@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize a Codex-native PM Workflow framework workspace."""
+"""Initialize a PM Workflow framework workspace for Codex or Claude Code."""
 
 from __future__ import annotations
 
@@ -14,6 +14,8 @@ AGENT_DIR = SKILL_ROOT / "agents"
 ROLE_SKILLS_DIR = SKILL_ROOT / "role-skills"
 BUNDLED_SKILLS_DIR = SKILL_ROOT / "bundled-skills"
 REPO_SKILLS_DIR = SKILL_ROOT.parent
+CODEX_PACKAGE_DIR = SKILL_ROOT / ".codex"
+CLAUDE_PACKAGE_DIR = SKILL_ROOT / ".claude"
 
 TEMPLATE_DIR = SKILL_ROOT / "templates"
 
@@ -58,6 +60,28 @@ def write_if_missing(path: Path, content: str) -> bool:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
     return True
+
+
+def detect_cli(root: Path, requested: str) -> str:
+    if requested != "auto":
+        return requested
+    if (root / ".claude").exists():
+        return "claude"
+    if (root / ".codex").exists() or (root / ".agents").exists():
+        return "codex"
+    return "codex"
+
+
+def copy_tree_contents(src: Path, dest: Path) -> list[str]:
+    copied: list[str] = []
+    if not src.exists():
+        return copied
+    dest.mkdir(parents=True, exist_ok=True)
+    for item in sorted(src.iterdir()):
+        target = dest / item.name
+        if copy_tree_if_missing(item, target):
+            copied.append(str(target))
+    return copied
 
 
 def copy_agents(root: Path) -> list[str]:
@@ -107,6 +131,21 @@ def copy_main_skill_if_missing(dest: Path) -> bool:
 
     shutil.copytree(SKILL_ROOT, dest, ignore=ignore)
     return True
+
+
+def copy_codex_package(root: Path) -> list[str]:
+    source = CODEX_PACKAGE_DIR if CODEX_PACKAGE_DIR.exists() else SKILL_ROOT
+    target = root / ".codex"
+    copied: list[str] = []
+    if source == SKILL_ROOT:
+        return copied
+    for item in sorted(source.iterdir()):
+        if item.name == "agents":
+            continue
+        dest = target / item.name
+        if copy_tree_if_missing(item, dest):
+            copied.append(str(dest.relative_to(root)))
+    return copied
 
 
 def copy_repo_scoped_skills(root: Path) -> list[str]:
@@ -168,6 +207,43 @@ def copy_impeccable_skill(root: Path) -> tuple[list[str], list[str]]:
     return [], searched
 
 
+def remove_codex_agent_manifest(skill_dir: Path) -> None:
+    openai_manifest = skill_dir / "agents" / "openai.yaml"
+    if openai_manifest.exists():
+        openai_manifest.unlink()
+    agents_dir = skill_dir / "agents"
+    if agents_dir.exists() and not any(agents_dir.iterdir()):
+        agents_dir.rmdir()
+
+
+def copy_claude_package(root: Path) -> list[str]:
+    target = root / ".claude"
+    copied: list[str] = []
+
+    if CLAUDE_PACKAGE_DIR.exists():
+        for item in sorted(CLAUDE_PACKAGE_DIR.iterdir()):
+            dest = target / item.name
+            if copy_tree_if_missing(item, dest):
+                copied.append(str(dest.relative_to(root)))
+        remove_codex_agent_manifest(target / "skills" / "impeccable")
+        return copied
+
+    # Fallback for a skill folder that does not include the full .claude package.
+    skill_dest = target / "skills" / "pm-workflow"
+    if copy_main_skill_if_missing(skill_dest):
+        copied.append(str(skill_dest.relative_to(root)))
+    if ROLE_SKILLS_DIR.exists():
+        for src in sorted(ROLE_SKILLS_DIR.iterdir()):
+            if src.is_dir() and copy_tree_if_missing(src, target / "skills" / src.name):
+                copied.append(str((target / "skills" / src.name).relative_to(root)))
+    bundled = bundled_skill_source("impeccable")
+    if bundled and copy_tree_if_missing(bundled, target / "skills" / "impeccable"):
+        impeccable_dest = target / "skills" / "impeccable"
+        remove_codex_agent_manifest(impeccable_dest)
+        copied.append(str(impeccable_dest.relative_to(root)))
+    return copied
+
+
 def write_plugin_manifest(root: Path) -> bool:
     manifest = """{
   "name": "pm-workflow",
@@ -203,7 +279,7 @@ def write_plugin_manifest(root: Path) -> bool:
     return write_if_missing(root / ".codex-plugin" / "plugin.json", manifest)
 
 
-def create_structure(root: Path, product_name: str) -> None:
+def create_common_structure(root: Path, product_name: str, include_agents_md: bool) -> list[str]:
     root = root.resolve()
 
     dirs = [
@@ -220,9 +296,6 @@ def create_structure(root: Path, product_name: str) -> None:
         root / "prototype" / "review" / "screenshots" / "tablet",
         root / "prototype" / "review" / "screenshots" / "mobile",
         root / "outputs" / "dev-package",
-        root / ".codex" / "agents",
-        root / ".agents" / "context",
-        root / ".agents" / "skills",
     ]
     for directory in dirs:
         directory.mkdir(parents=True, exist_ok=True)
@@ -240,11 +313,12 @@ def create_structure(root: Path, product_name: str) -> None:
     ):
         created.append("docs/workflow-state.json")
 
-    if write_if_missing(
-        root / "AGENTS.md",
-        render_template("framework-AGENTS.md", product_name),
-    ):
-        created.append("AGENTS.md")
+    if include_agents_md:
+        if write_if_missing(
+            root / "AGENTS.md",
+            render_template("framework-AGENTS.md", product_name),
+        ):
+            created.append("AGENTS.md")
 
     if write_if_missing(
         root / "README.md",
@@ -257,6 +331,15 @@ def create_structure(root: Path, product_name: str) -> None:
         render_template("prototype-README.md", product_name),
     ):
         created.append("prototype/README.md")
+    return created
+
+
+def create_codex_structure(root: Path, product_name: str) -> tuple[list[str], list[str], list[str], list[str]]:
+    root = root.resolve()
+    for directory in [root / ".codex" / "agents", root / ".agents" / "context", root / ".agents" / "skills"]:
+        directory.mkdir(parents=True, exist_ok=True)
+
+    created = create_common_structure(root, product_name, include_agents_md=True)
 
     config_toml = """[agents]
 max_threads = 6
@@ -266,15 +349,43 @@ job_max_runtime_seconds = 1800
     if write_if_missing(root / ".codex" / "config.toml", config_toml):
         created.append(".codex/config.toml")
 
+    copied_codex = copy_codex_package(root)
     copied_agents = copy_agents(root)
     copied_skills = copy_repo_scoped_skills(root)
     copied_impeccable, missing_impeccable_sources = copy_impeccable_skill(root)
     copied_skills.extend(copied_impeccable)
     if write_plugin_manifest(root):
         created.append(".codex-plugin/plugin.json")
+    return created, copied_codex + copied_agents, copied_skills, missing_impeccable_sources
+
+
+def create_claude_structure(root: Path, product_name: str) -> tuple[list[str], list[str], list[str], list[str]]:
+    root = root.resolve()
+    created = create_common_structure(root, product_name, include_agents_md=False)
+    copied_claude = copy_claude_package(root)
+    return created, copied_claude, [], []
+
+
+def create_structure(root: Path, product_name: str, cli: str) -> None:
+    root = root.resolve()
+    had_platform_marker = (root / ".claude").exists() or (root / ".codex").exists() or (root / ".agents").exists()
+    selected_cli = detect_cli(root, cli)
+    if selected_cli == "claude":
+        created, copied_platform, copied_skills, missing_impeccable_sources = create_claude_structure(root, product_name)
+        platform_name = "Claude Code"
+        directory_summary = "docs/, prototype/, prototype/review/screenshots/, outputs/dev-package/, .claude/"
+        next_step = "Next step: start Claude Code in this directory, then describe your product idea or run `/pm-workflow:init`."
+    else:
+        created, copied_platform, copied_skills, missing_impeccable_sources = create_codex_structure(root, product_name)
+        platform_name = "Codex"
+        directory_summary = "docs/, prototype/, prototype/review/screenshots/, outputs/dev-package/, .codex/, .agents/context/, .agents/skills/"
+        next_step = "Next step: start Codex in this directory, then describe your product idea or say `澄清需求`."
 
     print(f"Project structure created: {root}")
-    print("Created or confirmed directories: docs/, prototype/, prototype/review/screenshots/, outputs/dev-package/, .codex/agents/, .agents/context/, .agents/skills/")
+    print(f"Selected CLI structure: {platform_name}")
+    if cli == "auto" and selected_cli == "codex" and not had_platform_marker:
+        print("Auto mode defaulted to Codex for an empty directory. Use `--cli claude` to create a Claude Code workspace.")
+    print(f"Created or confirmed directories: {directory_summary}")
     if created:
         print("Template files created:")
         for item in created:
@@ -282,12 +393,12 @@ job_max_runtime_seconds = 1800
     else:
         print("Template files already existed; no template files overwritten.")
 
-    if copied_agents:
-        print("Agent configs copied:")
-        for item in copied_agents:
+    if copied_platform:
+        print(f"{platform_name} platform files copied:")
+        for item in copied_platform:
             print(f"  + {item}")
     else:
-        print("Agent configs already existed or source agents were unavailable.")
+        print(f"{platform_name} platform files already existed or source package was unavailable.")
 
     if copied_skills:
         print("Repo-scoped skills copied:")
@@ -302,16 +413,17 @@ job_max_runtime_seconds = 1800
             print(f"  - {item}")
         print("Design stage must stop until .agents/skills/impeccable/ is available. The pm-workflow package should normally include bundled-skills/impeccable/.")
 
-    print("Next step: start Codex in this directory, then describe your product idea or say `澄清需求`.")
+    print(next_step)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Initialize a PM Workflow project structure.")
     parser.add_argument("--root", default=".", help="Project root directory. Defaults to current directory.")
     parser.add_argument("--name", default="My Product", help="Product name for templates.")
+    parser.add_argument("--cli", choices=["auto", "codex", "claude"], default="auto", help="CLI layout to create. Defaults to auto.")
     args = parser.parse_args()
 
-    create_structure(Path(args.root), args.name)
+    create_structure(Path(args.root), args.name, args.cli)
     return 0
 
 
