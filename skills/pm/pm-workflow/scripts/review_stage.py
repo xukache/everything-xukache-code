@@ -66,6 +66,8 @@ def default_clarification() -> dict:
         "summary": "",
         "missing_context": [],
         "materials_needed": [],
+        "terminology": [],
+        "concepts_aligned": False,
         "completion_criteria": {
             "target_user": False,
             "scenario_problem": False,
@@ -169,11 +171,15 @@ def score_stage(root: Path, stage: str) -> dict:
     contents = "\n\n".join(read_text(root / item) for item in expected)
     has_placeholder = any(pattern in contents for pattern in PLACEHOLDER_PATTERNS)
     total_chars = len(contents.strip())
+    clarification = state.get("clarification") or {}
+    init_concepts_not_aligned = stage == "init" and not bool(clarification.get("concepts_aligned"))
     init_not_confirmed = stage == "init" and not clarification_confirmed(state)
     analyze_has_open_questions = stage == "analyze" and has_blocking_analyze_questions(state, read_text(root / "docs" / "prd.md"))
 
     if init_not_confirmed:
         missing.append("docs/workflow-state.json: clarification.status=user_confirmed")
+    if init_concepts_not_aligned:
+        missing.append("docs/workflow-state.json: clarification.concepts_aligned=true")
     if analyze_has_open_questions:
         missing.append("docs/prd.md: 待用户回答问题未清空或文档仍为 draft")
 
@@ -192,7 +198,7 @@ def score_stage(root: Path, stage: str) -> dict:
     consistency, consistency_note = consistency_score(root, stage)
     if init_not_confirmed:
         consistency = min(consistency, 5)
-        consistency_note = "需求澄清尚未获得用户确认，不能视为初始化完成。"
+        consistency_note = "需求澄清尚未获得用户确认或关键术语概念未对齐，不能视为初始化完成。"
     executability = executability_score(contents, stage, has_placeholder)
     if init_not_confirmed or analyze_has_open_questions:
         executability = min(executability, 5)
@@ -209,6 +215,7 @@ def score_stage(root: Path, stage: str) -> dict:
     scores["has_placeholder"] = has_placeholder
     scores["consistency_note"] = consistency_note
     scores["init_not_confirmed"] = init_not_confirmed
+    scores["init_concepts_not_aligned"] = init_concepts_not_aligned
     scores["analyze_has_open_questions"] = analyze_has_open_questions
     return scores
 
@@ -217,10 +224,12 @@ def clarification_confirmed(state: dict) -> bool:
     clarification = state.get("clarification") or {}
     criteria = clarification.get("completion_criteria") or {}
     all_criteria_done = bool(criteria) and all(bool(value) for value in criteria.values())
+    concepts_aligned = bool(clarification.get("concepts_aligned"))
     return (
         clarification.get("status") == "user_confirmed"
         and not state.get("user_confirmation_required", True)
         and all_criteria_done
+        and concepts_aligned
     )
 
 
@@ -365,6 +374,8 @@ def build_issues(scores: dict, round_no: int) -> str:
         issues.append("- 文档仍包含“待补充”或 TODO，占位内容需要替换为真实决策。")
     if scores.get("init_not_confirmed"):
         issues.append("- 需求澄清尚未获得用户确认，`init` 不能判定完成。")
+    if scores.get("init_concepts_not_aligned"):
+        issues.append("- 关键术语和概念尚未对齐，容易导致 AI 与用户说的是不同东西。")
     if scores.get("analyze_has_open_questions"):
         issues.append("- PRD 仍是草稿或存在待用户回答问题，不能触发 analyze 通过。")
     if scores["consistency"] < 6:

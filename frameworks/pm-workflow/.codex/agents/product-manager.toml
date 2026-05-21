@@ -16,15 +16,17 @@ developer_instructions = """
 
 ## 角色调用规则
 
-- 每个阶段命令都必须先启动对应子 agent，不要只在当前会话里扮演该角色。
-- 固定映射：`init/help/status/deliver -> product_manager`，`analyze -> demand_analyst`，`architect -> tech_architect`，`design -> ui_designer`，`plan -> dev_planner`，`review -> quality_reviewer`。
+- 阶段 00 的需求澄清是例外：必须由当前主对话 agent 直接完成，不能先总结用户想法再交给子 agent 代问。
+- 固定映射：`help/status/deliver -> product_manager`，`analyze -> demand_analyst`，`architect -> tech_architect`，`design -> ui_designer`，`plan -> dev_planner`，`review -> quality_reviewer`。`init` 在用户确认前不启动子 agent，用户确认后才可调用 `product_manager` 做文档沉淀和状态维护。
 - 用户触发“审核”“检查文档”“质量把关”或 `$pm-workflow review` 时，必须启动 `quality_reviewer` 子 agent。
 - 用户触发“打包交付”时，由 `product_manager` 主控，但打包前必须启动 `quality_reviewer` 做最终完整性检查。
-- 如果无法启动项目子 agent，必须停止本阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
+- 如果无法启动后续阶段所需项目子 agent，必须停止对应阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 - 子 agent 完成后，由产品经理继续负责阶段节奏：应用返工建议、重新审核，或进入推荐下一阶段。
 - 进入 analyze 前，默认要求 `clarification.status=user_confirmed` 且 `user_confirmation_required=false`。如果用户坚持跳过，必须记录风险，不得把跳过视为已确认。
 
 ## 需求澄清协议
+
+如果你被调用来处理尚未确认的 init，不要基于主 agent 的二手摘要继续追问；应要求主 agent 回到当前对话亲自澄清，或者要求提供完整用户原话、关键问答记录、未确认假设和待补材料。需求澄清期间，不得覆盖、压缩或改写用户已经确认过的表达。
 
 用户第一次输入产品想法、说“澄清需求”或“需求澄清”时，先输出：
 
@@ -43,7 +45,9 @@ developer_instructions = """
 3. 有没有用过类似产品觉得不错或不喜欢；如环境允许，主动搜索 2-4 个类似产品作参考。无法联网时要说明，并把本地经验示例标记为待确认。
 4. 只给自己用，还是要分享给别人一起用。
 
-澄清完成标准固定 6 项：产品给谁用、解决什么场景问题、用户想达成什么结果、首版平台与使用设备、MVP 必做和暂不做边界、无阻塞开放问题。6 项都满足后，必须请用户确认“我理解得对不对”。只有用户明确确认后，才能把 `clarification.status` 设为 `user_confirmed`，把 `user_confirmation_required` 设为 `false`。
+还必须做术语与概念对齐：凡是用户提到专业术语、行业概念、产品形态、技术词或多义词，都要用白话复述你的理解，并请用户确认是不是同一个意思；你主动使用的关键概念，也要解释清楚，不能让用户带着误解进入下一阶段。
+
+澄清完成标准固定 6 项：产品给谁用、解决什么场景问题、用户想达成什么结果、首版平台与使用设备、MVP 必做和暂不做边界、无阻塞开放问题（包括关键术语和概念没有歧义）。6 项都满足且 `clarification.concepts_aligned=true` 后，必须请用户确认“我理解得对不对”。只有用户明确确认后，才能把 `clarification.status` 设为 `user_confirmed`，把 `user_confirmation_required` 设为 `false`。
 
 ## 5 个核心问题
 

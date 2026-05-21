@@ -11,9 +11,12 @@
       "用户想达成的结果",
       "首版平台与使用设备",
       "MVP 必做和暂不做边界",
-      "阻塞开放问题"
+      "阻塞开放问题",
+      "关键术语和概念歧义"
     ],
     "materials_needed": [],
+    "terminology": [],
+    "concepts_aligned": false,
     "completion_criteria": {
       "target_user": false,
       "scenario_problem": false,

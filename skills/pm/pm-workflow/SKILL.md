@@ -40,11 +40,11 @@ user-invocable: true
 
 ## Agent 调度规则
 
-每个阶段都必须先启动对应的 `.codex/agents/*.toml` 子 agent。不要只由当前会话扮演角色。若当前 Codex 环境无法启动项目子 agent，必须停止本阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
+除阶段 00 的需求澄清外，每个阶段都必须先启动对应的 `.codex/agents/*.toml` 子 agent。阶段 00 是特殊例外：用户刚输入产品想法时，主 agent 拥有最完整的对话上下文，必须亲自完成欢迎、复述、追问、整理缺口和请用户确认，禁止把“待澄清需求”先总结后交给 `product_manager` 或任何子 agent 继续澄清。若当前 Codex 环境无法启动后续阶段所需的项目子 agent，必须停止对应阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 Codex 运行方式中打开当前工作室目录后重试。
 
-| 命令 | 必须启动的 agent | 配置文件 |
+| 命令 | 调度方式 | 配置文件 |
 |---|---|---|
-| `init` | `product_manager` | `.codex/agents/product-manager.toml` |
+| `init` | 需求澄清由主 agent 直接完成；用户确认后可由主 agent 写入配置，或启动 `product_manager` 只做文档沉淀和状态维护 | `.codex/agents/product-manager.toml` |
 | `help` | `product_manager` | `.codex/agents/product-manager.toml` |
 | `status` | `product_manager` | `.codex/agents/product-manager.toml` |
 | `analyze` | `demand_analyst` | `.codex/agents/demand-analyst.toml` |
@@ -162,12 +162,18 @@ project-root/
 你说的 xxx 产品，核心就是：xxx
 ```
 
+阶段 00 的澄清必须由主 agent 直接完成，不能把用户原话压缩成二手摘要后交给子 agent 代问。原因是主 agent 持有完整聊天上下文、用户语气、补充材料和刚刚发生的追问线索，最不容易遗漏真实需求。
+
+在用户确认前，禁止启动 `product_manager`、`demand_analyst` 或其他子 agent 做需求澄清；禁止把“我总结一下再让子 agent 问你”作为默认流程。若后续需要子 agent 做文档沉淀，必须传递完整用户原话、关键问答记录、未确认假设和待补材料，且不得让子 agent 覆盖用户已确认的表达。
+
 随后只问 3-5 个最关键的问题，必须用普通用户能懂的话，并允许用户“不用一次性全回答，想到什么说什么就行”。问题默认覆盖：
 
 1. 你想在什么设备或平台上用？
 2. 除了核心功能，还有特别想要的功能吗？
 3. 有没有用过类似产品觉得不错或不喜欢？如环境允许，AI 主动搜索 2-4 个类似产品作参考；如无法联网，说明无法实时搜索，并用本地经验示例且标记待确认。
 4. 这个产品只给自己用，还是分享给别人一起用？
+
+需求澄清必须包含“术语与概念对齐”。主 agent 遇到用户提到的专业词、行业词、产品形态、技术词或容易多义的普通词时，必须先用白话复述自己的理解，再问用户是不是这个意思；主 agent 自己描述需求时，也要解释关键概念，避免用户表面点头但实际理解不同。典型句式是：“你说的 xxx，我先按 yyy 理解；如果你指的是 zzz，那方案会不一样，我理解得对吗？”
 
 澄清完成标准固定为 6 项：
 
@@ -176,9 +182,9 @@ project-root/
 3. 用户想达成什么结果。
 4. 首版平台与使用设备。
 5. MVP 必须做和暂不做边界。
-6. 无阻塞开放问题。
+6. 无阻塞开放问题，包括关键术语和概念没有歧义。
 
-只有 6 项均有答案，并且用户确认“我理解得对”，才能把 `docs/workflow-state.json` 中 `clarification.status` 更新为 `user_confirmed`，把 `user_confirmation_required` 设为 `false`，并推荐进入 `analyze`。内部判断通过、文档已写好、审核通过都不等于用户确认。
+只有 6 项均有答案、关键术语概念已经对齐，并且用户确认“我理解得对”，才能把 `docs/workflow-state.json` 中 `clarification.status` 更新为 `user_confirmed`，把 `clarification.concepts_aligned` 设为 `true`，把 `user_confirmation_required` 设为 `false`，并推荐进入 `analyze`。内部判断通过、文档已写好、审核通过都不等于用户确认。
 
 产品经理继续补齐五个核心问题：
 

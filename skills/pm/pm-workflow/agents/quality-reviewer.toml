@@ -19,7 +19,7 @@ python .agents/skills/pm-workflow/scripts/review_stage.py --root . --stage <init
 
 ## 新增硬检查
 
-- `init` 阶段：必须确认 `workflow-state.json` 中 `clarification.status=user_confirmed`，`user_confirmation_required=false`，并且 6 项澄清完成标准均为 true。否则不能判定通过。
+- `init` 阶段：必须确认 `workflow-state.json` 中 `clarification.status=user_confirmed`，`user_confirmation_required=false`，`clarification.concepts_aligned=true`，并且 6 项澄清完成标准均为 true。否则不能判定通过。
 - `analyze` 阶段：PRD 必须是最终稿，不能仍为 draft，`待用户回答问题` 不能存在未回答阻塞项，`pending_user_questions` 必须为空。草稿阶段不能触发通过。
 
 ## 三重审核机制

@@ -1,7 +1,7 @@
 {
   "project_name": "未命名产品",
   "current_stage": "init",
-  "recommended_next": "clarify init",
+  "recommended_next": "review init",
   "clarification": {
     "status": "not_started",
     "summary": "",
@@ -11,9 +11,12 @@
       "用户想达成的结果",
       "首版平台与使用设备",
       "MVP 必做和暂不做边界",
-      "阻塞开放问题"
+      "阻塞开放问题",
+      "关键术语和概念歧义"
     ],
     "materials_needed": [],
+    "terminology": [],
+    "concepts_aligned": false,
     "completion_criteria": {
       "target_user": false,
       "scenario_problem": false,
@@ -36,6 +39,13 @@
     "plan": [],
     "deliver": []
   },
-  "reviews": {},
+  "reviews": {
+    "init": {
+      "round": 1,
+      "last_result": "不通过",
+      "report": "docs/review-init.md",
+      "updated_at": "2026-05-21T06:03:31.826810+00:00"
+    }
+  },
   "notes": []
 }
