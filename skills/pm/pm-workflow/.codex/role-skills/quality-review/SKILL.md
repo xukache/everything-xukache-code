@@ -38,7 +38,7 @@ node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <stage>
 - 是否存在待补充、待办占位或空表。
 - init 阶段是否已经在 `workflow-state.json` 中达到 `clarification.status=user_confirmed`、`clarification.concepts_aligned=true`，且 8 项澄清标准均完成。
 - analyze 阶段是否为 `文档状态：final`，并且没有未回答的阻塞问题。
-- init 阶段 8 项澄清完成标准是否全部完成，尤其是高频真实需求和真实使用流程。
+- init 阶段 8 个判断锚点是否全部完成，尤其是高频真实需求、最值得先做的一段流程、Agent 能力、结果落点和最小可用 demo 边界。
 - analyze 阶段是否基于高频真实需求和真实使用流程识别真需求与伪需求，P0 是否映射到高频场景和流程位置。
 - design 阶段 UI 可见内容是否使用 emoji，主体字号是否低于 16px。
 - design 阶段页面访问逻辑是否来自真实使用流程，页面和模块是否避免堆叠并记录整合理由。

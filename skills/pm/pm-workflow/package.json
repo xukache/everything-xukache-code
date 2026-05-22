@@ -1,6 +1,6 @@
 {
   "name": "pm-workflow-studio",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "AI product development studio CLI for Codex and Claude Code.",
   "type": "commonjs",
   "bin": {

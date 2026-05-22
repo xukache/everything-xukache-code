@@ -38,7 +38,8 @@
 
 - 阶段 00 的需求澄清由主 agent 直接完成：欢迎、复述、追问、整理缺口和请用户确认都不能外包给子 agent。
 - 禁止把用户刚输入的需求先总结成二手摘要，再交给 `product_manager` 或其他子 agent 继续澄清；主 agent 持有完整对话上下文，必须亲自判断真实需求。
-- 阶段 00 必须摸清谁高频使用、用户真正的高频需求、打开产品的触发点、从开始到结束的真实使用流程，以及页面/模块减负边界；这些信息是需求分析识别真需求和 UI 设计制定页面访问逻辑的依据。
+- 阶段 00 必须做顾问式澄清：不要直接给完整方案或平台清单，每轮最多问 3 个问题，优先判断解决什么问题、哪一段最值得先做、需要什么 Agent 能力、结果落到哪里，以及如何收束成最小可用 demo。
+- 阶段 00 还必须摸清谁高频使用、用户真正的高频需求、打开产品的触发点、从开始到结束的真实使用流程，以及页面/模块减负边界；这些信息是需求分析识别真需求和 UI 设计制定页面访问逻辑的依据。
 - 除阶段 00 的需求澄清外，每个阶段命令都必须先启动当前 CLI 结构下对应的项目子 agent：Codex 使用 `.codex/agents/*.toml`，Claude Code 使用 `.claude/agents/*.md`。
 - 阶段到 agent 的固定映射：`help/status/deliver -> product_manager/product-manager`，`analyze -> demand_analyst/demand-analyst`，`architect -> tech_architect/tech-architect`，`design -> ui_designer/ui-designer`，`plan -> dev_planner/dev-planner`，`review -> quality_reviewer/quality-reviewer`。`init` 在用户确认前不启动子 agent，确认后可调用产品经理子 agent 做文档沉淀和状态维护。
 - 每个阶段开始都先输出阶段开场卡：当前用户情况、推荐方案、为什么这样选、接下来产出什么。

@@ -57,10 +57,10 @@ const REQUIRED_CLARIFICATION_CRITERIA = {
   target_user: "产品给谁用",
   high_frequency_need: "用户真正的高频需求",
   scenario_problem: "解决什么场景问题",
-  desired_outcome: "用户想达成什么结果",
-  core_usage_flow: "用户从开始到结束的真实使用流程",
+  desired_outcome: "用户想达成什么结果以及结果落点",
+  core_usage_flow: "用户从开始到结束的真实使用流程，以及最值得先做的一段",
   first_platform: "首版平台与使用设备",
-  mvp_boundary: "MVP 必做和暂不做边界，包括功能整合和页面/模块减负原则",
+  mvp_boundary: "最小可用 demo 必做和暂不做边界，包括能力合并、页面/模块减负和人工兜底原则",
   no_blocking_questions: "无阻塞开放问题，包括关键术语和概念没有歧义",
 };
 
@@ -74,9 +74,13 @@ function defaultClarification() {
       "核心场景",
       "用户想达成的结果",
       "真实使用流程",
+      "最值得先做的一段流程",
+      "Agent 需要具备的关键能力",
+      "结果落点",
       "首版平台与使用设备",
-      "MVP 必做和暂不做边界",
+      "最小可用 demo 必做和暂不做边界",
       "页面/模块减负边界",
+      "人工兜底边界",
       "阻塞开放问题",
       "关键术语和概念歧义",
     ],
@@ -518,7 +522,7 @@ function buildIssues(scores, roundNo) {
 function buildRework(stage, result, scores, roundNo) {
   if (result === "通过") return "本阶段已通过，无需返工。可根据用户偏好做非阻塞微调。";
   const suggestions = {
-    init: "补齐 8 项澄清完成标准、六个核心问题、高频真实需求、真实使用流程、参考产品、功能整合边界和工作量粗估。",
+    init: "补齐 8 个澄清判断锚点、六个核心问题、高频真实需求、最值得先做的一段流程、Agent 能力、结果落点、最小 demo 边界和工作量粗估。",
     analyze: "先让用户回答 PRD 草稿中的待确认问题，再补齐 P0/P1/P2、Mx-Fx 功能编号、业务规则、不做清单和验收标准，并把文档状态改为 final。",
     architect: "补齐需求到数据库、字段、接口、部署配置和技术风险的映射。",
     design: "补齐 2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、docs/prototype-review.md、Playwright 截图证据、Impeccable 审查记录、页面清单、需求到界面映射和完整原型路径。",
