@@ -63,10 +63,10 @@
 在本框架内运行脚本时使用：
 
 ```bash
-python .agents/skills/pm-workflow/scripts/review_stage.py --root . --stage analyze
-python .agents/skills/pm-workflow/scripts/package_delivery.py --root .
-python .claude/skills/pm-workflow/scripts/review_stage.py --root . --stage analyze
-python .claude/skills/pm-workflow/scripts/package_delivery.py --root .
+node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage analyze
+node .agents/skills/pm-workflow/scripts/package_delivery.js --root .
+node .claude/skills/pm-workflow/scripts/review_stage.js --root . --stage analyze
+node .claude/skills/pm-workflow/scripts/package_delivery.js --root .
 ```
 
 ## 后续开发执行

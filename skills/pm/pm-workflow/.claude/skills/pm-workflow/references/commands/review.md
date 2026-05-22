@@ -19,7 +19,7 @@
 1. 确定目标阶段：优先使用用户显式参数，其次使用 workflow state 中的 `current_stage`。
 2. 启动 `quality_reviewer` 子 agent，并把目标阶段、工作室根目录、当前阶段产物路径传给它。
 3. 由 `quality_reviewer` 运行或等价执行：
-   `python .agents/skills/pm-workflow/scripts/review_stage.py --root . --stage <stage>`
+   `node .claude/skills/pm-workflow/scripts/review_stage.js --root . --stage <stage>`
 4. 由 `quality_reviewer` 执行三重审核机制：
    - 对完整性、清晰度、一致性、可执行性评分
    - 模拟下游角色使用产物

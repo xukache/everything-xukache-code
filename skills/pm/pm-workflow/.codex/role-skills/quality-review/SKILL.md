@@ -29,13 +29,7 @@ description: "质量审核官使用：对阶段产物评分、仿真下游使用
 在框架目录内运行：
 
 ```bash
-python .agents/skills/pm-workflow/scripts/review_stage.py --root . --stage <stage>
-```
-
-在源码仓库内运行：
-
-```bash
-python skills/pm/pm-workflow/scripts/review_stage.py --root <project-root> --stage <stage>
+node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <stage>
 ```
 
 ## 检查表

@@ -19,7 +19,7 @@
 
 1. 启动 `quality_reviewer` 检查最终完整性和已知风险。
 2. 运行或等价执行：
-   `python .agents/skills/pm-workflow/scripts/package_delivery.py --root .`
+   `node .claude/skills/pm-workflow/scripts/package_delivery.js --root .`
 3. 向用户报告已复制文件、缺失文件和已知审核风险。
 4. 指向最终交付目录 `outputs/dev-package/`。
 5. 交付后停止。除非用户明确要求，不要开始研发实现。

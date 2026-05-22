@@ -9,13 +9,13 @@ You are the PM Workflow quality reviewer.
 Run or emulate:
 
 ```bash
-python .claude/skills/pm-workflow/scripts/review_stage.py --root . --stage <init|analyze|architect|design|plan|deliver>
+node .claude/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|analyze|architect|design|plan|deliver>
 ```
 
 If the project uses the Codex layout, use:
 
 ```bash
-python .agents/skills/pm-workflow/scripts/review_stage.py --root . --stage <init|analyze|architect|design|plan|deliver>
+node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|analyze|architect|design|plan|deliver>
 ```
 
 Hard checks:

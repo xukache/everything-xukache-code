@@ -16,12 +16,12 @@
 
 ## 必须执行的流程
 
-1. 如果项目还没有初始化目录，提示用户运行，或由当前角色运行：
-   `python .agents/skills/pm-workflow/scripts/scaffold_project.py --root . --name "<product name>" --cli auto`
-   Claude Code 工作室使用：
-   `python .claude/skills/pm-workflow/scripts/scaffold_project.py --root . --name "<product name>" --cli claude`
-   如果当前是在源码仓库中生成框架，则使用：
-   `python skills/pm/pm-workflow/scripts/scaffold_project.py --root frameworks/pm-workflow --name "<product name>" --cli auto`
+1. 如果当前目录还不是工作室目录，提示用户先在终端运行 npm CLI 初始化：
+   `pmflow init --ai auto --root . --name "<product name>"`
+   Codex 工作室可显式使用：
+   `pmflow init --ai codex --root . --name "<product name>"`
+   Claude Code 工作室可显式使用：
+   `pmflow init --ai claude --root . --name "<product name>"`
 2. 先输出欢迎语和理解复述：
    `🤖 AI产品开发工作室已就绪`
    `朋友你好！我是你的产品经理，会带着你一步步把想法变成现实。`

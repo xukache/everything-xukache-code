@@ -1,6 +1,6 @@
 # {{PRODUCT_NAME}} 工作室说明
 
-这是一个可直接进入并运行的产品开发工作室目录。它可以按 Codex 或 Claude Code 结构安装；脚手架会根据 `--cli auto|codex|claude` 选择对应目录。
+这是一个可直接进入并运行的产品开发工作室目录。它可以按 Codex 或 Claude Code 结构安装；`pmflow init` 会根据 `--ai auto|codex|claude` 选择对应目录。
 
 ## 目录说明
 
@@ -50,10 +50,10 @@ outputs/dev-package/
 ## 脚本
 
 ```bash
-python .agents/skills/pm-workflow/scripts/review_stage.py --root . --stage analyze
-python .agents/skills/pm-workflow/scripts/package_delivery.py --root .
-python .claude/skills/pm-workflow/scripts/review_stage.py --root . --stage analyze
-python .claude/skills/pm-workflow/scripts/package_delivery.py --root .
+node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage analyze
+node .agents/skills/pm-workflow/scripts/package_delivery.js --root .
+node .claude/skills/pm-workflow/scripts/review_stage.js --root . --stage analyze
+node .claude/skills/pm-workflow/scripts/package_delivery.js --root .
 ```
 
 ## 流程规则

@@ -9,16 +9,16 @@ user-invocable: true
 
 把一句模糊的产品想法，逐步变成可评审、可设计、可开发、可交付的施工蓝图。工作室按阶段串行推进，由 6 个角色协作：产品经理、需求分析师、技术架构师、界面设计师、开发规划师、质量审核官。
 
-当前仓库内 `skills/pm/pm-workflow` 是本技能的源码依据。真正给用户进入运行的工作室目录应由脚手架生成，例如 `frameworks/pm-workflow/`。Codex 工作室主入口位于 `.agents/skills/pm-workflow/`，Claude Code 工作室主入口位于 `.claude/skills/pm-workflow/`。
+当前 npm 包目录只维护两套平台镜像：`.codex/` 和 `.claude/`。用户通过 `pmflow init` 生成真正使用的工作室目录后，Codex 主入口位于 `.agents/skills/pm-workflow/`，Claude Code 主入口位于 `.claude/skills/pm-workflow/`。
 
 ## 平台结构
 
-本技能同时维护两套平台结构：
+本技能同时维护两套平台结构，避免外层源码目录和样例目录反复同步：
 
 - `.codex/`：Codex 版结构镜像，保留当前 `SKILL.md`、TOML agents、references、scripts、templates、role-skills、assets 和 bundled-skills。
 - `.claude/`：Claude Code 版结构，包含 `CLAUDE.md`、`settings.json`、Markdown subagents、slash commands 和 Claude Code 可识别的 `.claude/skills/`。
 
-根目录现有文件暂时作为兼容入口保留，避免已安装的 Codex skill 和脚手架路径失效。维护时需要同步根目录、`.codex/` 和 `.claude/` 中对应的流程契约。
+维护时只需要同步 `.codex/` 和 `.claude/` 中对应的流程契约。不要再依赖外层 `agents/`、`assets/`、`references/`、`role-skills/`、`templates/` 或 `frameworks/pm-workflow` 样例。
 
 ## 命令菜单
 
@@ -76,20 +76,17 @@ user-invocable: true
 - "开始打包" -> `deliver`
 - "当前进度" -> `status`
 
-## 框架结构
+## 初始化结构
 
-在源码仓库中生成一个可运行的工作室框架：
-
-```bash
-python skills/pm/pm-workflow/scripts/scaffold_project.py --root frameworks/pm-workflow --name "<product name>" --cli auto
-```
-
-`--cli auto` 会按目标目录选择结构：已有 `.claude/` 时生成 Claude Code 结构；已有 `.codex/` 或 `.agents/` 时生成 Codex 结构；空目录默认 Codex，并提示可用 `--cli claude` 覆盖。显式示例：
+使用 npm CLI 生成一个可运行的工作室目录：
 
 ```bash
-python skills/pm/pm-workflow/scripts/scaffold_project.py --root frameworks/pm-workflow --name "<product name>" --cli codex
-python skills/pm/pm-workflow/scripts/scaffold_project.py --root frameworks/pm-workflow-claude --name "<product name>" --cli claude
+pmflow init --ai auto --root ./pm-workflow-demo --name "<product name>"
+pmflow init --ai codex --root ./pm-workflow-demo --name "<product name>"
+pmflow init --ai claude --root ./pm-workflow-claude-demo --name "<product name>"
 ```
+
+`--ai auto` 会按目标目录选择结构：已有 `.claude/` 时生成 Claude Code 结构；已有 `.codex/` 或 `.agents/` 时生成 Codex 结构；空目录默认 Codex，并提示可用 `--ai claude` 覆盖。`pmflow init` 只依赖 Node.js，不依赖 Python。
 
 在生成后的框架目录中，Codex 脚本路径位于 `.agents/skills/pm-workflow/scripts/`，Claude Code 脚本路径位于 `.claude/skills/pm-workflow/scripts/`。
 
@@ -161,7 +158,7 @@ project-root/
     dev-package/
 ```
 
-`AGENTS.md` 是项目级总控说明。`.codex/agents/` 是 6 个角色配置。`.agents/skills/` 是当前项目内可调用的技能，其中 `impeccable/` 是界面原型自审和打磨能力。`pm-workflow/bundled-skills/impeccable/` 是随本技能一起分发的第三方技能副本，脚手架会优先从这里复制到项目的 `.agents/skills/impeccable/`，避免用户只安装 pm-workflow 时缺少依赖。角色阶段模板放在对应角色技能的 `templates/` 目录中；`docs/` 只放运行时生成的阶段产物。`prototype/` 是高保真网页原型区。`outputs/dev-package/` 是最终开发交付包。
+`AGENTS.md` 是项目级总控说明。`.codex/agents/` 是 6 个角色配置。`.agents/skills/` 是当前项目内可调用的技能，其中 `impeccable/` 是界面原型自审和打磨能力。`pm-workflow/bundled-skills/impeccable/` 是随本技能一起分发的第三方技能副本，`pmflow init` 会优先从这里复制到项目的 `.agents/skills/impeccable/`，避免用户只安装 pm-workflow 时缺少依赖。角色阶段模板放在对应角色技能的 `templates/` 目录中；`docs/` 只放运行时生成的阶段产物。`prototype/` 是高保真网页原型区。`outputs/dev-package/` 是最终开发交付包。
 
 Claude Code 结构会创建 `.claude/CLAUDE.md`、`.claude/settings.json`、`.claude/agents/*.md`、`.claude/commands/pm-workflow/*.md`、`.claude/skills/pm-workflow/`、`.claude/skills/<role>/` 和 `.claude/skills/impeccable/`。Claude Code 版 Impeccable 必须是 Claude skill 格式，不包含 Codex 专用的 `agents/openai.yaml`。
 
@@ -330,7 +327,7 @@ UI 页面访问逻辑必须从真实使用流程推导，页面数量以完成�
 运行：
 
 ```bash
-python .agents/skills/pm-workflow/scripts/package_delivery.py --root .
+node .agents/skills/pm-workflow/scripts/package_delivery.js --root .
 ```
 
 交付包输出到 `outputs/dev-package/`。打包脚本只报告缺失文件，不判断质量完整性；质量结论由质量审核官负责。
@@ -346,7 +343,7 @@ python .agents/skills/pm-workflow/scripts/package_delivery.py --root .
 运行：
 
 ```bash
-python .agents/skills/pm-workflow/scripts/review_stage.py --root . --stage <init|analyze|architect|design|plan|deliver>
+node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|analyze|architect|design|plan|deliver>
 ```
 
 质量审核官必须使用三种机制：

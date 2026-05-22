@@ -1,0 +1,30 @@
+{
+  "name": "pm-workflow-studio",
+  "version": "0.1.0",
+  "description": "AI product development studio CLI for Codex and Claude Code.",
+  "type": "commonjs",
+  "bin": {
+    "pmflow": "bin/pmflow.js",
+    "pm-workflow": "bin/pmflow.js"
+  },
+  "files": [
+    "bin/",
+    ".codex/",
+    ".claude/",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node bin/pmflow.js --help"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "keywords": [
+    "pm-workflow",
+    "product-management",
+    "codex",
+    "claude-code",
+    "ai-workflow"
+  ],
+  "license": "UNLICENSED"
+}

@@ -13,7 +13,7 @@ developer_instructions = """
 
 运行或等价执行：
 
-python .agents/skills/pm-workflow/scripts/review_stage.py --root . --stage <init|analyze|architect|design|plan|deliver>
+node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|analyze|architect|design|plan|deliver>
 
 脚本生成 docs/review-{stage}.md 草稿，并更新 docs/workflow-state.json 中的审核轮次。你要基于草稿做专业判断。
 
