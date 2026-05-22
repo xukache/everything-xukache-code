@@ -2,6 +2,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const readline = require("node:readline");
 
 const PACKAGE_ROOT = path.resolve(__dirname, "..");
 const CODEX_MIRROR = path.join(PACKAGE_ROOT, ".codex");
@@ -26,6 +27,8 @@ function printHelp() {
   console.log(`PM Workflow Studio
 
 Usage:
+  pmflow
+  pmflow init
   pmflow init [--ai auto|codex|claude] [--root <dir>] [--name <product name>]
   pm-workflow init [--ai auto|codex|claude] [--root <dir>] [--name <product name>]
 
@@ -36,9 +39,13 @@ Options:
               claude: generate .claude structure for Claude Code.
   --root        Target workspace directory. Defaults to current directory.
   --name        Product name for generated templates. Defaults to "My Product".
+  -i, --interactive
+               Start the interactive setup wizard.
   -h, --help    Show help.
 
 Examples:
+  pmflow
+  pmflow init
   pmflow init --ai codex --root ./pm-workflow-demo --name "习惯打卡"
   pmflow init --ai claude --root ./pm-workflow-claude-demo --name "习惯打卡"
   pmflow init --ai auto --name "习惯打卡"
@@ -53,6 +60,20 @@ function fail(message) {
   console.error("Run `pmflow --help` for usage.");
   process.exit(1);
 }
+
+const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
+const color = {
+  cyan: (value) => (useColor ? `\u001b[36m${value}\u001b[0m` : value),
+  dim: (value) => (useColor ? `\u001b[2m${value}\u001b[0m` : value),
+  green: (value) => (useColor ? `\u001b[32m${value}\u001b[0m` : value),
+  bold: (value) => (useColor ? `\u001b[1m${value}\u001b[0m` : value),
+};
+
+const symbol = {
+  pointer: useColor ? color.cyan("?") : "?",
+  done: useColor ? color.green("✔") : "✔",
+  arrow: useColor ? color.cyan("›") : "›",
+};
 
 function exists(target) {
   return fs.existsSync(target);
@@ -89,6 +110,7 @@ function parseInitArgs(argv) {
     ai: "auto",
     root: ".",
     name: "My Product",
+    interactive: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -96,6 +118,10 @@ function parseInitArgs(argv) {
     if (arg === "-h" || arg === "--help") {
       printHelp();
       process.exit(0);
+    }
+    if (arg === "-i" || arg === "--interactive") {
+      options.interactive = true;
+      continue;
     }
     if (arg === "--ai" || arg === "--cli") {
       const value = argv[index + 1];
@@ -138,6 +164,188 @@ function parseInitArgs(argv) {
   }
 
   return options;
+}
+
+function createPrompt() {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  return {
+    input: process.stdin,
+    output: process.stdout,
+    ask(question) {
+      return new Promise((resolve) => {
+        rl.question(question, (answer) => resolve(answer.trim()));
+      });
+    },
+    close() {
+      rl.close();
+    },
+  };
+}
+
+function printInteractiveHeader() {
+  console.log("");
+  console.log(color.bold("PM Workflow Studio"));
+  console.log(color.dim("Create a Codex or Claude Code product workspace."));
+  console.log("");
+}
+
+function promptLine(label, defaultValue) {
+  const suffix = defaultValue ? ` ${color.dim(`(${defaultValue})`)}` : "";
+  return `${symbol.pointer} ${label}${suffix} ${symbol.arrow} `;
+}
+
+function printAnswer(label, value) {
+  console.log(`${symbol.done} ${label}: ${color.green(value)}`);
+}
+
+async function askText(prompt, label, defaultValue) {
+  const answer = await prompt.ask(promptLine(label, defaultValue));
+  const value = answer || defaultValue;
+  printAnswer(label, value);
+  return value;
+}
+
+async function askAi(prompt, defaultValue) {
+  const choices = [
+    ["1", "auto", "Auto, choose by target directory"],
+    ["2", "codex", "Codex, generate .codex + .agents"],
+    ["3", "claude", "Claude Code, generate .claude"],
+  ];
+
+  if (!prompt.input.isTTY || !prompt.output.isTTY) {
+    return defaultValue;
+  }
+
+  return new Promise((resolve) => {
+    let selected = Math.max(
+      0,
+      choices.findIndex(([, value]) => value === defaultValue)
+    );
+    let renderedLines = 0;
+    const input = prompt.input;
+    const output = prompt.output;
+    const wasRaw = input.isRaw;
+
+    const render = () => {
+      if (renderedLines > 0) {
+        readline.moveCursor(output, 0, -renderedLines);
+        readline.clearScreenDown(output);
+      }
+
+      const lines = [`${symbol.pointer} Select AI workspace ${color.dim(`(${defaultValue})`)}`];
+      for (const [, value, description] of choices) {
+        const active = choices[selected][1] === value;
+        const marker = value === defaultValue ? color.dim(" (default)") : "";
+        const cursor = active ? symbol.arrow : " ";
+        const label = active ? color.green(value.padEnd(6)) : value.padEnd(6);
+        lines.push(`  ${cursor} ${label} ${color.dim(description)}${marker}`);
+      }
+      lines.push(color.dim("    Use ↑/↓ to move. Space to select."));
+
+      output.write(`${lines.join("\n")}\n`);
+      renderedLines = lines.length;
+    };
+
+    const cleanup = (clear) => {
+      input.off("keypress", onKeypress);
+      if (input.isTTY) input.setRawMode(wasRaw);
+      if (clear && renderedLines > 0) {
+        readline.moveCursor(output, 0, -renderedLines);
+        readline.clearScreenDown(output);
+      }
+    };
+
+    const finish = () => {
+      const value = choices[selected][1];
+      cleanup(true);
+      printAnswer("AI workspace", value);
+      resolve(value);
+    };
+
+    const onKeypress = (str, key = {}) => {
+      if (key.ctrl && key.name === "c") {
+        cleanup(false);
+        output.write("\n");
+        process.exit(130);
+      }
+      if (key.name === "up" || key.name === "k") {
+        selected = (selected - 1 + choices.length) % choices.length;
+        render();
+        return;
+      }
+      if (key.name === "down" || key.name === "j") {
+        selected = (selected + 1) % choices.length;
+        render();
+        return;
+      }
+      if (key.name === "space" || key.name === "return" || str === " ") {
+        finish();
+      }
+    };
+
+    readline.emitKeypressEvents(input);
+    input.on("keypress", onKeypress);
+    input.setRawMode(true);
+    input.resume();
+    render();
+  });
+}
+
+async function askConfirm(prompt, label, defaultValue = true) {
+  const suffix = defaultValue ? "Y/n" : "y/N";
+  while (true) {
+    const answer = (await prompt.ask(promptLine(label, suffix))).toLowerCase();
+    if (!answer) {
+      printAnswer(label, defaultValue ? "yes" : "no");
+      return defaultValue;
+    }
+    if (["y", "yes", "是", "确认"].includes(answer)) {
+      printAnswer(label, "yes");
+      return true;
+    }
+    if (["n", "no", "否", "取消"].includes(answer)) {
+      printAnswer(label, "no");
+      return false;
+    }
+    console.log(color.dim("  Enter y or n."));
+  }
+}
+
+async function runInteractiveInit(seedOptions = {}) {
+  if (!process.stdin.isTTY || !process.stdout.isTTY) {
+    fail("interactive mode requires a TTY. Use `pmflow init --ai auto --root . --name \"My Product\"` in non-interactive environments.");
+  }
+
+  const prompt = createPrompt();
+  try {
+    printInteractiveHeader();
+
+    const name = await askText(prompt, "What is your product named?", seedOptions.name || "My Product");
+    const root = await askText(prompt, "Where should the project be created?", seedOptions.root || ".");
+
+    const ai = await askAi(prompt, seedOptions.ai || "auto");
+
+    console.log("");
+    console.log(color.bold("Summary"));
+    console.log(`  Product:   ${color.green(name)}`);
+    console.log(`  Directory: ${color.green(path.resolve(root))}`);
+    console.log(`  Workspace: ${color.green(ai)}`);
+    console.log("");
+
+    const confirmed = await askConfirm(prompt, "Create this workspace?", true);
+    if (!confirmed) {
+      console.log(color.dim("Canceled."));
+      return;
+    }
+
+    console.log("");
+    createStructure(root, name, normalizeAi(ai));
+  } finally {
+    prompt.close();
+  }
 }
 
 function templatePath(name) {
@@ -442,22 +650,41 @@ function createStructure(rootInput, productName, cli) {
   console.log(nextStep);
 }
 
-function runInit(argv) {
+async function runInit(argv) {
   const options = parseInitArgs(argv);
+  if (options.interactive || (argv.length === 0 && process.stdin.isTTY && process.stdout.isTTY)) {
+    await runInteractiveInit(options);
+    return;
+  }
   createStructure(options.root, options.name, options.ai);
 }
 
-function main() {
+async function main() {
   const [command, ...rest] = process.argv.slice(2);
   if (!command || command === "-h" || command === "--help") {
+    if (!command) {
+      if (process.stdin.isTTY && process.stdout.isTTY) {
+        await runInteractiveInit();
+      } else {
+        printHelp();
+      }
+      return;
+    }
     printHelp();
     return;
   }
   if (command === "init") {
-    runInit(rest);
+    await runInit(rest);
     return;
   }
   fail(`unknown command "${command}".`);
 }
 
-main();
+main().catch((error) => {
+  if (error && error.message) {
+    console.error(`pmflow: ${error.message}`);
+  } else {
+    console.error(error);
+  }
+  process.exit(1);
+});

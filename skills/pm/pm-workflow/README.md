@@ -17,6 +17,20 @@ pm-workflow --help
 
 ## 快速开始
 
+交互式：
+
+```bash
+pmflow
+```
+
+或：
+
+```bash
+pmflow init
+```
+
+CLI 会逐步询问产品名称、项目目录和 AI 工作区结构；选择题可用上下键移动，空格确认。适合不想记参数的日常使用。
+
 Codex：
 
 ```bash
@@ -49,6 +63,7 @@ claude
 
 ```bash
 pmflow init --ai auto --name "习惯打卡"
+pmflow init --interactive
 pmflow init --ai codex --root ./pm-workflow-demo --name "习惯打卡"
 pmflow init --ai claude --root ./pm-workflow-claude-demo --name "习惯打卡"
 ```
@@ -56,6 +71,7 @@ pmflow init --ai claude --root ./pm-workflow-claude-demo --name "习惯打卡"
 - `--ai auto|codex|claude`：选择生成结构。默认 `auto`；空目录默认 Codex；目录已有 `.claude/` 时选择 Claude Code。
 - `--root <dir>`：目标项目目录，默认当前目录。
 - `--name <product name>`：产品名称，默认 `My Product`。
+- `--interactive` / `-i`：进入交互式创建向导。
 - `--cli` 是 `--ai` 的别名。
 
 当前支持 Codex 和 Claude Code；`kiro` 暂未支持。
