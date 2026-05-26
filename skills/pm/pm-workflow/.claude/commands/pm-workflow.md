@@ -11,3 +11,4 @@ Read:
 
 Route natural-language commands to the matching command file under `.claude/commands/pm-workflow/`.
 
+Before moving from any stage into review or the next stage, ensure the stage artifact contains a valid `## 文档同步检查` table. Downstream stages may not silently change upstream facts.

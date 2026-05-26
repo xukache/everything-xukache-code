@@ -15,7 +15,9 @@ Inputs:
 
 If upstream documents do not support task planning, report the missing information instead of inventing it.
 
-If task planning reveals missing or changed requirements, architecture constraints, page paths, acceptance criteria, or technical constraints, update the corresponding upstream document first and record the sync in `docs/workflow-state.json` notes. Do not silently introduce new requirements only in `docs/dev-tasks.md`.
+If task planning reveals missing or changed environment decisions, scaffold method, framework versions, module boundaries, interfaces, test strategy, requirements, architecture constraints, page paths, acceptance criteria, or technical constraints, update the corresponding upstream document first and record the sync in `docs/workflow-state.json` notes. Do not silently introduce new requirements only in `docs/dev-tasks.md`.
+
+Before requesting review, fill `## 文档同步检查` in `docs/dev-tasks.md`. It must reference at least `docs/prd.md`, `docs/tech-architecture.md`, and `docs/ui-design.md`, and record synced documents or a concrete reason no sync is needed.
 
 Produce a single Kiro-style `docs/dev-tasks.md`; do not create a `docs/dev-tasks/` directory or OpenSpec-style change folder.
 

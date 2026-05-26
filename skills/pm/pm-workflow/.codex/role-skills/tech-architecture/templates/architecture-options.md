@@ -61,3 +61,9 @@
 ## 用户确认原文
 
 > 
+
+## 文档同步检查
+
+| 变更项 | 影响类型 | 是否影响上游事实 | 已检查文档 | 已同步文档 | 不需要同步原因 | 责任阶段 | 检查结论 |
+|---|---|---|---|---|---|---|---|
+| 架构候选与最终选择 | 技术约束/部署/数据/接口 | 是/否 | `docs/prd.md`、`docs/handoff-prd.md`、`docs/tech-architecture.md`、`docs/handoff-architecture.md` | 待填写 | 待填写 | architect | 待确认 |

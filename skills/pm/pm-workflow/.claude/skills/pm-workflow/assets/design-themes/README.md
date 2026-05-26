@@ -2,7 +2,7 @@
 
 这个目录存放 `pm-workflow` 可复用的设计主题。每个主题使用一个文件夹，主题正文统一放在 `DESIGN.md`，预览样例统一放在 `examples.html`。主题文件只描述视觉语言、tokens、组件、布局和提示词，不承担主题选择逻辑。
 
-主题选择规则统一维护在 `../../references/design-theme-selection.md`。新增主题时，文件夹名使用具体风格名，例如 `linear/`、`vercel/`、`stripe/`。
+主题选择规则统一维护在 `../../../ui-prototype-design/references/design-theme-selection.md`。新增主题时，文件夹名使用具体风格名，例如 `linear/`、`vercel/`、`stripe/`。
 
 ## 可用主题
 
@@ -17,7 +17,7 @@
 
 使用顺序：
 
-1. 先按 `../../references/design-theme-selection.md` 生成候选主题和设计方向确认表单。
+1. 先按 `../../../ui-prototype-design/references/design-theme-selection.md` 生成候选主题和设计方向确认表单。
 2. 展示候选主题的 `examples.html` 预览路径，让用户确认后再进入 HTML 原型。
 3. 如果用户指定品牌、参考站点、截图或风格名，再查找 `open-design/<slug>/DESIGN.md`。
 4. 如果使用 Open Design 主题，必须在 `notes/requirements.md` 里记录源文件，例如 `assets/design-themes/open-design/linear-app/DESIGN.md`。

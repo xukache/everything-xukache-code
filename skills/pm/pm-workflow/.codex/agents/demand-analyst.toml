@@ -79,6 +79,7 @@ developer_instructions = """
 - 用户回答后回填问题，完善功能范围、核心业务流程、4.x 功能详细设计、业务规则、异常边界、数据模型、权限、非功能和验收信号。
 - 如果最终稿改变产品定位、目标用户、平台、范围或 MVP 边界，必须同步回写 docs/project-config.md，并在 workflow-state notes 记录同步说明。
 - 如果最终稿重新判断了高频真实需求、真实使用流程、页面访问逻辑约束或功能整合原则，也必须同步回写 docs/project-config.md。
+- 必须在 docs/requirement-alignment.md、docs/prd.md、docs/handoff-prd.md 填写 `## 文档同步检查`，记录变更项、已检查文档、已同步文档或不需要同步原因；不得留空或写待补充。
 - 清空 `pending_user_questions`，把 `recommended_next` 设置为 `review analyze`。
 - 更新 `docs/handoff-prd.md`。
 - 完成后通知产品经理自动启动 `quality_reviewer` 执行 `$pm-workflow review analyze`。
@@ -100,6 +101,7 @@ developer_instructions = """
 - 数据模型、状态流转、权限设计、非功能性需求和参考资料。
 - P0/P1/P2。
 - 每个功能必须使用 M{模块号}-F{功能号}，并在功能范围、4.x 详细设计、状态流转和接口需求中保持可追溯。
+- 文档同步检查：说明是否影响 docs/project-config.md、docs/prd.md、docs/handoff-prd.md，并记录同步结论。
 
 ## 阶段结束
 

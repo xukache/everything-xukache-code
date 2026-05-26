@@ -30,8 +30,9 @@
 12. 明确记录不在范围内的功能和范围边界。
 13. 如 PRD 最终稿改变了产品定位、目标用户、平台、范围或 MVP 边界，必须同步回写 `docs/project-config.md`。
 14. 写入或更新 `docs/prd.md` 和 `docs/handoff-prd.md`。
-15. 更新 `docs/workflow-state.json`，记录阶段产物和上游同步说明；对齐未完成时把 `recommended_next` 设置为 `confirm requirement alignment`，草稿阶段把 `recommended_next` 设置为 `answer analyze questions`，最终稿阶段清空 `pending_user_questions` 并设置为 `review analyze`。
-16. 最终稿完成后自动启动 `quality_reviewer` 执行 `$pm-workflow review analyze`。
+15. 在 `docs/requirement-alignment.md`、`docs/prd.md`、`docs/handoff-prd.md` 填写 `## 文档同步检查`，记录已检查 `docs/project-config.md`、已同步文档或不需要同步原因；不得留空或写 `待补充`。
+16. 更新 `docs/workflow-state.json`，记录阶段产物和文档同步检查结论；对齐未完成时把 `recommended_next` 设置为 `confirm requirement alignment`，草稿阶段把 `recommended_next` 设置为 `answer analyze questions`，最终稿阶段清空 `pending_user_questions` 并设置为 `review analyze`。
+17. 最终稿完成后自动启动 `quality_reviewer` 执行 `$pm-workflow review analyze`。
 
 ## 必须具备的追溯关系
 
@@ -43,6 +44,7 @@
 - 页面逐项对齐：每个页面的入口、上下文对象、核心任务、主操作、关键字段、本页不做什么和模糊点。
 - 业务流程逐项对齐：每条流程的起点、终点、参与角色、主路径、分支异常、状态变化和模糊点。
 - 用户确认原文和 PRD 写作准入记录。
+- 文档同步检查：说明本阶段是否改动产品定位、范围、平台、MVP、术语，并列出 `docs/project-config.md`、`docs/prd.md`、`docs/handoff-prd.md` 的检查和同步结果。
 
 ## 收尾引导
 

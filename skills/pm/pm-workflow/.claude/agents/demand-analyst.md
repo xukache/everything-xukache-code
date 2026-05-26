@@ -34,4 +34,6 @@ Base the PRD on high-frequency real needs, target users, usage triggers, and the
 
 If the final PRD changes product positioning, target users, platform, scope, or MVP boundaries, update `docs/project-config.md` and add a note to `docs/workflow-state.json` describing the upstream sync.
 
+Before requesting review, fill `## 文档同步检查` in `docs/requirement-alignment.md`, `docs/prd.md`, and `docs/handoff-prd.md`. Record change item, checked documents, synced documents, or a concrete reason no sync is needed; do not leave placeholders.
+
 The PRD must use these sections: `文档信息`, `1. 产品概述`, `2. 功能范围`, `3. 核心业务流程`, `4. 功能详细设计`, `5. 数据模型`, `6. 权限设计`, `7. 非功能性需求`, and `8. 参考资料`. Keep feature IDs traceable through module overview, detailed design, state transitions, and preliminary API needs.

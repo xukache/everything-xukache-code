@@ -19,7 +19,9 @@ Do not reach conclusions too early. The agent must not stop clarification after 
 
 Stage 00 must also identify who uses the product frequently, the user's real high-frequency need, the trigger for opening the product, the user's start-to-finish flow, and the page/module reduction boundary. These details drive true-demand analysis and simple page access logic.
 
-When a downstream document changes requirements, platform, scope, feature IDs, technical constraints, page paths, or acceptance criteria, update the corresponding upstream source document and record the sync in `docs/workflow-state.json` notes.
+Document synchronization is a hard gate. When any stage changes requirements, scope, feature IDs, interfaces, data, technical constraints, page paths, interaction flows, states, acceptance criteria, test strategy, or development execution method, check upstream source documents, current stage documents, and downstream handoff documents. Fill `## 文档同步检查` in the stage artifact before review.
+
+The sync table must include: 变更项, 影响类型, 是否影响上游事实, 已检查文档, 已同步文档, 不需要同步原因, 责任阶段, 检查结论. Do not leave it blank, use placeholders, or hide behind generic "not applicable" wording.
 
 Technical architecture must be confirmed iteratively before producing a final architecture document. Clarify platform, deployment environment, data scale, third-party dependencies, runtime/framework versions, package manager, scaffold method, team maintenance constraints, and unacceptable options.
 

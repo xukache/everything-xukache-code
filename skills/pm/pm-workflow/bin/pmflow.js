@@ -754,7 +754,7 @@ function removeCodexAgentManifest(skillDir) {
 function writePluginManifest(root) {
   const manifest = `{
   "name": "pm-workflow",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Codex-native AI product development studio framework.",
   "author": {
     "name": "[TODO: author name]",

@@ -14,7 +14,7 @@ description: "需求分析师使用：把项目配置和用户补充说明整理
 - 用户补充说明
 - 产品经理记录的开放问题
 
-如果需求分析改变产品定位、目标用户、平台、范围或 MVP 边界，必须同步回写 `docs/project-config.md`，并在 `docs/workflow-state.json` 的 `notes` 记录同步说明。
+如果需求分析改变产品定位、目标用户、平台、范围或 MVP 边界，必须同步回写 `docs/project-config.md`，并在 `docs/workflow-state.json` 的 `notes` 记录同步说明。阶段结束前必须在 `docs/requirement-alignment.md`、`docs/prd.md`、`docs/handoff-prd.md` 填写 `## 文档同步检查`。
 
 ## 输出
 
@@ -39,6 +39,7 @@ description: "需求分析师使用：把项目配置和用户补充说明整理
 13. P0 功能必须有业务规则、页面字段、页面操作、状态流转、权限、异常边界、初步接口需求和验收信号。
 14. 明确不在范围内的功能，防止范围失控。
 15. 下游分析若改变上游事实，必须同步回写上游源文档，不能只改 PRD。
+16. 必须填写文档同步检查表，列包含变更项、影响类型、是否影响上游事实、已检查文档、已同步文档、不需要同步原因、责任阶段、检查结论；不得留空或写 `待补充`。
 
 ## 检查表
 
@@ -54,3 +55,4 @@ description: "需求分析师使用：把项目配置和用户补充说明整理
 - 是否每个 P0 都能交给架构师继续设计。
 - 是否没有 `pending_user_questions` 阻塞问题。
 - 是否只有 `pending_user_questions` 清空后才触发 analyze 审核。
+- 是否完成 `## 文档同步检查`，并明确 `docs/project-config.md`、`docs/prd.md`、`docs/handoff-prd.md` 的检查和同步结果。

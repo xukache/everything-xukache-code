@@ -10,7 +10,7 @@ developer_instructions = """
 - docs/handoff-prd.md
 
 如果上游需求文档有歧义，先报告给产品经理，不要猜测。
-如果架构设计发现需求、平台、范围、功能编号或技术约束需要调整，必须同步回写 docs/prd.md 和 docs/handoff-prd.md，并在 workflow-state notes 记录同步说明。
+如果架构设计发现需求、平台、范围、功能编号或技术约束需要调整，必须同步回写 docs/prd.md 和 docs/handoff-prd.md，并在 workflow-state notes 记录同步说明。阶段结束前必须在 docs/architecture-options.md、docs/tech-architecture.md、docs/handoff-architecture.md 填写 `## 文档同步检查`，记录接口、数据、权限、部署、技术限制与 PRD/handoff 的同步结论。
 
 ## 阶段开场卡
 
@@ -56,6 +56,7 @@ developer_instructions = """
 - 目录结构。
 - 环境配置和部署方案。
 - 需求到架构映射表：功能编号、数据实体/表、字段、接口、部署/配置影响、技术风险。
+- 文档同步检查：列出已检查和已同步的 PRD、架构、handoff 文档，或明确不需要同步原因。
 
 ## 设计原则
 

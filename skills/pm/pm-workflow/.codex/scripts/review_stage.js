@@ -57,6 +57,9 @@ const DOWNSTREAM_ROLE = {
 const PLACEHOLDER_PATTERNS = ["待补充", "TODO", "[TODO]", "{{"];
 const PLAN_VAGUE_PATTERNS = ["类似上一步", "写相关测试", "处理边界情况", "待替换为真实"];
 const PLAN_COARSE_PATTERNS = ["实现完整模块", "完成全部接口", "搭建整个项目", "创建所有测试", "接入完整业务流程"];
+const B_END_SIGNAL_PATTERN = /后台|管理系统|运营台|SaaS|工作台|CRM|ERP|数据看板|审批|配置|权限|表格|列表|筛选|批量操作/i;
+const VBEN_ARCO_REJECTION_PATTERN = /不采用\s*(Vben|Arco)|拒绝\s*(Vben|Arco)|用户明确拒绝\s*(Vben|Arco)|技术架构硬冲突|架构硬冲突|不属于\s*B\s*端/i;
+const SYNC_RISK_PATTERN = /需求|范围|功能编号|M\d+-F\d+|接口|API|数据|数据库|字段|权限|部署|环境|技术约束|框架|版本|包管理器|脚手架|页面|路径|交互|状态|验收|测试策略|测试命令|开发执行|模块边界/i;
 const EMOJI_PATTERN = /[\u{1F1E6}-\u{1F1FF}\u{1F300}-\u{1FAFF}\u{2700}-\u{27BF}\u{2600}-\u{26FF}]/u;
 const FONT_SIZE_PATTERN = /font-size\s*:\s*([0-9]+(?:\.[0-9]+)?)px/gi;
 const REQUIRED_CLARIFICATION_CRITERIA = {
@@ -68,6 +71,32 @@ const REQUIRED_CLARIFICATION_CRITERIA = {
   first_platform: "首版平台与使用设备",
   mvp_boundary: "最小可用 demo 必做和暂不做边界，包括能力合并、页面/模块减负和人工兜底原则",
   no_blocking_questions: "无阻塞开放问题，包括关键术语和概念没有歧义",
+};
+
+const STAGE_SYNC_DOCS = {
+  analyze: ["docs/requirement-alignment.md", "docs/prd.md", "docs/handoff-prd.md"],
+  architect: ["docs/architecture-options.md", "docs/tech-architecture.md", "docs/handoff-architecture.md"],
+  design: [
+    "docs/ui-design-brief.md",
+    "docs/ui-information-architecture.md",
+    "docs/ui-design-tokens.md",
+    "docs/ui-build-tasks.md",
+    "docs/ui-design.md",
+    "docs/handoff-ui.md",
+    "docs/prototype-review.md",
+  ],
+  plan: ["docs/dev-tasks.md"],
+  deliver: [
+    "docs/project-config.md",
+    "docs/prd.md",
+    "docs/tech-architecture.md",
+    "docs/ui-design.md",
+    "docs/dev-tasks.md",
+    "docs/handoff-prd.md",
+    "docs/handoff-architecture.md",
+    "docs/handoff-ui.md",
+    "AGENTS.md",
+  ],
 };
 
 function defaultClarification() {
@@ -301,6 +330,23 @@ function designUiRuleViolations(root) {
   const targets = [];
   const uiDoc = path.join(root, "docs", "ui-design.md");
   if (exists(uiDoc)) targets.push(uiDoc);
+  const designDocPaths = [
+    "docs/ui-design-brief.md",
+    "docs/ui-information-architecture.md",
+    "docs/ui-design-tokens.md",
+    "docs/ui-build-tasks.md",
+    "docs/ui-design.md",
+    "docs/prototype-review.md",
+  ];
+  const designDocs = designDocPaths.map((name) => readText(path.join(root, name))).join("\n");
+  const upstreamDocs = [
+    "docs/prd.md",
+    "docs/tech-architecture.md",
+    "docs/ui-design-brief.md",
+    "docs/ui-information-architecture.md",
+    "docs/ui-design-tokens.md",
+    "docs/ui-design.md",
+  ].map((name) => readText(path.join(root, name))).join("\n");
   const prototypeDir = path.join(root, "prototype");
   if (exists(prototypeDir)) {
     for (const file of walkFiles(prototypeDir)) {
@@ -330,6 +376,122 @@ function designUiRuleViolations(root) {
   if (smallFontHits.length) {
     violations.push(`UI 主体字号疑似小于 16px: ${uniqueSorted(smallFontHits).slice(0, 8).join(", ")}`);
   }
+  if (!/assets\/design-themes/i.test(designDocs) || !/DESIGN\.md/.test(designDocs)) {
+    violations.push("UI 阶段必须记录已读取的主题库路径和具体 DESIGN.md，例如 assets/design-themes/<theme>/DESIGN.md");
+  }
+  if (!/(主题扫描命令|find\s+.*DESIGN\.md|已读取主题\s*`?DESIGN\.md`?)/i.test(designDocs)) {
+    violations.push("UI 阶段必须记录主题库扫描命令或已读取主题 DESIGN.md 的证据");
+  }
+  const isBEnd = B_END_SIGNAL_PATTERN.test(upstreamDocs);
+  const hasVbenArcoRejection = VBEN_ARCO_REJECTION_PATTERN.test(designDocs);
+  if (isBEnd && !hasVbenArcoRejection) {
+    if (!/assets\/design-themes\/vben\/DESIGN\.md|vben\/DESIGN\.md/i.test(designDocs)) {
+      violations.push("B 端 UI 必须读取 assets/design-themes/vben/DESIGN.md 作为 Vben 主色来源，除非记录用户拒绝或技术硬冲突");
+    }
+    if (!/Vben\s*主色|主色.*Vben|仅用于主色|只.*主色/i.test(designDocs)) {
+      violations.push("B 端 UI 必须声明 Vben 主题只用于主色/品牌色 token，不作为组件规范");
+    }
+    if (!/Arco Design Pro/i.test(designDocs) || !/Arco Design Vue/i.test(designDocs)) {
+      violations.push("B 端 UI 必须明确 Arco Design Pro Vue / Arco Design Vue 作为组件框架，除非记录用户拒绝或技术硬冲突");
+    }
+    if (!/一比一引用|一比一复用|完全按照\s*Arco Design Pro|复用\s*Arco Design Pro/i.test(designDocs)) {
+      violations.push("B 端 UI 必须声明组件、布局和交互一比一引用或复用 Arco Design Pro，不得从 Vben 主题仿造组件");
+    }
+    if (!/#4F63D7/.test(designDocs) || !/--primary-6|primary-6|themeColor/i.test(designDocs)) {
+      violations.push("B 端 UI 必须记录 Vben 主色 #4F63D7 如何覆盖 Arco primary token 或 Pro themeColor");
+    }
+    if (!/组件级\s*Token|组件级 token|组件级-token|组件级.*应用表/i.test(designDocs)) {
+      violations.push("B 端 UI 必须在 docs/ui-design-tokens.md / docs/ui-design.md 中产出组件级 token 应用表，不能只写使用 Arco");
+    }
+    const requiredComponentTokens = ["Button", "Input", "Table", "Form", "Modal", "Drawer", "Card", "Progress"];
+    const missingComponentTokens = requiredComponentTokens.filter((name) => !new RegExp(name, "i").test(designDocs));
+    if (missingComponentTokens.length) {
+      violations.push(`B 端组件级 token 应用表缺少组件：${missingComponentTokens.join(", ")}`);
+    }
+    if (!/Progress/i.test(designDocs) || !/#4F63D7|--primary-6/.test(designDocs) || !/var\(--color-fill-3\)/.test(designDocs)) {
+      violations.push("B 端 Progress 必须声明完成进度固定使用项目主色 #4F63D7/--primary-6，轨道使用 var(--color-fill-3)");
+    }
+    if (/Progress[\s\S]{0,120}(按百分比|根据进度).{0,20}(绿|橙|红|变色)/i.test(designDocs)) {
+      violations.push("B 端 Progress 不得按进度百分比变化为绿/橙/红，只能使用项目主色表示完成进度");
+    }
+  }
+  return violations;
+}
+
+function documentSyncViolations(root, stage) {
+  const docs = STAGE_SYNC_DOCS[stage] || [];
+  if (!docs.length) return [];
+
+  const availableDocs = docs.filter((name) => readText(path.join(root, name)).trim());
+  if (!availableDocs.length) return [];
+
+  const textByDoc = new Map(availableDocs.map((name) => [name, readText(path.join(root, name))]));
+  const combined = [...textByDoc.values()].join("\n\n");
+  const violations = [];
+
+  if (!/##\s*文档同步检查|#\s*文档同步检查/.test(combined)) {
+    violations.push(`${stage} 阶段缺少“文档同步检查”固定区，无法确认上下游文档已同步。`);
+    return violations;
+  }
+
+  const requiredColumns = ["变更项", "影响类型", "是否影响上游事实", "已检查文档", "已同步文档", "不需要同步原因", "责任阶段", "检查结论"];
+  const missingColumns = requiredColumns.filter((column) => !combined.includes(column));
+  if (missingColumns.length) {
+    violations.push(`文档同步检查表缺少列：${missingColumns.join(", ")}`);
+  }
+
+  const syncRows = combined
+    .split(/\r?\n/)
+    .filter((line) => /^\|/.test(line) && !/^\|\s*-+/.test(line) && !requiredColumns.every((column) => line.includes(column)));
+  const meaningfulRows = syncRows.filter((line) => {
+    const normalized = line.replace(/\s+/g, "");
+    return (
+      /已同步|不需要同步|无影响|已检查|已确认|不涉及|一致/.test(normalized) &&
+      !/待补充|TODO|\{\{/.test(normalized)
+    );
+  });
+  if (!meaningfulRows.length) {
+    violations.push("文档同步检查表未填写有效结论，不能全为空、待补充或不适用。");
+  }
+
+  if (SYNC_RISK_PATTERN.test(combined) && !meaningfulRows.some((line) => /已同步|不需要同步|无影响|不涉及/.test(line))) {
+    violations.push("阶段文档包含需求/接口/页面/测试等高风险变更信号，但未记录已同步文档或不需要同步原因。");
+  }
+
+  if (stage === "plan") {
+    const tasks = readText(path.join(root, "docs", "dev-tasks.md"));
+    const requiredSources = ["docs/prd.md", "docs/tech-architecture.md", "docs/ui-design.md"];
+    const missingSources = requiredSources.filter((source) => !tasks.includes(source));
+    if (missingSources.length) {
+      violations.push(`docs/dev-tasks.md 必须在文档同步检查或追溯区引用来源文档：${missingSources.join(", ")}`);
+    }
+    const baselineRisk = /环境|框架|版本|包管理器|脚手架|测试策略|测试命令|技术基线|模块边界|接口/.test(tasks);
+    const architectureSyncRecorded = meaningfulRows.some(
+      (line) => line.includes("docs/tech-architecture.md") && /已同步|不需要同步|无影响|不涉及|上游已明确/.test(line)
+    );
+    if (baselineRisk && !architectureSyncRecorded) {
+      violations.push("plan 阶段涉及环境/框架/脚手架/测试策略/接口等技术基线变化，必须在有效同步行中记录 docs/tech-architecture.md 已同步或不需要同步原因。");
+    }
+  }
+
+  if (stage === "design") {
+    const designRisk = /页面|模块|交互|路径|字段|状态|响应式|验收/.test(combined);
+    const prdSyncRecorded = meaningfulRows.some((line) => line.includes("docs/prd.md") && /已同步|不需要同步|无影响|不涉及/.test(line));
+    const uiHandoffRecorded = meaningfulRows.some((line) => line.includes("docs/handoff-ui.md") && /已同步|不需要同步|无影响|不涉及/.test(line));
+    if (designRisk && (!prdSyncRecorded || !uiHandoffRecorded)) {
+      violations.push("design 阶段涉及页面/交互/字段/状态/验收等变更信号，必须在有效同步行中记录 docs/prd.md 和 docs/handoff-ui.md 的同步结论。");
+    }
+  }
+
+  if (stage === "deliver") {
+    const deliverText = combined;
+    const requiredDeliverDocs = ["docs/prd.md", "docs/tech-architecture.md", "docs/ui-design.md", "docs/dev-tasks.md", "AGENTS.md"];
+    const missingDeliverDocs = requiredDeliverDocs.filter((doc) => !deliverText.includes(doc));
+    if (missingDeliverDocs.length) {
+      violations.push(`deliver 阶段文档同步检查必须覆盖：${missingDeliverDocs.join(", ")}`);
+    }
+  }
+
   return violations;
 }
 
@@ -436,6 +598,7 @@ function scoreStage(root, stage) {
   const architectureViolations = stage === "architect" ? architectureOptionViolations(root) : [];
   const designUiViolations = stage === "design" ? designUiRuleViolations(root) : [];
   const planViolations = stage === "plan" ? planQualityViolations(root) : [];
+  const syncViolations = documentSyncViolations(root, stage);
 
   if (initNotConfirmed) {
     if (clarification.status !== "user_confirmed") missing.push("docs/workflow-state.json: clarification.status=user_confirmed");
@@ -450,15 +613,16 @@ function scoreStage(root, stage) {
   missing.push(...architectureViolations);
   missing.push(...designUiViolations);
   missing.push(...planViolations);
+  missing.push(...syncViolations);
 
   let completeness = missing.length ? Math.max(1, Math.round((10 * presentCount) / Math.max(requiredCount, 1))) : 10;
   if (hasPlaceholder) completeness = Math.min(completeness, 6);
-  if (initNotConfirmed || analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length) completeness = Math.min(completeness, 5);
+  if (initNotConfirmed || analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length || syncViolations.length) completeness = Math.min(completeness, 5);
 
   let clarity = totalChars > 2500 && !hasPlaceholder ? 9 : totalChars > 800 ? 6 : 3;
   if (stage === "plan" && !planViolations.length && !hasPlaceholder) clarity = Math.max(clarity, 8);
   if (hasPlaceholder) clarity = Math.min(clarity, 5);
-  if (analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length) clarity = Math.min(clarity, 5);
+  if (analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length || syncViolations.length) clarity = Math.min(clarity, 5);
 
   let [consistency, consistencyNote] = consistencyScore(root, stage);
   if (initNotConfirmed) {
@@ -466,7 +630,7 @@ function scoreStage(root, stage) {
     consistencyNote = "需求澄清尚未获得用户确认或关键术语概念未对齐，不能视为初始化完成。";
   }
   let executability = executabilityScore(contents, stage, hasPlaceholder);
-  if (initNotConfirmed || analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length) executability = Math.min(executability, 5);
+  if (initNotConfirmed || analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length || syncViolations.length) executability = Math.min(executability, 5);
 
   const scores = {
     completeness,
@@ -485,6 +649,7 @@ function scoreStage(root, stage) {
   scores.architecture_option_violations = architectureViolations;
   scores.design_ui_violations = designUiViolations;
   scores.plan_violations = planViolations;
+  scores.sync_violations = syncViolations;
   return scores;
 }
 
@@ -712,8 +877,9 @@ function buildIssues(scores, roundNo) {
   if (scores.analyze_has_open_questions) issues.push("- workflow-state 仍存在 pending_user_questions，不能触发 analyze 通过。");
   if ((scores.requirement_alignment_violations || []).length) issues.push(`- PRD 前需求对齐门禁未通过：${scores.requirement_alignment_violations.join("；")}`);
   if ((scores.architecture_option_violations || []).length) issues.push(`- 技术架构选型门禁未通过：${scores.architecture_option_violations.join("；")}`);
-  if (scores.design_ui_violations.length) issues.push("- UI 原型存在 emoji 或主体字号小于 16px 的问题，需要改为图标资源并提高默认字号。");
+  if (scores.design_ui_violations.length) issues.push(`- UI 阶段门禁未通过：${scores.design_ui_violations.join("；")}`);
   if ((scores.plan_violations || []).length) issues.push(`- 开发任务规划不符合 Kiro 风格实施计划要求：${scores.plan_violations.join("；")}`);
+  if ((scores.sync_violations || []).length) issues.push(`- 文档同步硬门禁未通过：${scores.sync_violations.join("；")}`);
   if (scores.consistency < 6) issues.push("- 跨阶段追溯不足，需求功能编号没有完整映射到当前阶段产物。");
   if (scores.executability < 6) issues.push("- 下游执行信号不足，缺少验收、验证、接口、状态或任务粒度信息。");
   if (roundNo >= 3 && scores.average < 8) issues.push("- 已达到第三轮未通过，建议停止推进并先修复关键问题。");
@@ -724,11 +890,11 @@ function buildRework(stage, result, scores, roundNo) {
   if (result === "通过") return "本阶段已通过，无需返工。可根据用户偏好做非阻塞微调。";
   const suggestions = {
     init: "补齐 8 个澄清判断锚点、六个核心问题、高频真实需求、最值得先做的一段流程、Agent 能力、结果落点、最小 demo 边界和工作量粗估。",
-    analyze: "先完成 docs/requirement-alignment.md：模块、页面、业务流程逐项和用户确认，模糊点全部有最终确认，用户明确同意写 PRD；再让用户回答 pending_user_questions，补齐新 PRD 的功能范围、核心业务流程、4.x 功能详细设计、数据模型、权限、非功能、Mx-Fx 功能编号和异常边界。",
-    architect: "先补齐 docs/architecture-options.md：提供至少 2 个候选架构方案、五维度对比、推荐理由、用户最终选择和确认原文；再补齐需求到数据库、字段、接口、部署配置和技术风险的映射。",
-    design: "补齐 docs/ui-design-brief.md、docs/ui-information-architecture.md、docs/ui-design-tokens.md、docs/ui-build-tasks.md、2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、docs/prototype-review.md、Playwright 截图证据、Impeccable 审查记录、页面清单、需求到界面映射和完整原型路径。",
-    plan: "补齐 Kiro 风格实施计划结构、技术基线锁定、编号 checklist、3-6 条具体动作、测试/验收动作、_需求 追溯，并继续拆小粒度过粗的任务。",
-    deliver: "补齐缺失文档、审核报告、AGENTS.md 和 prototype 后重新打包。",
+    analyze: "先完成 docs/requirement-alignment.md：模块、页面、业务流程逐项和用户确认，模糊点全部有最终确认，用户明确同意写 PRD；再让用户回答 pending_user_questions，补齐新 PRD 的功能范围、核心业务流程、4.x 功能详细设计、数据模型、权限、非功能、Mx-Fx 功能编号和异常边界，并填写文档同步检查。",
+    architect: "先补齐 docs/architecture-options.md：提供至少 2 个候选架构方案、五维度对比、推荐理由、用户最终选择和确认原文；再补齐需求到数据库、字段、接口、部署配置和技术风险的映射，并填写文档同步检查。",
+    design: "补齐 docs/ui-design-brief.md、docs/ui-information-architecture.md、docs/ui-design-tokens.md、docs/ui-build-tasks.md、主题库扫描记录、每个方向读取的 DESIGN.md 路径、B 端 Vben 主色记录、项目主色色阶覆盖、组件级 token 应用表、Progress 固定主色规则、Arco Design Pro 组件一比一引用记录、2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、docs/prototype-review.md、Playwright 截图证据、Impeccable 审查记录、页面清单、需求到界面映射、完整原型路径和文档同步检查。",
+    plan: "补齐 Kiro 风格实施计划结构、技术基线锁定、编号 checklist、3-6 条具体动作、测试/验收动作、_需求 追溯，并继续拆小粒度过粗的任务；同时填写文档同步检查并引用 PRD/架构/UI 来源文档。",
+    deliver: "补齐缺失文档、审核报告、AGENTS.md、prototype 和全链路文档同步检查后重新打包。",
   };
   const extra = roundNo >= 3 && scores.average < 8 ? "\n\n第三轮仍未通过：请向用户报告继续推进的具体风险。" : "";
   return suggestions[stage] + extra;

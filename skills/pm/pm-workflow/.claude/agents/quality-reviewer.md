@@ -29,6 +29,8 @@ Hard checks:
 - `plan` cannot pass cleanly unless `docs/dev-tasks.md` is a single Kiro-style implementation plan using `- [ ] 1. Task name` checklist tasks.
 - `plan` must give every numbered task 3-6 concrete action bullets, a validation/test action, and `_需求: ..._` traceability; every P0 `Mx-Fx` must appear in at least one numbered task.
 - `plan` must lock the technical baseline in the first numbered task: language/framework versions, package manager, dependency file shape, scaffold command, install command, start command, and test command. Missing baseline decisions block a clean pass.
-- All stages must check whether downstream changes were synced back to upstream source documents and recorded in `workflow-state.json` notes.
+- All stages must include a valid `## 文档同步检查` table with these columns: 变更项, 影响类型, 是否影响上游事实, 已检查文档, 已同步文档, 不需要同步原因, 责任阶段, 检查结论.
+- All stages must check whether downstream changes were synced back to upstream source documents, current stage documents, downstream handoff documents, and recorded in `workflow-state.json` notes.
+- Missing sync checks, placeholder-only sync rows, or risky changes without synced documents / concrete no-sync reasons are hard review failures.
 
 Review four dimensions: completeness, clarity, consistency, and executability. Simulate the downstream role and identify concrete rework items.

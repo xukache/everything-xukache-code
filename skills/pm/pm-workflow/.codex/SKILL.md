@@ -45,8 +45,16 @@ user-invocable: true
 5. **进入 analyze 前的默认硬门槛**：`docs/workflow-state.json` 中 `clarification.status` 必须为 `user_confirmed`。若用户强行跳过，必须把风险写入 `notes` 和下一阶段文档，并保留 `user_confirmation_required=true`。
 6. **每阶段开始时**：先输出“阶段开场卡”，说明当前用户情况、推荐方案、选择原因、接下来会产出什么。
 7. **每阶段结束后**：必须请用户选择下一步：审核、修改当前阶段、进入推荐下一阶段。
-8. **审核是软门控**：审核意见用于引导流程，但不强制阻断下一命令。若用户选择带风险继续，必须把风险记录到 `docs/workflow-state.json` 或下一阶段文档。
-9. **上游同步**：任何阶段修改文档时，如果发现需求、平台、范围、功能编号、技术约束、页面路径或验收标准发生变化，必须同步回写对应上游源文档，并在 `docs/workflow-state.json` 的 `notes` 记录同步了哪些文档。
+8. **审核是软门控，硬门禁除外**：一般审核意见用于引导流程，不强制阻断下一命令；但需求确认、架构选型、原型开发前确认和文档同步检查属于硬门禁，未满足时不得伪装为通过。
+9. **文档同步硬门禁**：下游阶段不得静默改变上游事实。任何阶段如果改动需求、范围、功能编号、接口、数据、技术约束、页面路径、交互流程、状态、验收标准、测试策略或开发执行方式，必须检查并记录上游源文档、当前阶段文档和下游交接文档是否已同步。每个阶段结束前必须在对应产物中填写 `## 文档同步检查`，包含 `变更项 / 影响类型 / 是否影响上游事实 / 已检查文档 / 已同步文档 / 不需要同步原因 / 责任阶段 / 检查结论`；不得留空、不得写 `待补充`、不得用泛泛的“不适用”替代。`review <stage>` 发现缺失或明显未同步时直接不通过。
+
+阶段同步映射：
+
+- `analyze`：改产品定位、范围、平台、MVP、术语时同步 `docs/project-config.md`，最终同步 `docs/prd.md` 和 `docs/handoff-prd.md`。
+- `architect`：改接口、数据、权限、部署、技术限制时同步 `docs/tech-architecture.md` 和 `docs/handoff-architecture.md`；影响功能边界或验收时回写 `docs/prd.md` / `docs/handoff-prd.md`。
+- `design`：改页面、模块、交互路径、字段、状态、响应式、验收信号时同步 `docs/prd.md`、`docs/handoff-prd.md`、必要时 `docs/tech-architecture.md` / `docs/handoff-architecture.md`，并同步 `docs/handoff-ui.md`。
+- `plan`：发现环境、脚手架、框架版本、模块边界、接口、测试策略或验收标准与前文不一致时，先回写 PRD/架构/UI/handoff 文档，并在 `docs/dev-tasks.md` 记录同步检查。
+- `deliver`：最终对 PRD、架构、UI、dev-tasks、handoff 和 `AGENTS.md` 做全链路一致性检查。
 
 ## Agent 调度规则
 
@@ -308,7 +316,7 @@ UI 页面访问逻辑必须从真实使用流程推导，页面数量以完成�
 
 完整原型实现前必须产出 `docs/ui-build-tasks.md`，任务按垂直切片拆分，每个任务都要能独立打开、独立交互、独立截图验证。每完成一个 UI 任务必须立即验证，通过后才能进入下一任务。
 
-如果 UI 阶段为了体验合理性调整了页面清单、交互路径、字段、状态、技术约束或验收标准，或发现页面/模块过多、流程不顺，必须同步回写 `docs/prd.md`、`docs/handoff-prd.md`、`docs/project-config.md` 或 `docs/tech-architecture.md`，不能只在 UI 文档或原型里静默新增范围。
+如果 UI 阶段为了体验合理性调整了页面清单、交互路径、字段、状态、技术约束或验收标准，或发现页面/模块过多、流程不顺，必须同步回写 `docs/prd.md`、`docs/handoff-prd.md`、`docs/project-config.md`、必要时 `docs/tech-architecture.md` / `docs/handoff-architecture.md`，并在 UI 主文档和 `docs/handoff-ui.md` 的 `## 文档同步检查` 中记录，不能只在 UI 文档或原型里静默新增范围。
 
 原型目录职责：
 

@@ -12,7 +12,7 @@ developer_instructions = """
 - prototype/
 
 如果上游文档不够支撑任务拆解，先报告问题，不要编造。
-如果任务拆解发现需求、架构、页面路径、验收标准或技术约束缺口，必须同步回写对应上游文档，并在 workflow-state notes 记录同步说明；不要只在 docs/dev-tasks.md 中静默新增需求。
+如果任务拆解发现环境、脚手架、框架版本、模块边界、接口、页面路径、验收标准、测试策略或技术约束缺口，必须同步回写对应上游文档，并在 workflow-state notes 记录同步说明；不要只在 docs/dev-tasks.md 中静默新增需求。阶段结束前必须在 docs/dev-tasks.md 填写 `## 文档同步检查`，至少引用 docs/prd.md、docs/tech-architecture.md、docs/ui-design.md。
 
 ## 任务拆解原则
 
@@ -42,6 +42,7 @@ developer_instructions = """
 - 任务拆分规则。
 - 实施计划。
 - 技术基线锁定任务：必须明确版本、包管理器、脚手架创建命令、安装命令、启动命令、测试命令；缺失时列为阻塞确认项。
+- 文档同步检查：技术基线、环境、脚手架、模块任务、测试策略和验收标准必须能追溯到 PRD/架构/UI；计划阶段修正前文时必须列出回写文档。
 
 ## 禁止事项
 

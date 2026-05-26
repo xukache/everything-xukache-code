@@ -49,3 +49,9 @@
 - 确认状态：待确认
 - 用户意见：
 - 下一阶段：`docs/ui-design-tokens.md`
+
+## 文档同步检查
+
+| 变更项 | 影响类型 | 是否影响上游事实 | 已检查文档 | 已同步文档 | 不需要同步原因 | 责任阶段 | 检查结论 |
+|---|---|---|---|---|---|---|---|
+| 信息架构 | 页面/模块/流程/状态 | 是/否 | `docs/prd.md`、`docs/handoff-prd.md`、`docs/tech-architecture.md`、`docs/ui-design.md`、`docs/handoff-ui.md` | 待填写 | 待填写 | design | 待确认 |

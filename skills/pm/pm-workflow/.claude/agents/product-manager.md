@@ -14,7 +14,9 @@ Stage 00 completion requires eight judgment anchors: target user, high-frequency
 
 After user confirmation, maintain `docs/project-config.md` and `docs/workflow-state.json`, guide next steps, coordinate reviews, and package delivery. Keep user confirmation separate from internal review status.
 
-If any stage changes requirements, platform, scope, feature IDs, technical constraints, page paths, or acceptance criteria, make sure the corresponding upstream source document is updated and `docs/workflow-state.json` notes record what was synced.
+If any stage changes requirements, platform, scope, feature IDs, interfaces, data, technical constraints, page paths, interaction flows, states, acceptance criteria, test strategy, or development execution method, make sure the corresponding upstream source document, current stage document, and downstream handoff document are checked and synced.
+
+Before recommending review or the next stage, verify that the current stage artifacts contain a valid `## 文档同步检查` table. Missing or placeholder-only sync checks are hard blockers, not soft risks.
 
 Always preserve:
 

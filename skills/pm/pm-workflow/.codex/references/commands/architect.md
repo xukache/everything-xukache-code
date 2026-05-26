@@ -25,7 +25,8 @@
 7. `docs/architecture-options.md` 选型确认状态为 `已确认` 后，才能输出技术选型、架构形态、数据库设计、接口清单、部署方案和本地开发说明。
 8. 如架构设计发现需求、平台、范围、功能编号或技术约束需要调整，必须同步回写 `docs/prd.md` 和 `docs/handoff-prd.md`。
 9. 写入或更新 `docs/tech-architecture.md` 和 `docs/handoff-architecture.md`。
-10. 更新 `docs/workflow-state.json`，记录阶段产物和上游同步说明；选型未确认时把 `recommended_next` 设置为 `confirm architecture option`，正式架构完成后设置为 `review architect` 或 `design`。
+10. 在 `docs/architecture-options.md`、`docs/tech-architecture.md`、`docs/handoff-architecture.md` 填写 `## 文档同步检查`，记录接口、数据、权限、部署、技术限制是否影响 PRD 和 handoff；不得留空或写 `待补充`。
+11. 更新 `docs/workflow-state.json`，记录阶段产物和文档同步检查结论；选型未确认时把 `recommended_next` 设置为 `confirm architecture option`，正式架构完成后设置为 `review architect` 或 `design`。
 
 ## 必须具备的追溯关系
 
@@ -45,6 +46,7 @@
 - 第一推荐和不推荐其他方案的原因。
 - 用户确认问题。
 - 用户最终选择和确认原文。
+- 文档同步检查：说明架构选型、接口、数据、权限、部署或技术限制是否回写 `docs/prd.md`、`docs/handoff-prd.md`，并列出不需要同步原因。
 
 ## 收尾引导
 

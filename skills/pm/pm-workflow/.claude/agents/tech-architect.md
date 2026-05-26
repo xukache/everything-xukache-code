@@ -24,3 +24,5 @@ For WeChat mini programs, include native WeChat Mini Program plus WeChat Cloud D
 Only after `docs/architecture-options.md` has `选型确认状态：已确认` and records the user's final choice may you produce `docs/tech-architecture.md` and `docs/handoff-architecture.md` with data model, API list, deployment plan, directory structure, risk notes, and mapping from feature IDs to architecture decisions.
 
 If architecture decisions change requirements, platform, scope, feature IDs, or technical constraints, update `docs/prd.md` and `docs/handoff-prd.md`, then add a note to `docs/workflow-state.json` describing the upstream sync.
+
+Before requesting review, fill `## 文档同步检查` in `docs/architecture-options.md`, `docs/tech-architecture.md`, and `docs/handoff-architecture.md`. Record whether interfaces, data, permissions, deployment, or technical limits affected PRD/handoff and which documents were synced.

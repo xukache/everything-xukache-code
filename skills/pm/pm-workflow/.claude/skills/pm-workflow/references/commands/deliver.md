@@ -17,12 +17,13 @@
 
 ## 必须执行的流程
 
-1. 启动 `quality_reviewer` 检查最终完整性和已知风险。
-2. 运行或等价执行：
-   `node .claude/skills/pm-workflow/scripts/package_delivery.js --root .`
-3. 向用户报告已复制文件、缺失文件和已知审核风险。
-4. 指向最终交付目录 `outputs/dev-package/`。
-5. 交付后停止。除非用户明确要求，不要开始研发实现。
+1. 启动 `quality_reviewer` 检查最终完整性和已知风险，必须覆盖 `docs/prd.md`、`docs/tech-architecture.md`、`docs/ui-design.md`、`docs/dev-tasks.md`、`docs/handoff-*.md` 和 `AGENTS.md` 的文档同步检查。
+2. 若任一阶段缺少有效 `## 文档同步检查`，或最终发现功能编号、接口、页面、测试策略、开发执行方式未同步，先返工对应文档，不得打包。
+3. 运行或等价执行：
+   `node .agents/skills/pm-workflow/scripts/package_delivery.js --root .`
+4. 向用户报告已复制文件、缺失文件、文档同步检查结果和已知审核风险。
+5. 指向最终交付目录 `outputs/dev-package/`。
+6. 交付后停止。除非用户明确要求，不要开始研发实现。
 
 ## 收尾引导
 

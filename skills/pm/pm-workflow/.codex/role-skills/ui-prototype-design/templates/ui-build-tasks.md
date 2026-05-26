@@ -58,3 +58,9 @@
   - 覆盖能力：critique/audit/adapt/layout/typeset/clarify/animate/harden/polish。
   - 修改文件：原型文件、`docs/prototype-review.md`。
   - 验证：每个问题都有处理结果或遗留说明。
+
+## 文档同步检查
+
+| 变更项 | 影响类型 | 是否影响上游事实 | 已检查文档 | 已同步文档 | 不需要同步原因 | 责任阶段 | 检查结论 |
+|---|---|---|---|---|---|---|---|
+| UI 构建任务 | 页面路径/交互/状态/验收 | 是/否 | `docs/prd.md`、`docs/handoff-prd.md`、`docs/tech-architecture.md`、`docs/ui-design.md`、`docs/handoff-ui.md` | 待填写 | 待填写 | design | 待确认 |

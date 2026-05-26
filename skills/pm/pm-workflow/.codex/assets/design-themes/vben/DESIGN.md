@@ -361,10 +361,54 @@
 ## 十四、项目定制项
 
 > 只有本章允许写项目级定制。第一到十三章、第十五章不得混入项目定制值。
+> B 端项目使用本章把 Vben 主色写入 Arco 全局主色 token；组件形态、尺寸、圆角、阴影、间距和交互仍按第十五章 Arco 组件 token 执行。
 
 | 定制项 | 项目值 | 说明 |
 |---|---|---|
 | Vben 项目主题色 | `#4F63D7` | 用于覆盖 Arco Pro 官方默认 `themeColor: #165DFF` |
+
+### 14.1 项目主色覆盖色阶
+
+使用 `@arco-design/color@0.4.0` 的 `generate('#4F63D7', { list: true, format: 'hex' })` 生成项目主色色阶。B 端项目必须统一用这一套主色覆盖 Arco 主色 token，不允许页面或组件临时取近似蓝紫色。
+
+| 项目 token | 项目值 | 应覆盖的 Arco token | 用途 |
+|---|---|---|---|
+| `--primary-1` | `#E8EFFF` | `--primary-1` / `@color-primary-1` | 弱选中背景、浅底强调 |
+| `--primary-2` | `#C6D4F7` | `--primary-2` / `@color-primary-2` | hover 浅底、弱边框 |
+| `--primary-3` | `#A6B8EF` | `--primary-3` / `@color-primary-3` | 禁用主色背景 |
+| `--primary-4` | `#879CE7` | `--primary-4` / `@color-primary-4` | 次强调 |
+| `--primary-5` | `#6A80DF` | `--primary-5` / `@color-primary-5` | hover |
+| `--primary-6` | `#4F63D7` | `--primary-6` / `@color-primary-6` / `themeColor` | 主按钮、当前导航、链接、选中态、进度条 |
+| `--primary-7` | `#3241B4` | `--primary-7` / `@color-primary-7` | active |
+| `--primary-8` | `#1B2592` | `--primary-8` / `@color-primary-8` | 深色强调 |
+| `--primary-9` | `#0A0F6F` | `--primary-9` / `@color-primary-9` | 深色背景强调 |
+| `--primary-10` | `#00014D` | `--primary-10` / `@color-primary-10` | 极深强调 |
+
+Vue 项目优先通过 Arco `ConfigProvider` / Pro `themeColor` 设置主色；HTML 原型必须在全局样式中一次性定义上述 `--primary-*`，并把主按钮、链接、当前导航、选中态、焦点态、进度条统一指向这些 token。禁止在单个页面写 `#165DFF`、`#4f63d7` 以外的临时主色或硬编码 hover/active 色。
+
+### 14.2 组件应用层锁定规则
+
+| 组件/场景 | 必须使用的 Arco token | 项目应用规则 |
+|---|---|---|
+| Button | `@btn-border-radius`、`@btn-size-*-height`、`@btn-primary-color-bg`、`@btn-primary-color-bg_hover`、`@btn-primary-color-bg_active` | 高度、内边距、圆角按第十五章 Button；primary 使用项目主色色阶，不按页面临时改色。 |
+| Input / Textarea / Select / Cascader / TreeSelect | `@input-border-radius`、`@input-size-default-height`、`@input-color-border_focus`、选择类 option height | 输入和选择控件统一 `32px` 默认高度、`@radius-small` 圆角、主色聚焦态；同一表单内不得混用多套高度。 |
+| Table | `@table-size-*-padding-*`、`@table-border-radius`、`@table-color-bg-header-cell`、`@table-color-bg-body-row_hover` | 表格页必须使用 Arco 表格密度和 hover 背景；不得给每行加卡片阴影或自定义大圆角。 |
+| Form | `@form-size-default-margin-item-bottom`、`@form-margin-label-right`、`@form-color-text-label` | 表单项间距、标签间距和说明文字按 Arco token；不得按页面感觉临时调。 |
+| Modal / Drawer | `@modal-border-radius`、`@modal-default-size-width`、`@drawer-size-header-height`、`@drawer-padding-*` | 弹窗、抽屉宽度、头部高、内边距按 Arco；浮层阴影使用 Arco popup shadow。 |
+| Card / Descriptions / Collapse | `@card-border-radius`、`@card-size-default-padding-horizontal-body`、`@descriptions-border-radius`、`@collapse-border-radius` | 普通信息容器使用 Arco 卡片圆角和内边距；禁止同页出现多套卡片圆角。 |
+| Tag / Badge | `@tag-border-radius`、`@tag-size-default`、`@badge-size-count-height` | 标签和徽标只用于状态/分类；圆角、高度、字号按 Arco，不临时放大。 |
+| Tabs / Breadcrumb / Pagination / Menu | 对应第十五章导航 token | 当前导航、选中 tab、分页 active 使用项目主色；菜单高度和间距按 Arco Pro。 |
+| Progress | `@progress-line-color-inner-bg`、`@progress-line-color-line-bg` | 进度条只使用项目主色 `--primary-6/#4F63D7` 表示完成进度，轨道使用 `var(--color-fill-3)`；禁止按百分比变化为绿/橙/红。只有明确成功/失败/警告状态组件才能使用语义色。 |
+| Tooltip / Popover / Dropdown / Popconfirm | `@popup-border-radius`、`@popup-shadow`、`@dropdown-option-height` | 浮层圆角和阴影按 Arco；下拉项高度统一，不按页面单独调。 |
+| Skeleton / Spin / Empty / Result | 对应第十五章反馈 token | 加载、空态、结果页使用 Arco 尺寸和主色 icon；不得使用 emoji 或自绘风格。 |
+| Slider / Timeline / Tree / Anchor | 对应第十五章数据展示 token | 轨道、节点、树节点行高和 active 色按 Arco；不得为单页自定义线宽和节点大小。 |
+
+### 14.3 原型和开发实现检查
+
+- `docs/ui-design-tokens.md` 必须落出“组件级 token 应用表”，至少覆盖 Button、Input、Select、Table、Form、Modal、Drawer、Card、Tag、Tabs、Progress、Tooltip、Dropdown、Skeleton、Spin、Empty。
+- `docs/ui-design.md` 必须声明主色覆盖方式、组件 token 来源和“不允许页面级临时样式”的规则。
+- `docs/prototype-review.md` 必须抽检至少 8 类组件，记录截图或代码位置，确认颜色、字号、控件高度、圆角、阴影、间距来自统一 token。
+- 若项目不是 Vue 技术栈，也必须按 Arco token 值在当前技术栈中复刻；不得因为不是 Vue 就改用自定义组件尺度。
 
 ---
 

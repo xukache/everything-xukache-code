@@ -67,6 +67,39 @@
 
 仅在项目被识别为 B 端网页时填写；只记录本次自审实际用到的规范章节和验收标准，不粘贴整份参考文档。
 
+## Vben 主色与 Arco 组件抽检记录
+
+- 是否记录主题库 README：
+- 是否记录已读取 `DESIGN.md`：
+- 是否从 `assets/design-themes/vben/DESIGN.md` 提取 Vben 主色：
+- 是否声明 Vben 仅用于主色/品牌色 token：
+- 是否明确 Arco Design Pro Vue / Arco Design Vue 组件、布局和交互一比一引用策略：
+- 是否已按 `docs/ui-design-tokens.md` 统一主色色阶、字号、控件高度、间距、圆角、阴影：
+- 是否已逐项抽检组件级 token 应用表：
+- 是否存在不采用 Vben 主色或 Arco Design Pro 组件的用户拒绝或技术冲突证据：
+
+| 检查项 | 证据位置 | 结论 | 修正记录 |
+|---|---|---|---|
+| 主题路径可追溯 | `docs/ui-design.md` / `docs/ui-design-tokens.md` | 待补充 | 待补充 |
+| Vben 仅作为主色 | `docs/ui-design.md` / `docs/ui-design-tokens.md` | 待补充 | 待补充 |
+| Arco Design Pro 组件一比一引用 | `docs/ui-design.md` / `prototype/directions/` | 待补充 | 待补充 |
+| 项目主色色阶覆盖 Arco primary token | `docs/ui-design-tokens.md` / 全局样式 | 待补充 | 待补充 |
+| Progress 固定主色，不按百分比变色 | `docs/ui-design-tokens.md` / 原型截图 | 待补充 | 待补充 |
+| 原型落地 | `prototype/` 截图 | 待补充 | 待补充 |
+
+| 组件 | 抽检页面/截图 | 字号/高度 | 颜色 | 圆角 | 阴影/边框 | 间距 | 结论 |
+|---|---|---|---|---|---|---|---|
+| Button | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待确认 |
+| Input / Select | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待确认 |
+| Table | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待确认 |
+| Form | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待确认 |
+| Modal / Drawer | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待确认 |
+| Card | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待确认 |
+| Tag / Badge | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待确认 |
+| Progress | 待补充 | 待补充 | `--primary-6/#4F63D7` + `var(--color-fill-3)` | 待补充 | 待补充 | 待补充 | 待确认 |
+| Tooltip / Dropdown | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待确认 |
+| Skeleton / Spin / Empty | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 | 待确认 |
+
 | 检查阶段 | 规范章节 | 验收标准/禁止事项 | 截图或页面证据 | 处理结果 |
 |---|---|---|---|---|
 | 识别和边界 | `使用原则` | 待补充 | docs/ui-design.md | 待补充 |
@@ -94,3 +127,9 @@
 
 - 第 1 轮：
 - 第 2 轮：
+
+## 文档同步检查
+
+| 变更项 | 影响类型 | 是否影响上游事实 | 已检查文档 | 已同步文档 | 不需要同步原因 | 责任阶段 | 检查结论 |
+|---|---|---|---|---|---|---|---|
+| 原型自审和修正 | 页面/交互/状态/响应式/验收 | 是/否 | `docs/prd.md`、`docs/tech-architecture.md`、`docs/ui-design.md`、`docs/handoff-ui.md`、`docs/dev-tasks.md` | 待填写 | 待填写 | design | 待确认 |

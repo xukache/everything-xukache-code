@@ -20,6 +20,7 @@ description: "界面设计师使用：选择设计方向、编写界面与体验
 | 阶段 | 参考 | 模板 | 产物 |
 |---|---|---|---|
 | 设计流程 | `references/design-flow.md` | - | 阶段执行顺序和门禁 |
+| 设计主题选择 | `references/design-theme-selection.md` | - | 主题库扫描、`DESIGN.md` 必读和候选方向追溯 |
 | 设计简报 | `references/design-brief.md` | `templates/design-brief.md` | `docs/ui-design-brief.md` |
 | 信息架构 | `references/information-architecture.md` | `templates/information-architecture.md` | `docs/ui-information-architecture.md` |
 | 设计系统和 tokens | `references/design-tokens.md` | `templates/design-tokens.md` | `docs/ui-design-tokens.md` |
@@ -27,7 +28,7 @@ description: "界面设计师使用：选择设计方向、编写界面与体验
 | B 端设计规范 | `references/b-end-ui-design-spec.md` | - | 写入阶段文档和 `docs/ui-design.md` |
 | 视觉审查 | `references/visual-review.md` | `templates/prototype-review.md` | `docs/prototype-review.md` |
 
-如果 UI 阶段新增或调整页面清单、交互路径、字段、状态、技术约束或验收标准，或发现页面/模块过多、流程不顺，必须同步回写 `docs/project-config.md`、`docs/prd.md`、`docs/handoff-prd.md` 或 `docs/tech-architecture.md`，并在 `docs/workflow-state.json` 的 `notes` 记录同步说明。
+如果 UI 阶段新增或调整页面清单、交互路径、字段、状态、技术约束或验收标准，或发现页面/模块过多、流程不顺，必须同步回写 `docs/project-config.md`、`docs/prd.md`、`docs/handoff-prd.md`、必要时 `docs/tech-architecture.md` / `docs/handoff-architecture.md`，并在 `docs/workflow-state.json` 的 `notes` 记录同步说明。阶段结束前必须在 UI 阶段文档、`docs/handoff-ui.md` 和 `docs/prototype-review.md` 填写 `## 文档同步检查`。
 
 ## UI 硬规则
 
@@ -36,10 +37,25 @@ description: "界面设计师使用：选择设计方向、编写界面与体验
 - 通用 Web 和移动端正文、表单、按钮、列表文本不小于 16px；移动端优先保持 16px 起。
 - B 端网页、后台、运营台、管理系统和 SaaS 产品必须优先遵循 `references/b-end-ui-design-spec.md` 的文字、间距和控件参数，不强行套用 16px 起的移动端规则。
 - B 端常规正文可按规范使用 `13-16`，注释和辅助信息可按规范使用 `10-13`；但核心正文、主操作、关键状态必须清晰可读，不得为了信息密度牺牲可读性。
+- UI 阶段必须读取 `references/design-theme-selection.md`，并定位实际主题库中的 `DESIGN.md`；候选方向、tokens 和原型不得只写“参考主题资产”。
+- B 端网页、后台、运营台、管理系统、SaaS、CRM、ERP、数据看板、审批、配置、权限、表格、筛选、批量操作等场景，默认读取 `assets/design-themes/vben/DESIGN.md` 只提取 Vben 主色；组件框架、页面骨架、布局模式、表格、筛选、表单、弹窗、状态、导航和交互必须完全按照 Arco Design Pro Vue / Arco Design Vue 一比一引用和复用。
+- B 端项目必须先在 `docs/ui-design-tokens.md` 统一整体设计 token，再进入完整原型实现。字体、字号、颜色、控件大小、间距、圆角、阴影、边框和组件状态不得由页面临时决定。
+- B 端项目必须读取 `assets/design-themes/vben/DESIGN.md` 第十四章项目定制项和第十五章组件级 token，把 Vben 主色 `#4F63D7` 覆盖为 Arco primary 色阶，并产出组件级 token 应用表。Progress 固定使用项目主色和 Arco 轨道色，不按进度百分比变化颜色。
 
 ## B 端设计规范渐进读取
 
 当需求、PRD、架构或用户描述出现后台、管理系统、运营台、SaaS、工作台、CRM、ERP、数据看板、审批、配置、权限、表格、列表、筛选、批量操作等信号时，默认按 B 端网页处理，并引用 `references/b-end-ui-design-spec.md`。
+
+B 端主题和组件框架不是可选建议：识别为 B 端后，必须先读取 `references/design-theme-selection.md`，再读取主题库中的 `vben/DESIGN.md`。Vben 只提供主色和品牌色 token，不提供组件实现基准。候选方向的默认推荐项必须是 Arco Design Pro + Vben 主色方向；`docs/ui-design-tokens.md` 必须写明 `Arco Design Pro Vue / Arco Design Vue` 的组件框架优先级，并声明组件、布局和交互一比一引用 Arco Design Pro。若当前技术架构不是 Vue，仍按 Arco Design Pro 的信息架构、密度、布局、组件语义和交互模式在当前技术栈中复刻。
+
+`docs/ui-design-tokens.md` 不是泛泛的配色文档，必须成为组件实现契约：
+
+- 写明项目主色色阶：`#4F63D7` 作为 `--primary-6`，并使用 `vben/DESIGN.md` 第十四章生成的 `--primary-1` 到 `--primary-10` 覆盖 Arco primary token。
+- 写明 Vue 项目通过 Arco `ConfigProvider` / Pro `themeColor` 注入主色；HTML 原型通过全局 CSS 变量一次性注入主色，不允许页面级硬编码。
+- 至少覆盖 Button、Input、Select、Table、Form、Modal、Drawer、Card、Tag、Tabs、Progress、Tooltip、Dropdown、Skeleton、Spin、Empty 等组件。
+- 每个组件都要写清 Arco token、项目覆盖值、使用场景和禁止偏离项。
+- Progress 必须固定使用 `--primary-6/#4F63D7`，轨道使用 `var(--color-fill-3)`；不得按百分比变化颜色。
+- 原型自审必须抽检组件级 token 应用表，发现字体、字号、颜色、控件大小、间距、圆角或阴影不一致时先修正 token 或实现，再进入下一阶段。
 
 不要在 UI 阶段一开始完整读取整份 B 端参考文档。必须先用 `rg -n "^##|^###" references/b-end-ui-design-spec.md` 查看章节索引，再按当前阶段只读取必要章节；只有当某个设计决策需要参数、禁止事项或验收标准时，才读取对应段落。
 
@@ -118,22 +134,24 @@ B 端规范引用要求：
 
 1. 读取 `references/design-flow.md`，向用户说明 UI 阶段会依次产出设计简报、信息架构、tokens、方向 demo、UI 构建任务、完整原型和截图审查。
 2. 做上游前置审查，确认高频真实需求、使用人群和真实使用流程清晰；必须询问用户当前上下文是否足够理解显性需求和隐藏需求，发现歧义先报告。
-3. 读取 `references/design-brief.md`，扫描 PRD、架构、现有设计系统、组件、tokens、字体、图标和主题资产，生成 `docs/ui-design-brief.md`；未确认前不进入信息架构。
-4. 判断是否为 B 端网页；如果是，先查 `references/b-end-ui-design-spec.md` 章节索引，并在阶段文档和 `docs/ui-design.md` 建立 B 端规范引用记录。
-5. 读取 `references/information-architecture.md`，从真实使用流程推导页面访问逻辑、页面地图、页面任务卡、模块准入表和需求到界面追溯，生成 `docs/ui-information-architecture.md`；需要和用户反复确认页面边界。
-6. 读取 `references/design-tokens.md`，基于已确认方向和既有系统生成 `docs/ui-design-tokens.md`；B 端项目必须读取配色、画布、密度、组件表现和适配相关章节。
-7. 推荐 2-3 个差异化设计方向；为每个方向生成一个可打开的首页 demo，放在 `prototype/directions/`，并生成 `prototype/directions/index.html` 作为预览索引。
-8. 在 `docs/ui-design.md` 中汇总设计简报、IA、tokens、每个方向的 demo 路径和已采用的 B 端规则；没有 demo 的方向不得交给用户选择。
-9. 等用户选择，或在用户明确授权后使用第一推荐。
-10. 读取 `references/ui-build-tasks.md`，生成 `docs/ui-build-tasks.md`，把完整原型实现拆成可独立打开、独立截图验证的垂直切片任务。
-11. 暂停并提交原型开发前确认：向用户说明每个页面的核心任务、主操作、用户流程、保留模块、删除/后置模块、本页不做什么、跳转边界和上下文边界；未确认不得进入原型实现。
-12. 如果用户要求修正页面边界，先更新 `docs/ui-information-architecture.md`、`docs/ui-design.md` 和 `docs/ui-build-tasks.md` 并重新确认；用户明确确认后，才能基于选定方向构建完整高保真 HTML 原型。
-13. 按 `docs/ui-build-tasks.md` 顺序实现完整原型；每完成一个 UI 任务，必须打开对应路径、执行交互并验证通过后才能进入下一任务。
-14. 已采用的 B 端规则和 token 决策必须落成真实布局、字号、间距、控件高度、状态和响应式实现。
-15. 读取 `references/visual-review.md`，使用 Playwright 对候选 demo 和完整原型逐页截图，B 端项目必须覆盖 `1280x800`、`1440x900`，必要时补 `1920x1080`；非 B 端按实际设备覆盖 desktop/tablet/mobile。
-16. 使用 Impeccable 做专项审查和修正，最多两轮；B 端项目必须把发现问题反查到对应 B 端规范章节的禁止事项和验收标准。
-17. 写入 `docs/prototype-review.md`，记录截图证据、审查结论、原型开发前确认检查、B 端规范抽检、修正项和遗留问题。
-18. 如 UI 决策改变上游事实，回写上游文档并记录同步说明。
+3. 读取 `references/design-theme-selection.md`，定位主题库，读取主题库 `README.md`，列出候选 `DESIGN.md` 文件，并在阶段文档记录扫描命令和实际读取路径。
+4. 读取 `references/design-brief.md`，扫描 PRD、架构、现有设计系统、组件、tokens、字体、图标和主题资产，生成 `docs/ui-design-brief.md`；未确认前不进入信息架构。
+5. 判断是否为 B 端网页；如果是，先查 `references/b-end-ui-design-spec.md` 章节索引，读取 `vben/DESIGN.md`，并在阶段文档和 `docs/ui-design.md` 建立 B 端规范、Vben 主色 token、Arco Design Pro 组件框架引用记录。
+6. 读取 `references/information-architecture.md`，从真实使用流程推导页面访问逻辑、页面地图、页面任务卡、模块准入表和需求到界面追溯，生成 `docs/ui-information-architecture.md`；需要和用户反复确认页面边界。
+7. 读取 `references/design-tokens.md`，基于已确认方向和既有系统生成 `docs/ui-design-tokens.md`；B 端项目必须读取配色、画布、密度、组件表现和适配相关章节，写明 Vben 主色值、项目主色色阶、Arco Design Pro Vue / Arco Design Vue 一比一引用策略和组件级 token 应用表。
+8. 推荐 2-3 个差异化设计方向；每个方向必须列出已读取的 `DESIGN.md` 路径，B 端默认推荐方向必须是 Arco Design Pro + Vben 主色；为每个方向生成一个可打开的首页 demo，放在 `prototype/directions/`，并生成 `prototype/directions/index.html` 作为预览索引。
+9. 在 `docs/ui-design.md` 中汇总设计简报、IA、tokens、每个方向的 demo 路径、已读取主题 `DESIGN.md` 路径和已采用的 B 端规则；没有 demo 的方向不得交给用户选择。
+10. 等用户选择，或在用户明确授权后使用第一推荐。
+11. 读取 `references/ui-build-tasks.md`，生成 `docs/ui-build-tasks.md`，把完整原型实现拆成可独立打开、独立截图验证的垂直切片任务。
+12. 暂停并提交原型开发前确认：向用户说明每个页面的核心任务、主操作、用户流程、保留模块、删除/后置模块、本页不做什么、跳转边界和上下文边界；未确认不得进入原型实现。
+13. 如果用户要求修正页面边界，先更新 `docs/ui-information-architecture.md`、`docs/ui-design.md` 和 `docs/ui-build-tasks.md` 并重新确认；用户明确确认后，才能基于选定方向构建完整高保真 HTML 原型。
+14. 按 `docs/ui-build-tasks.md` 顺序实现完整原型；每完成一个 UI 任务，必须打开对应路径、执行交互并验证通过后才能进入下一任务。
+15. 已采用的 B 端规则、Vben 主色 token、Arco Design Pro 组件和 token 决策必须落成真实布局、字号、间距、控件高度、圆角、阴影、状态和响应式实现；不得在页面里另起一套控件样式。
+16. 读取 `references/visual-review.md`，使用 Playwright 对候选 demo 和完整原型逐页截图，B 端项目必须覆盖 `1280x800`、`1440x900`，必要时补 `1920x1080`；非 B 端按实际设备覆盖 desktop/tablet/mobile。
+17. 使用 Impeccable 做专项审查和修正，最多两轮；B 端项目必须把发现问题反查到对应 B 端规范章节的禁止事项和验收标准。
+18. 写入 `docs/prototype-review.md`，记录截图证据、审查结论、原型开发前确认检查、Vben 主色、项目主色色阶、Arco Design Pro 组件引用检查、组件级 token 抽检、B 端规范抽检、修正项和遗留问题。
+19. 如 UI 决策改变上游事实，回写上游文档并记录同步说明。
+20. 填写文档同步检查表，记录页面、模块、交互路径、字段、状态、响应式和验收信号对 PRD、架构、UI handoff、原型产物的同步结论；不得留空或写 `待补充`。
 
 ## Impeccable 使用清单
 
@@ -207,6 +225,8 @@ prototype/
 - 页面数量和模块数量是否服务高频路径，而不是堆叠低频功能。
 - 能合并的入口、状态、表单、列表、详情是否已经合并并记录理由。
 - B 端项目是否已识别并按阶段引用 `references/b-end-ui-design-spec.md`，而不是一次性完整读取。
+- 是否已读取 `references/design-theme-selection.md`，定位主题库，并在阶段文档记录实际读取的 `DESIGN.md` 路径。
+- B 端项目是否只从 `assets/design-themes/vben/DESIGN.md` 提取主色，并明确 Arco Design Pro Vue / Arco Design Vue 组件、布局和交互的一比一引用策略。
 - B 端项目是否完成识别、配色、画布、信息架构、布局骨架、组件表现、交互状态和自审修正的阶段门禁。
 - B 端项目是否在 `docs/ui-design.md` 和 `docs/prototype-review.md` 记录实际采用的规范章节、设计动作、偏离原因和验收结果。
 - B 端项目是否把规范落成真实原型实现，而不是只在文档中引用。

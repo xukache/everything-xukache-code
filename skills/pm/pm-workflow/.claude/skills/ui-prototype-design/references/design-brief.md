@@ -7,7 +7,7 @@
 - `docs/prd.md`：目标用户、P0 功能、高频场景、验收标准。
 - `docs/tech-architecture.md`：前端框架、组件库、路由、状态管理、响应式约束。
 - 现有原型或前端代码：组件、tokens、布局、字体、图标、页面模式。
-- `assets/design-themes/`：可用主题资产和品牌线索。
+- `assets/design-themes/`：可用主题资产和品牌线索；必须按 `references/design-theme-selection.md` 读取主题库 `README.md` 和具体 `DESIGN.md`。
 
 ## 必须问清
 
@@ -25,3 +25,4 @@
 - 设计原则最多三条，每条都要能指导取舍。
 - 明确反向参考和不做范围，防止 UI 阶段加戏。
 - 记录仍需用户确认的问题；未确认的问题不能悄悄变成默认结论。
+- 每个审美方向必须记录已读取的主题 `DESIGN.md` 路径；B 端默认推荐方向必须记录 `assets/design-themes/vben/DESIGN.md` 仅用于主色，以及 Arco Design Pro Vue / Arco Design Vue 组件一比一引用策略。

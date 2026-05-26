@@ -50,13 +50,14 @@
 - 色彩策略：
 - 间距和密度：
 - 响应式断点：
+- 主题库 README：
+- 已读取主题 `DESIGN.md`：
+- Vben 主色值：
+- Vben 使用范围：仅主色/品牌色 token，不作为组件规范
+- Arco Design Pro Vue / Arco Design Vue 一比一引用状态：
+- 项目主色色阶是否已覆盖 Arco primary token：
+- 组件级 token 应用表：`docs/ui-design-tokens.md#组件级-token-应用表`
 - B 端规范采用状态：
-
-## 上游同步记录
-
-- 本阶段是否改变页面清单、交互路径、字段、状态、技术约束或验收标准：
-- 已同步回写的上游文档：
-- `workflow-state.json` notes 记录：
 
 ## UI 硬规则
 
@@ -64,11 +65,18 @@
 - 图标必须使用图标库、SVG 或图片资源，不用 emoji 代替。
 - 通用 Web 和移动端正文、表单、按钮、列表文本默认不小于 16px。
 - B 端网页、后台、运营台、管理系统和 SaaS 产品优先遵循 B 端设计规范的文字、间距和控件参数，不强行套用移动端 16px 起规则。
+- B 端项目必须先统一主色、字号、间距、圆角、阴影和组件控件 token，再实现页面；所有组件样式以 `docs/ui-design-tokens.md` 的组件级 token 应用表为准。
+- Progress 进度条固定使用项目主色 `--primary-6/#4F63D7` 和 Arco 轨道色 `var(--color-fill-3)`；不得按百分比变化为绿/橙/红。
+- 禁止页面级临时样式：不得为单个页面或组件临时写主色、hover 色、active 色、圆角、阴影、控件高度或表格密度；需要新增时先回写 `docs/ui-design-tokens.md`。
 
 ## B 端规范引用记录
 
 - 是否识别为 B 端网页：
 - 判断依据：
+- 是否读取 `assets/design-themes/vben/DESIGN.md` 提取主色：
+- Vben 主色值：
+- Arco Design Pro Vue / Arco Design Vue 组件、布局和交互一比一引用策略：
+- 不采用 Vben 主色或 Arco Design Pro 组件的原因：
 - 章节索引检查：`rg -n "^##|^###" references/b-end-ui-design-spec.md`
 - 本阶段已按需读取的规范章节：
 - 已落入原型的规则：
@@ -85,13 +93,49 @@
 | 交互流程和状态 | `交互效率与认知负荷规则`、`尼尔森可用性原则补充规则`、`包容性与可理解性补充规则` | 待补充 | 补齐反馈、防错、错误修正、权限异常、加载超时和帮助入口 | 待确认 |
 | 原型自审和修正 | 问题对应章节的 `禁止事项` 和 `验收标准` | 待补充 | 根据截图问题反查规范并修正 | 待确认 |
 
-## 设计方向候选
+## 组件级 Token 锁定记录
 
-| 方向 | 主题资产 | 视觉气质 | 适合理由 | 预览路径 |
-|---|---|---|---|---|
-| 方案 A | 待补充 | 待补充 | 待补充 | 待补充 |
-| 方案 B | 待补充 | 待补充 | 待补充 | 待补充 |
-| 方案 C | 待补充 | 待补充 | 待补充 | 待补充 |
+本节汇总 `docs/ui-design-tokens.md` 的组件级 token 应用结果。完整原型和开发实现必须逐项复用，不得只写“使用 Arco”。
+
+| 组件 | 字号/高度 | 颜色 token | 圆角 token | 阴影/边框 token | 间距 token | 原型使用位置 | 是否一致 |
+|---|---|---|---|---|---|---|---|
+| Button | 待补充 | `--primary-6` / Arco semantic | `@btn-border-radius` | `@btn-border-width` | padding token | 待补充 | 待确认 |
+| Input / Textarea | 待补充 | focus `--primary-6` | `@input-border-radius` | focus shadow token | padding token | 待补充 | 待确认 |
+| Select / Cascader / TreeSelect | 待补充 | hover / active token | popup radius | popup border | option padding | 待补充 | 待确认 |
+| Table | 待补充 | header / row hover token | `@table-border-radius` | table border token | cell padding token | 待补充 | 待确认 |
+| Form | 待补充 | label text token | - | - | item margin token | 待补充 | 待确认 |
+| Modal / Drawer | 待补充 | text / mask token | modal/drawer radius | popup shadow | padding token | 待补充 | 待确认 |
+| Card | 待补充 | bg / title token | `@card-border-radius` | card border token | body padding token | 待补充 | 待确认 |
+| Tag / Badge | 待补充 | semantic / neutral token | tag radius | - | padding token | 待补充 | 待确认 |
+| Tabs / Pagination / Menu | 待补充 | active `--primary-6` | item radius | - | item spacing | 待补充 | 待确认 |
+| Progress | 字号 `12px` | inner `--primary-6/#4F63D7`，track `var(--color-fill-3)` | line/circle 按 Arco | - | 按 Arco | 待补充 | 待确认 |
+| Tooltip / Popover / Dropdown | 待补充 | popup token | popup/dropdown radius | `@popup-shadow` | option height / padding | 待补充 | 待确认 |
+| Skeleton / Spin / Empty / Result | 待补充 | Spin `--primary-6`，Skeleton fill token | 按 Arco | - | 按 Arco | 待补充 | 待确认 |
+
+## 禁止临时样式检查
+
+| 检查项 | 结果 | 证据 |
+|---|---|---|
+| 是否存在页面级硬编码主色、hover 色、active 色 | 待确认 | 待补充 |
+| 是否存在不同页面按钮高度/圆角不一致 | 待确认 | 待补充 |
+| 是否存在输入、选择、表格、弹窗控件尺寸不一致 | 待确认 | 待补充 |
+| 是否存在 Progress 按百分比变色 | 待确认 | 待补充 |
+| 是否存在自定义阴影覆盖 Arco popup/card shadow | 待确认 | 待补充 |
+
+## 主题库扫描和设计方向候选
+
+- 主题库路径：
+- 主题库 README：
+- 主题扫描命令：
+- 已读取主题 `DESIGN.md`：
+- 已读取主题 `examples.html`：
+- B 端是否默认采用 Arco Design Pro + Vben 主色：
+
+| 方向 | 主题 `DESIGN.md` | 主色来源 | 组件框架/组件语义 | 视觉气质 | 适合理由 | 预览路径 |
+|---|---|---|---|---|---|---|
+| 方案 A | assets/design-themes/vben/DESIGN.md | Vben 主色 | Arco Design Pro Vue / Arco Design Vue 一比一引用 | 待补充 | B 端默认推荐 | 待补充 |
+| 方案 B | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 |
+| 方案 C | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 |
 
 ## 首页 Demo 预览
 
@@ -249,3 +293,9 @@ prototype/
 | Impeccable audit | 可访问性、性能、响应式、语义结构、反模式 | 待确认 |
 | Impeccable adapt | 桌面、平板、移动适配 | 待确认 |
 | Impeccable polish | 最终综合打磨 | 待确认 |
+
+## 文档同步检查
+
+| 变更项 | 影响类型 | 是否影响上游事实 | 已检查文档 | 已同步文档 | 不需要同步原因 | 责任阶段 | 检查结论 |
+|---|---|---|---|---|---|---|---|
+| UI 设计汇总 | 页面/模块/路径/交互/字段/状态/验收 | 是/否 | `docs/prd.md`、`docs/handoff-prd.md`、`docs/tech-architecture.md`、`docs/handoff-architecture.md`、`docs/handoff-ui.md` | 待填写 | 待填写 | design | 待确认 |
