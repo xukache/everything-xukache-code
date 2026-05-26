@@ -6,6 +6,15 @@
 - 视觉原则：
 - 交互原则：
 
+## 阶段产物
+
+- 设计简报：`docs/ui-design-brief.md`
+- 信息架构：`docs/ui-information-architecture.md`
+- 设计系统和 tokens：`docs/ui-design-tokens.md`
+- UI 构建任务：`docs/ui-build-tasks.md`
+- 汇总设计文档：`docs/ui-design.md`
+- 原型自审：`docs/prototype-review.md`
+
 ## 原型入口
 
 - 主入口：`prototype/index.html`

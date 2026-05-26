@@ -5,6 +5,7 @@
 | 产品名称 | {{PRODUCT_NAME}} |
 | 文档版本 | v1.0 |
 | 创建日期 | |
+| PRD 前对齐清单 | docs/requirement-alignment.md |
 | 关联调研文档 | |
 
 ---

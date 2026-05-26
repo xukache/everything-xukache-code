@@ -11,9 +11,13 @@ const REVIEW_TEMPLATE = "quality-review/templates/review-stage.md";
 
 const STAGE_ARTIFACTS = {
   init: ["docs/project-config.md"],
-  analyze: ["docs/prd.md", "docs/handoff-prd.md"],
-  architect: ["docs/tech-architecture.md", "docs/handoff-architecture.md"],
+  analyze: ["docs/requirement-alignment.md", "docs/prd.md", "docs/handoff-prd.md"],
+  architect: ["docs/architecture-options.md", "docs/tech-architecture.md", "docs/handoff-architecture.md"],
   design: [
+    "docs/ui-design-brief.md",
+    "docs/ui-information-architecture.md",
+    "docs/ui-design-tokens.md",
+    "docs/ui-build-tasks.md",
     "docs/ui-design.md",
     "docs/handoff-ui.md",
     "docs/prototype-review.md",
@@ -210,6 +214,89 @@ function hasBlockingAnalyzeQuestions(state, prd) {
   return pending.length > 0;
 }
 
+function requirementAlignmentViolations(root) {
+  const alignmentPath = path.join(root, "docs", "requirement-alignment.md");
+  const text = readText(alignmentPath);
+  const violations = [];
+  if (!text.trim()) {
+    violations.push("docs/requirement-alignment.md 缺失或为空");
+    return violations;
+  }
+  const requiredMarkers = [
+    "## 模块逐项对齐",
+    "## 页面逐项对齐",
+    "## 业务流程逐项对齐",
+    "## 模糊点处理记录",
+    "## PRD 写作准入",
+    "## 用户确认原文",
+  ];
+  for (const marker of requiredMarkers) {
+    if (!text.includes(marker)) violations.push(`docs/requirement-alignment.md 缺少 ${marker}`);
+  }
+  if (!/整体确认状态[：:]\s*已确认/.test(text)) {
+    violations.push("docs/requirement-alignment.md 整体确认状态必须为已确认");
+  }
+  const gateSection = text.split("## PRD 写作准入")[1] || "";
+  for (const gate of ["模块已逐项确认", "页面已逐项确认", "业务流程已逐项确认", "范围取舍已确认", "用户允许写 PRD"]) {
+    const gateLine = gateSection.split(/\r?\n/).find((line) => line.includes(gate)) || "";
+    if (!tableRowHasConfirmedStatus(gateLine)) {
+      violations.push(`docs/requirement-alignment.md PRD 写作准入未确认：${gate}`);
+    }
+  }
+  const activeRows = text
+    .split(/\r?\n/)
+    .filter((line) => /^\|\s*(M\d+|P\d+|F\d+|A\d+)/.test(line));
+  for (const row of activeRows) {
+    if (!tableRowHasConfirmedStatus(row)) {
+      violations.push("docs/requirement-alignment.md 存在未确认的模块、页面、业务流程或模糊点");
+      break;
+    }
+  }
+  return violations;
+}
+
+function architectureOptionViolations(root) {
+  const optionsPath = path.join(root, "docs", "architecture-options.md");
+  const text = readText(optionsPath);
+  const violations = [];
+  if (!text.trim()) {
+    violations.push("docs/architecture-options.md 缺失或为空");
+    return violations;
+  }
+  const requiredMarkers = [
+    "## 选型门禁",
+    "## 候选方案总览",
+    "## 五维度对比",
+    "## 推荐方案说明",
+    "## 用户最终选择",
+    "## 用户确认原文",
+  ];
+  for (const marker of requiredMarkers) {
+    if (!text.includes(marker)) violations.push(`docs/architecture-options.md 缺少 ${marker}`);
+  }
+  if (!/选型确认状态[：:]\s*已确认/.test(text)) {
+    violations.push("docs/architecture-options.md 选型确认状态必须为已确认");
+  }
+  const optionRows = text
+    .split(/\r?\n/)
+    .filter((line) => /^\|\s*[A-Z]\s*\|/.test(line));
+  if (optionRows.length < 2) {
+    violations.push("docs/architecture-options.md 至少需要 2 个候选架构方案");
+  }
+  const hasFinalChoice = /选择方案[：:]\s*\S+/.test(text) && !/选择方案[：:]\s*(待确认|待补充)\s*$/m.test(text);
+  if (!hasFinalChoice) {
+    violations.push("docs/architecture-options.md 必须记录用户最终选择方案");
+  }
+  return violations;
+}
+
+function tableRowHasConfirmedStatus(row) {
+  return row
+    .split("|")
+    .map((cell) => cell.trim().replace(/`/g, ""))
+    .some((cell) => cell === "已确认");
+}
+
 function designUiRuleViolations(root) {
   const targets = [];
   const uiDoc = path.join(root, "docs", "ui-design.md");
@@ -345,6 +432,8 @@ function scoreStage(root, stage) {
   const initNotConfirmed = stage === "init" && !clarificationConfirmed(state);
   const initMissingCriteria = stage === "init" ? missingClarificationCriteria(state) : [];
   const analyzeHasOpenQuestions = stage === "analyze" && hasBlockingAnalyzeQuestions(state, readText(path.join(root, "docs", "prd.md")));
+  const alignmentViolations = stage === "analyze" ? requirementAlignmentViolations(root) : [];
+  const architectureViolations = stage === "architect" ? architectureOptionViolations(root) : [];
   const designUiViolations = stage === "design" ? designUiRuleViolations(root) : [];
   const planViolations = stage === "plan" ? planQualityViolations(root) : [];
 
@@ -357,17 +446,19 @@ function scoreStage(root, stage) {
   }
   if (initConceptsNotAligned) missing.push("docs/workflow-state.json: clarification.concepts_aligned=true");
   if (analyzeHasOpenQuestions) missing.push("docs/workflow-state.json: pending_user_questions 未清空");
+  missing.push(...alignmentViolations);
+  missing.push(...architectureViolations);
   missing.push(...designUiViolations);
   missing.push(...planViolations);
 
   let completeness = missing.length ? Math.max(1, Math.round((10 * presentCount) / Math.max(requiredCount, 1))) : 10;
   if (hasPlaceholder) completeness = Math.min(completeness, 6);
-  if (initNotConfirmed || analyzeHasOpenQuestions || designUiViolations.length || planViolations.length) completeness = Math.min(completeness, 5);
+  if (initNotConfirmed || analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length) completeness = Math.min(completeness, 5);
 
   let clarity = totalChars > 2500 && !hasPlaceholder ? 9 : totalChars > 800 ? 6 : 3;
   if (stage === "plan" && !planViolations.length && !hasPlaceholder) clarity = Math.max(clarity, 8);
   if (hasPlaceholder) clarity = Math.min(clarity, 5);
-  if (analyzeHasOpenQuestions || designUiViolations.length || planViolations.length) clarity = Math.min(clarity, 5);
+  if (analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length) clarity = Math.min(clarity, 5);
 
   let [consistency, consistencyNote] = consistencyScore(root, stage);
   if (initNotConfirmed) {
@@ -375,7 +466,7 @@ function scoreStage(root, stage) {
     consistencyNote = "需求澄清尚未获得用户确认或关键术语概念未对齐，不能视为初始化完成。";
   }
   let executability = executabilityScore(contents, stage, hasPlaceholder);
-  if (initNotConfirmed || analyzeHasOpenQuestions || designUiViolations.length || planViolations.length) executability = Math.min(executability, 5);
+  if (initNotConfirmed || analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length) executability = Math.min(executability, 5);
 
   const scores = {
     completeness,
@@ -390,6 +481,8 @@ function scoreStage(root, stage) {
   scores.init_not_confirmed = initNotConfirmed;
   scores.init_concepts_not_aligned = initConceptsNotAligned;
   scores.analyze_has_open_questions = analyzeHasOpenQuestions;
+  scores.requirement_alignment_violations = alignmentViolations;
+  scores.architecture_option_violations = architectureViolations;
   scores.design_ui_violations = designUiViolations;
   scores.plan_violations = planViolations;
   return scores;
@@ -617,6 +710,8 @@ function buildIssues(scores, roundNo) {
   if (scores.init_not_confirmed) issues.push("- 需求澄清尚未获得用户确认，`init` 不能判定完成。");
   if (scores.init_concepts_not_aligned) issues.push("- 关键术语和概念尚未对齐，容易导致 AI 与用户说的是不同东西。");
   if (scores.analyze_has_open_questions) issues.push("- workflow-state 仍存在 pending_user_questions，不能触发 analyze 通过。");
+  if ((scores.requirement_alignment_violations || []).length) issues.push(`- PRD 前需求对齐门禁未通过：${scores.requirement_alignment_violations.join("；")}`);
+  if ((scores.architecture_option_violations || []).length) issues.push(`- 技术架构选型门禁未通过：${scores.architecture_option_violations.join("；")}`);
   if (scores.design_ui_violations.length) issues.push("- UI 原型存在 emoji 或主体字号小于 16px 的问题，需要改为图标资源并提高默认字号。");
   if ((scores.plan_violations || []).length) issues.push(`- 开发任务规划不符合 Kiro 风格实施计划要求：${scores.plan_violations.join("；")}`);
   if (scores.consistency < 6) issues.push("- 跨阶段追溯不足，需求功能编号没有完整映射到当前阶段产物。");
@@ -629,9 +724,9 @@ function buildRework(stage, result, scores, roundNo) {
   if (result === "通过") return "本阶段已通过，无需返工。可根据用户偏好做非阻塞微调。";
   const suggestions = {
     init: "补齐 8 个澄清判断锚点、六个核心问题、高频真实需求、最值得先做的一段流程、Agent 能力、结果落点、最小 demo 边界和工作量粗估。",
-    analyze: "先让用户回答 pending_user_questions，再补齐新 PRD 的功能范围、核心业务流程、4.x 功能详细设计、数据模型、权限、非功能、Mx-Fx 功能编号和异常边界。",
-    architect: "补齐需求到数据库、字段、接口、部署配置和技术风险的映射。",
-    design: "补齐 2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、docs/prototype-review.md、Playwright 截图证据、Impeccable 审查记录、页面清单、需求到界面映射和完整原型路径。",
+    analyze: "先完成 docs/requirement-alignment.md：模块、页面、业务流程逐项和用户确认，模糊点全部有最终确认，用户明确同意写 PRD；再让用户回答 pending_user_questions，补齐新 PRD 的功能范围、核心业务流程、4.x 功能详细设计、数据模型、权限、非功能、Mx-Fx 功能编号和异常边界。",
+    architect: "先补齐 docs/architecture-options.md：提供至少 2 个候选架构方案、五维度对比、推荐理由、用户最终选择和确认原文；再补齐需求到数据库、字段、接口、部署配置和技术风险的映射。",
+    design: "补齐 docs/ui-design-brief.md、docs/ui-information-architecture.md、docs/ui-design-tokens.md、docs/ui-build-tasks.md、2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、docs/prototype-review.md、Playwright 截图证据、Impeccable 审查记录、页面清单、需求到界面映射和完整原型路径。",
     plan: "补齐 Kiro 风格实施计划结构、技术基线锁定、编号 checklist、3-6 条具体动作、测试/验收动作、_需求 追溯，并继续拆小粒度过粗的任务。",
     deliver: "补齐缺失文档、审核报告、AGENTS.md 和 prototype 后重新打包。",
   };

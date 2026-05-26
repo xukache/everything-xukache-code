@@ -25,9 +25,9 @@ user-invocable: true
 | 命令 | 自然语言触发 | 主角色 | 产物 |
 |---|---|---|---|
 | `init` | `$pm-workflow`、"我想做一个..."、"澄清需求"、"需求澄清" | 产品经理 | `docs/project-config.md` |
-| `analyze` | "开始分析需求"、"需求分析" | 需求分析师 | `docs/prd.md`, `docs/handoff-prd.md` |
-| `architect` | "开始设计技术架构"、"技术架构" | 技术架构师 | `docs/tech-architecture.md`, `docs/handoff-architecture.md` |
-| `design` | "开始界面设计"、"开始界面原型设计" | 界面设计师 | `docs/ui-design.md`, `docs/handoff-ui.md`, `prototype/` |
+| `analyze` | "开始分析需求"、"需求分析" | 需求分析师 | `docs/requirement-alignment.md`, `docs/prd.md`, `docs/handoff-prd.md` |
+| `architect` | "开始设计技术架构"、"技术架构" | 技术架构师 | `docs/architecture-options.md`, `docs/tech-architecture.md`, `docs/handoff-architecture.md` |
+| `design` | "开始界面设计"、"开始界面原型设计" | 界面设计师 | `docs/ui-design-brief.md`, `docs/ui-information-architecture.md`, `docs/ui-design-tokens.md`, `docs/ui-build-tasks.md`, `docs/ui-design.md`, `docs/handoff-ui.md`, `prototype/` |
 | `plan` | "开始规划"、"开发规划"、"任务拆解" | 开发规划师 | `docs/dev-tasks.md` |
 | `review [stage]` | "审核一下"、"检查文档"、"质量把关" | 质量审核官 | `docs/review-{stage}.md` |
 | `deliver` | "开始打包"、"打包交付" | 产品经理 | `outputs/dev-package/` |
@@ -133,10 +133,16 @@ project-root/
   docs/
     workflow-state.json
     project-config.md
+    requirement-alignment.md
     prd.md
     handoff-prd.md
+    architecture-options.md
     tech-architecture.md
     handoff-architecture.md
+    ui-design-brief.md
+    ui-information-architecture.md
+    ui-design-tokens.md
+    ui-build-tasks.md
     ui-design.md
     handoff-ui.md
     prototype-review.md
@@ -221,12 +227,13 @@ Claude Code 结构会创建 `.claude/CLAUDE.md`、`.claude/settings.json`、`.cl
 
 阶段说明：[references/commands/analyze.md](references/commands/analyze.md)
 
-需求分析师开始前先输出阶段开场卡，并检查 `clarification.status=user_confirmed`。如果未确认，先交还产品经理继续澄清；用户坚持继续时必须记录风险。
+需求分析师开始前先输出阶段开场卡，并检查 `clarification.status=user_confirmed`。如果未确认，先交还产品经理继续澄清；用户坚持继续时必须记录风险。澄清确认只代表可以进入需求分析，不代表可以直接写 PRD。
 
-需求分析师执行两步式需求分析：
+需求分析师执行“对齐清单先行”的三步式需求分析：
 
-1. 先根据已确认的 `project-config.md` 生成符合新 1-8 章格式的 PRD 草稿；PRD 正文不写 `文档状态` 和 `待用户回答问题`，阻塞问题写入 `docs/workflow-state.json.pending_user_questions`。
-2. 产品经理把这些问题抛给用户。用户回答后，需求分析师回填并完善 `docs/prd.md` 和 `docs/handoff-prd.md`，清空 `pending_user_questions`，把 `recommended_next` 设置为 `review analyze`，再自动调用 `quality_reviewer` 审核 `analyze`。
+1. 先生成 `docs/requirement-alignment.md`，把模块、页面、业务流程逐项列出，标明边界、模糊点和推荐理解。
+2. 产品经理一个模块一个模块、一个页面一个页面、一个业务流程一个业务流程提交给用户确认；整体状态未达到 `已确认` 前，不得编写或改写 `docs/prd.md` 正式内容。
+3. 用户明确同意“可以开始写 PRD”后，需求分析师再生成符合新 1-8 章格式的 PRD 草稿；阻塞问题写入 `docs/workflow-state.json.pending_user_questions`。用户回答后，需求分析师回填并完善 `docs/prd.md` 和 `docs/handoff-prd.md`，清空 `pending_user_questions`，把 `recommended_next` 设置为 `review analyze`，再自动调用 `quality_reviewer` 审核 `analyze`。
 
 PRD 草稿和最终稿都使用四轮引导框架，并映射到新 PRD 结构：
 
@@ -245,7 +252,11 @@ PRD 草稿和最终稿都使用四轮引导框架，并映射到新 PRD 结构�
 
 阶段说明：[references/commands/architect.md](references/commands/architect.md)
 
-技术架构师开始前先输出阶段开场卡，用小白能听懂的话说明推荐技术路线和原因。例如：如果产品是微信小程序内使用，优先考虑微信原生小程序 + 微信云开发；如果是网页、App 或桌面软件，再根据平台、用户体量、商业化计划、迭代方向和维护成本比较技术栈。
+技术架构师开始前先输出阶段开场卡，用小白能听懂的话说明会先提供几版技术架构候选方案供用户参考。不得直接开始编写正式架构定稿。
+
+架构阶段必须先产出 `docs/architecture-options.md`，至少提供 2-3 个候选方案，分别说明前端/客户端、后端/API、数据库/存储、部署方式、适合场景、维护成本、主要风险和推荐等级。技术架构师可以给第一推荐，但必须等待用户确认最终选择；选型确认状态不是 `已确认` 时，不得编写或改写 `docs/tech-architecture.md` 正式方案。
+
+例如：如果产品是微信小程序内使用，候选方案里应包含微信原生小程序 + 微信云开发是否足够；如果是网页、App 或桌面软件，再根据平台、用户体量、商业化计划、迭代方向和维护成本比较技术栈。
 
 技术架构师使用五维度决策框架：
 
@@ -255,7 +266,7 @@ PRD 草稿和最终稿都使用四轮引导框架，并映射到新 PRD 结构�
 - 第三方集成
 - 维护成本
 
-`docs/tech-architecture.md` 必须包含技术选型、数据库设计、接口清单、部署方案和需求到架构映射表。`docs/handoff-architecture.md` 总结下游界面设计和开发规划关注点。
+用户确认某个候选方案后，`docs/tech-architecture.md` 必须包含技术选型、数据库设计、接口清单、部署方案和需求到架构映射表。`docs/handoff-architecture.md` 总结下游界面设计和开发规划关注点。
 
 结束时询问用户：审核架构、修改架构，还是开始界面与体验设计。
 
@@ -263,12 +274,18 @@ PRD 草稿和最终稿都使用四轮引导框架，并映射到新 PRD 结构�
 
 阶段说明：[references/commands/design.md](references/commands/design.md)
 
-界面设计师先做上游前置审查，确认高频真实需求和真实使用流程清晰，再基于 `assets/design-themes/` 推荐 2-3 个有明显差异的设计方向。每个候选方向必须生成一个可打开的首页 demo，放在 `prototype/directions/`，并在 `docs/ui-design.md` 中给出预览路径。等待用户选择；只有在用户明确授权时，才默认使用第一推荐。
+界面设计师先按 `ui-prototype-design/references/design-flow.md` 走阶段化流程：设计简报、信息架构、设计系统和 tokens、方向 demo、UI 构建任务、完整原型、截图审查。开始时必须做上游前置审查，确认高频真实需求和真实使用流程清晰，并询问用户上下文是否足够理解显性需求和隐藏需求；不能在一两轮询问后提前自认已经搞清楚。
+
+方向选择仍然必须真实可看：基于 `assets/design-themes/` 推荐 2-3 个有明显差异的设计方向，每个候选方向必须生成一个可打开的首页 demo，放在 `prototype/directions/`，并在 `docs/ui-design.md` 中给出预览路径。等待用户选择；只有在用户明确授权时，才默认使用第一推荐。
 
 UI 硬规则：页面可见文案、按钮、导航、空状态和提示语禁止使用 emoji；图标必须使用图标库、SVG 或图片资源，不用 emoji 代替。默认字号基准为正文、表单、按钮、列表文本不小于 16px；辅助说明可小于 16px 但不得低于 14px；移动端优先保持 16px 起。
 
 产物：
 
+- `docs/ui-design-brief.md`
+- `docs/ui-information-architecture.md`
+- `docs/ui-design-tokens.md`
+- `docs/ui-build-tasks.md`
 - `docs/ui-design.md`
 - `docs/handoff-ui.md`
 - `docs/prototype-review.md`
@@ -284,7 +301,9 @@ UI 硬规则：页面可见文案、按钮、导航、空状态和提示语禁�
 
 完整原型交付前，界面设计师必须完成 Playwright + Impeccable 自审：按当前 CLI 结构生成 Impeccable 上下文（Codex 默认 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`，Claude Code 可用 `.claude/context/PRODUCT.md` 和 `.claude/context/DESIGN.md` 或沿用 `.agents/context/`），运行 Impeccable context loader，用 Playwright 覆盖 desktop/tablet/mobile 截图，对候选 demo 和完整原型执行 `critique`、`audit`、`adapt` 以及必要的 `layout`、`typeset`、`clarify`、`animate`、`harden`、`polish`，并把审查、修正和复查结果写入 `docs/prototype-review.md`。
 
-UI 页面访问逻辑必须从真实使用流程推导，页面数量以完成高频路径为准。页面模块不能堆叠过多；能合并的入口、状态、表单、列表、详情必须合并，并在 `docs/ui-design.md` 记录合并理由。不要为了展示完整性把低频功能前置到主路径里。
+UI 页面访问逻辑必须从真实使用流程推导，页面数量以完成高频路径为准。页面模块不能堆叠过多；能合并的入口、状态、表单、列表、详情必须合并，并在 `docs/ui-information-architecture.md` 和 `docs/ui-design.md` 记录合并理由。不要为了展示完整性把低频功能前置到主路径里。
+
+完整原型实现前必须产出 `docs/ui-build-tasks.md`，任务按垂直切片拆分，每个任务都要能独立打开、独立交互、独立截图验证。每完成一个 UI 任务必须立即验证，通过后才能进入下一任务。
 
 如果 UI 阶段为了体验合理性调整了页面清单、交互路径、字段、状态、技术约束或验收标准，或发现页面/模块过多、流程不顺，必须同步回写 `docs/prd.md`、`docs/handoff-prd.md`、`docs/project-config.md` 或 `docs/tech-architecture.md`，不能只在 UI 文档或原型里静默新增范围。
 

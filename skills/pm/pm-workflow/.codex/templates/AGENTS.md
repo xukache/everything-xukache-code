@@ -8,6 +8,7 @@
 
 - 有假设先说出来。
 - 有歧义先问清楚。
+- 不要提前给出结论；如果需求、隐藏需求、上下文、技术基线或验收标准不够清楚，先询问用户是否已经提供了足够信息。
 - 有更简单的方案先提出来。
 - 不要默默开始写代码。
 
@@ -36,6 +37,7 @@
 ## 输入文档
 
 - `project-config.md`
+- `requirement-alignment.md`
 - `prd.md`
 - `handoff-prd.md`
 - `tech-architecture.md`

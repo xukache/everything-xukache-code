@@ -1,7 +1,13 @@
 {
   "name": "pm-workflow-studio",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "description": "AI product development studio CLI for Codex and Claude Code.",
+  "homepage": "https://github.com/xukache/everything-xukache-code/tree/main/skills/pm/pm-workflow",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xukache/everything-xukache-code.git",
+    "directory": "skills/pm/pm-workflow"
+  },
   "type": "commonjs",
   "bin": {
     "pmflow": "bin/pmflow.js",

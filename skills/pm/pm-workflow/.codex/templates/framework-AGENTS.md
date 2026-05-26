@@ -38,14 +38,18 @@
 
 - 阶段 00 的需求澄清由主 agent 直接完成：欢迎、复述、追问、整理缺口和请用户确认都不能外包给子 agent。
 - 禁止把用户刚输入的需求先总结成二手摘要，再交给 `product_manager` 或其他子 agent 继续澄清；主 agent 持有完整对话上下文，必须亲自判断真实需求。
+- 禁止过早给出结论：不能只问一两轮就自认为已经搞清需求。进入需求分析前，必须明确询问用户“这些上下文是否已经足够让我们搞清楚需求和需求背后隐藏的真实需求”，并等待用户确认或补充。
 - 阶段 00 必须做顾问式澄清：不要直接给完整方案或平台清单，每轮最多问 3 个问题，优先判断解决什么问题、哪一段最值得先做、需要什么 Agent 能力、结果落到哪里，以及如何收束成最小可用 demo。
 - 阶段 00 还必须摸清谁高频使用、用户真正的高频需求、打开产品的触发点、从开始到结束的真实使用流程，以及页面/模块减负边界；这些信息是需求分析识别真需求和 UI 设计制定页面访问逻辑的依据。
 - 除阶段 00 的需求澄清外，每个阶段命令都必须先启动当前 CLI 结构下对应的项目子 agent：Codex 使用 `.codex/agents/*.toml`，Claude Code 使用 `.claude/agents/*.md`。
 - 阶段到 agent 的固定映射：`help/status/deliver -> product_manager/product-manager`，`analyze -> demand_analyst/demand-analyst`，`architect -> tech_architect/tech-architect`，`design -> ui_designer/ui-designer`，`plan -> dev_planner/dev-planner`，`review -> quality_reviewer/quality-reviewer`。`init` 在用户确认前不启动子 agent，确认后可调用产品经理子 agent 做文档沉淀和状态维护。
 - 每个阶段开始都先输出阶段开场卡：当前用户情况、推荐方案、为什么这样选、接下来产出什么。
 - 进入需求分析前，`docs/workflow-state.json` 中的 `clarification.status` 默认必须是 `user_confirmed`，且 `user_confirmation_required=false`。
-- 需求分析先产出新 1-8 章格式 PRD 草稿，并把待用户回答问题写入 `workflow-state.json.pending_user_questions`；用户回答后再完善最终稿、清空阻塞问题，并自动触发 `quality_reviewer` 审核 analyze。
+- 需求分析不能在澄清完成后直接写 PRD；必须先产出 `docs/requirement-alignment.md`，一个模块一个模块、一个页面一个页面、一个业务流程一个业务流程和用户确认，整体状态为 `已确认` 且用户明确同意写 PRD 后，才能产出新 1-8 章格式 PRD 草稿。
+- PRD 草稿阶段把待用户回答问题写入 `workflow-state.json.pending_user_questions`；用户回答后再完善最终稿、清空阻塞问题，并自动触发 `quality_reviewer` 审核 analyze。
 - 需求分析必须基于高频真实需求和真实使用流程识别真需求与伪需求，P0 功能必须映射到高频场景和流程位置，功能模块优先合并同类能力。
+- 技术架构阶段不得在关键约束未确认时直接写定稿；必须反复确认平台、部署环境、数据规模、第三方依赖、版本/包管理器/脚手架方式、团队维护能力和不可接受方案。
+- 界面设计阶段不得在页面任务、用户路径、关键字段、权限状态、异常/空/加载状态和原型实现边界未确认时直接实现完整原型；必须先把仍需用户确认的问题列出并请用户确认。
 - 如果当前环境无法启动后续阶段所需的项目子 agent，必须停止对应阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
 - 每阶段结束必须引导用户选择：审核、修改、进入下一阶段。
 - 审核是软门控：不强制阻断，但必须记录风险。

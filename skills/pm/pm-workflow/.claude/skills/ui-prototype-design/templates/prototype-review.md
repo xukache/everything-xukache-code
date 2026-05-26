@@ -9,6 +9,14 @@
 
 ## 审查范围
 
+| 阶段产物 | 路径 | 是否完成 | 是否影响原型 |
+|---|---|---|---|
+| 设计简报 | docs/ui-design-brief.md | 待补充 | 待补充 |
+| 信息架构 | docs/ui-information-architecture.md | 待补充 | 待补充 |
+| 设计系统和 tokens | docs/ui-design-tokens.md | 待补充 | 待补充 |
+| UI 构建任务 | docs/ui-build-tasks.md | 待补充 | 待补充 |
+| 汇总设计文档 | docs/ui-design.md | 待补充 | 待补充 |
+
 | 类型 | 页面 | 路径 | 覆盖功能编号 | 状态 |
 |---|---|---|---|---|
 | 方向预览 | 方案 A | prototype/directions/option-a.html | 待补充 | 待补充 |
@@ -23,7 +31,14 @@
 | 是否存在原型开发前用户确认记录 | `docs/ui-design.md` 的 `## 原型开发前确认` | 待补充 |
 | 确认前是否已经开始写完整页面代码 | git diff、文件时间或实现记录；未确认不得进入原型实现 | 待补充 |
 | 用户提出的边界问题是否已回写设计文档 | `docs/ui-design.md` 的页面任务卡、模块准入表、修正记录 | 待补充 |
+| 用户提出的边界问题是否已同步阶段产物 | `docs/ui-information-architecture.md`、`docs/ui-build-tasks.md` | 待补充 |
 | 最终原型是否和已确认页面任务卡一致 | 页面截图、交互路径、模块保留/删除结果 | 待补充 |
+
+## UI 构建任务验证
+
+| 任务 ID | 页面/流程 | 验证路径 | 验证命令或操作 | 截图证据 | 结果 |
+|---|---|---|---|---|---|
+| UI-001 | 待补充 | 待补充 | 待补充 | 待补充 | 待补充 |
 
 ## Playwright 截图证据
 

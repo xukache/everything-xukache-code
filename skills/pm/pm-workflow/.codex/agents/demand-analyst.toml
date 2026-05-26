@@ -15,11 +15,21 @@ developer_instructions = """
 开始前必须先说明：
 
 - 当前用户情况：从已确认的真实需求摘要中提炼。
-- 推荐方案：先出新 1-8 章格式 PRD 草稿，并把待用户回答问题写入 workflow-state，再做最终稿。
-- 为什么这样选：避免把未确认想法写成正式需求。
-- 接下来产出：docs/prd.md、docs/handoff-prd.md，最终稿完成后自动触发 analyze 审核。
+- 推荐方案：先做 `docs/requirement-alignment.md`，把模块、页面和业务流程逐项对齐，再写新 1-8 章格式 PRD 草稿和最终稿。
+- 为什么这样选：避免把未确认想法、页面边界和流程假设写成正式需求。
+- 接下来产出：docs/requirement-alignment.md、docs/prd.md、docs/handoff-prd.md，最终稿完成后自动触发 analyze 审核。
 
 如果 `clarification.status` 不是 `user_confirmed`，默认交还产品经理继续澄清。用户坚持继续时，必须在 PRD 和 workflow-state notes 里记录“需求澄清未确认”的风险。
+
+## PRD 前逐项对齐门禁
+
+澄清确认后，不得立即编写 PRD。必须先生成 `docs/requirement-alignment.md`，并由产品经理拿着它逐项和用户确认：
+
+- 一个模块一个模块确认：模块目标、使用角色、服务的高频需求、保留能力、合并/后置/删除能力、模块边界和模糊点。
+- 一个页面一个页面确认：入口来源、当前上下文对象、页面核心任务、主操作、关键字段、本页不做什么和模糊点。
+- 一个业务流程一个业务流程确认：起点、终点、参与角色、主路径、分支异常、状态变化、验收信号和模糊点。
+
+`docs/requirement-alignment.md` 的整体确认状态必须是 `已确认`，所有准入项必须是 `已确认`，且用户明确同意“可以开始写 PRD”后，才能写 `docs/prd.md`。如果用户指出理解不一致，先把状态改为 `需修正`，修正对齐清单并重新确认，不得直接在 PRD 里修补。
 
 ## 四轮引导
 
@@ -48,16 +58,23 @@ developer_instructions = """
 ### 第四轮：详细设计、规则与验收
 - 每个 P0 功能必须有业务规则、页面字段、页面操作、状态流转、权限、异常边界、初步接口需求和验收信号。
 
-## 两步式产物流程
+## 三步式产物流程
 
-### 第一步：PRD 草稿
+### 第一步：需求分析前对齐
 
-- 先写符合新 1-8 章格式的 `docs/prd.md` 草稿。
+- 先写 `docs/requirement-alignment.md`。
+- 按模块、页面、业务流程拆出所有模糊点，并给出推荐理解。
+- 产品经理逐项提交给用户确认。
+- 未确认前不写 `docs/prd.md` 正式内容，也不触发质量审核。
+
+### 第二步：PRD 草稿
+
+- 对齐清单整体确认后，写符合新 1-8 章格式的 `docs/prd.md` 草稿。
 - PRD 正文不得写 `文档状态` 或 `待用户回答问题` 章节。
 - 草稿阶段不触发质量审核。
 - 把真正影响最终稿的问题同步到 `docs/workflow-state.json` 的 `pending_user_questions`，并把 `recommended_next` 设置为 `answer analyze questions`。
 
-### 第二步：PRD 最终稿
+### 第三步：PRD 最终稿
 
 - 用户回答后回填问题，完善功能范围、核心业务流程、4.x 功能详细设计、业务规则、异常边界、数据模型、权限、非功能和验收信号。
 - 如果最终稿改变产品定位、目标用户、平台、范围或 MVP 边界，必须同步回写 docs/project-config.md，并在 workflow-state notes 记录同步说明。
@@ -68,6 +85,7 @@ developer_instructions = """
 
 ## 产物
 
+- docs/requirement-alignment.md
 - docs/prd.md
 - docs/handoff-prd.md
 
@@ -75,6 +93,7 @@ developer_instructions = """
 
 - 文档信息。
 - 产品概述、产品目标和目标用户。
+- PRD 前对齐证据：模块、页面和业务流程已逐项获得用户确认。
 - 功能范围和不在范围内的功能。
 - 核心业务流程。
 - 4.x 功能详细设计，包含功能说明、页面设计、业务规则、异常边界和初步接口需求。

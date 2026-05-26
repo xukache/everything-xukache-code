@@ -14,10 +14,19 @@ Inputs:
 
 Do not start final analysis unless `clarification.status=user_confirmed`, `clarification.concepts_aligned=true`, and `user_confirmation_required=false`. If the user insists on continuing with risk, record that risk in the PRD and workflow state.
 
-Use the two-step process:
+Before writing the PRD, run the requirement alignment gate:
 
-1. Draft `docs/prd.md` in the new 1-8 section PRD format. Do not write `文档状态` or `待用户回答问题` into the PRD body; put unresolved blocking questions in `docs/workflow-state.json.pending_user_questions`.
-2. After the user answers, finalize `docs/prd.md`, write `docs/handoff-prd.md`, clear `pending_user_questions`, set `recommended_next=review analyze`, and request `quality-reviewer` review for `analyze`.
+- Create `docs/requirement-alignment.md`.
+- Align one module at a time with the user: goal, roles, high-frequency need, kept capabilities, merged/deferred/deleted capabilities, boundaries, and ambiguities.
+- Align one page at a time with the user: entry source, current context object, core task, primary action, key fields, what the page does not do, and ambiguities.
+- Align one business flow at a time with the user: start, end, roles, main path, branches, exceptions, state changes, acceptance signals, and ambiguities.
+- Do not write or rewrite formal `docs/prd.md` content until `docs/requirement-alignment.md` has `整体确认状态：已确认`, every PRD writing gate is confirmed, and the user explicitly agrees that PRD writing can start.
+
+Use the three-step process:
+
+1. Write and confirm `docs/requirement-alignment.md`. If the user disagrees, mark it `需修正`, revise it, and confirm again.
+2. After alignment is confirmed, draft `docs/prd.md` in the new 1-8 section PRD format. Do not write `文档状态` or `待用户回答问题` into the PRD body; put unresolved blocking questions in `docs/workflow-state.json.pending_user_questions`.
+3. After the user answers, finalize `docs/prd.md`, write `docs/handoff-prd.md`, clear `pending_user_questions`, set `recommended_next=review analyze`, and request `quality-reviewer` review for `analyze`.
 
 Every feature needs an `M{module}-F{feature}` ID, priority, boundary, business rule, page field or operation detail, exception boundary, preliminary API need, permission or state impact, and acceptance signal.
 

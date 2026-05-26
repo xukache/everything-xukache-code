@@ -13,6 +13,20 @@ description: "界面设计师使用：选择设计方向、编写界面与体验
 - `docs/tech-architecture.md`
 - `assets/design-themes/`
 
+## 阶段参考和模板
+
+本技能包采用分阶段 UI 设计产物，不再只依赖单一 `docs/ui-design.md` 汇总文档。执行时按需读取以下参考，并使用对应模板生成阶段产物：
+
+| 阶段 | 参考 | 模板 | 产物 |
+|---|---|---|---|
+| 设计流程 | `references/design-flow.md` | - | 阶段执行顺序和门禁 |
+| 设计简报 | `references/design-brief.md` | `templates/design-brief.md` | `docs/ui-design-brief.md` |
+| 信息架构 | `references/information-architecture.md` | `templates/information-architecture.md` | `docs/ui-information-architecture.md` |
+| 设计系统和 tokens | `references/design-tokens.md` | `templates/design-tokens.md` | `docs/ui-design-tokens.md` |
+| UI 构建任务 | `references/ui-build-tasks.md` | `templates/ui-build-tasks.md` | `docs/ui-build-tasks.md` |
+| B 端设计规范 | `references/b-end-ui-design-spec.md` | - | 写入阶段文档和 `docs/ui-design.md` |
+| 视觉审查 | `references/visual-review.md` | `templates/prototype-review.md` | `docs/prototype-review.md` |
+
 如果 UI 阶段新增或调整页面清单、交互路径、字段、状态、技术约束或验收标准，或发现页面/模块过多、流程不顺，必须同步回写 `docs/project-config.md`、`docs/prd.md`、`docs/handoff-prd.md` 或 `docs/tech-architecture.md`，并在 `docs/workflow-state.json` 的 `notes` 记录同步说明。
 
 ## UI 硬规则
@@ -91,6 +105,10 @@ B 端规范引用要求：
 
 ## 输出
 
+- `docs/ui-design-brief.md`
+- `docs/ui-information-architecture.md`
+- `docs/ui-design-tokens.md`
+- `docs/ui-build-tasks.md`
 - `docs/ui-design.md`
 - `docs/handoff-ui.md`
 - `docs/prototype-review.md`
@@ -98,22 +116,24 @@ B 端规范引用要求：
 
 ## 设计流程
 
-1. 先做上游前置审查，确认高频真实需求、使用人群和真实使用流程清晰；发现歧义先报告。
-2. 判断是否为 B 端网页；如果是，先查 `references/b-end-ui-design-spec.md` 章节索引，并在 `docs/ui-design.md` 建立 B 端规范引用记录。
-3. 推荐 2-3 个差异化设计方向；B 端项目在推荐前必须读取配色、画布、密度和适配相关章节。
-4. 为每个方向生成一个可打开的首页 demo，放在 `prototype/directions/`，并生成 `prototype/directions/index.html` 作为预览索引。
-5. 在 `docs/ui-design.md` 中写清每个方向的 demo 路径和已采用的 B 端规则；没有 demo 的方向不得交给用户选择。
-6. 等用户选择，或在用户明确授权后使用第一推荐。
-7. 从真实使用流程推导页面访问逻辑，页面数量以完成高频路径为准；B 端项目必须读取信息架构和视觉动线章节。
-8. 设计页面清单、页面任务卡、模块准入表、布局、组件、状态和流程；B 端项目必须按阶段读取页面模式、布局骨架、数据页面、组件表现和交互状态章节。
-9. 暂停并提交原型开发前确认：向用户说明每个页面的核心任务、主操作、用户流程、保留模块、删除/后置模块、本页不做什么、跳转边界和上下文边界；未确认不得进入原型实现。
-10. 如果用户要求修正页面边界，先更新 `docs/ui-design.md` 并重新确认；用户明确确认后，才能基于选定方向构建完整高保真 HTML 原型。
-11. 已采用的 B 端规则必须落成真实布局、字号、间距、控件高度、状态和响应式实现。
-12. 在 `docs/ui-design.md` 记录页面访问逻辑、模块整合理由、B 端规范采用结果、确认记录和偏离说明。
-13. 使用 Playwright 对候选 demo 和完整原型逐页截图，B 端项目必须覆盖 `1280x800`、`1440x900`，必要时补 `1920x1080`；非 B 端按实际设备覆盖 desktop/tablet/mobile。
-14. 使用 Impeccable 做专项审查和修正，最多两轮；B 端项目必须把发现问题反查到对应 B 端规范章节的禁止事项和验收标准。
-15. 写入 `docs/prototype-review.md`，记录截图证据、审查结论、原型开发前确认检查、B 端规范抽检、修正项和遗留问题。
-16. 如 UI 决策改变上游事实，回写上游文档并记录同步说明。
+1. 读取 `references/design-flow.md`，向用户说明 UI 阶段会依次产出设计简报、信息架构、tokens、方向 demo、UI 构建任务、完整原型和截图审查。
+2. 做上游前置审查，确认高频真实需求、使用人群和真实使用流程清晰；必须询问用户当前上下文是否足够理解显性需求和隐藏需求，发现歧义先报告。
+3. 读取 `references/design-brief.md`，扫描 PRD、架构、现有设计系统、组件、tokens、字体、图标和主题资产，生成 `docs/ui-design-brief.md`；未确认前不进入信息架构。
+4. 判断是否为 B 端网页；如果是，先查 `references/b-end-ui-design-spec.md` 章节索引，并在阶段文档和 `docs/ui-design.md` 建立 B 端规范引用记录。
+5. 读取 `references/information-architecture.md`，从真实使用流程推导页面访问逻辑、页面地图、页面任务卡、模块准入表和需求到界面追溯，生成 `docs/ui-information-architecture.md`；需要和用户反复确认页面边界。
+6. 读取 `references/design-tokens.md`，基于已确认方向和既有系统生成 `docs/ui-design-tokens.md`；B 端项目必须读取配色、画布、密度、组件表现和适配相关章节。
+7. 推荐 2-3 个差异化设计方向；为每个方向生成一个可打开的首页 demo，放在 `prototype/directions/`，并生成 `prototype/directions/index.html` 作为预览索引。
+8. 在 `docs/ui-design.md` 中汇总设计简报、IA、tokens、每个方向的 demo 路径和已采用的 B 端规则；没有 demo 的方向不得交给用户选择。
+9. 等用户选择，或在用户明确授权后使用第一推荐。
+10. 读取 `references/ui-build-tasks.md`，生成 `docs/ui-build-tasks.md`，把完整原型实现拆成可独立打开、独立截图验证的垂直切片任务。
+11. 暂停并提交原型开发前确认：向用户说明每个页面的核心任务、主操作、用户流程、保留模块、删除/后置模块、本页不做什么、跳转边界和上下文边界；未确认不得进入原型实现。
+12. 如果用户要求修正页面边界，先更新 `docs/ui-information-architecture.md`、`docs/ui-design.md` 和 `docs/ui-build-tasks.md` 并重新确认；用户明确确认后，才能基于选定方向构建完整高保真 HTML 原型。
+13. 按 `docs/ui-build-tasks.md` 顺序实现完整原型；每完成一个 UI 任务，必须打开对应路径、执行交互并验证通过后才能进入下一任务。
+14. 已采用的 B 端规则和 token 决策必须落成真实布局、字号、间距、控件高度、状态和响应式实现。
+15. 读取 `references/visual-review.md`，使用 Playwright 对候选 demo 和完整原型逐页截图，B 端项目必须覆盖 `1280x800`、`1440x900`，必要时补 `1920x1080`；非 B 端按实际设备覆盖 desktop/tablet/mobile。
+16. 使用 Impeccable 做专项审查和修正，最多两轮；B 端项目必须把发现问题反查到对应 B 端规范章节的禁止事项和验收标准。
+17. 写入 `docs/prototype-review.md`，记录截图证据、审查结论、原型开发前确认检查、B 端规范抽检、修正项和遗留问题。
+18. 如 UI 决策改变上游事实，回写上游文档并记录同步说明。
 
 ## Impeccable 使用清单
 
@@ -190,6 +210,10 @@ prototype/
 - B 端项目是否完成识别、配色、画布、信息架构、布局骨架、组件表现、交互状态和自审修正的阶段门禁。
 - B 端项目是否在 `docs/ui-design.md` 和 `docs/prototype-review.md` 记录实际采用的规范章节、设计动作、偏离原因和验收结果。
 - B 端项目是否把规范落成真实原型实现，而不是只在文档中引用。
+- 是否已产出 `docs/ui-design-brief.md`、`docs/ui-information-architecture.md`、`docs/ui-design-tokens.md` 和 `docs/ui-build-tasks.md`。
+- 是否在设计简报阶段明确询问并记录上下文是否足够理解显性需求和隐藏需求。
+- 是否在 IA 和原型开发前确认阶段反复确认页面任务、模块边界和跳转上下文。
+- `docs/ui-build-tasks.md` 的每个任务是否是可独立打开、独立截图验证的垂直切片。
 - 设计方向是否都有可打开的首页 demo，而不是只有文字说明。
 - 完整原型实现前是否已完成页面任务卡、模块准入表和原型开发前确认。
 - 用户提出的页面边界问题是否已先回写 `docs/ui-design.md` 并重新确认。
