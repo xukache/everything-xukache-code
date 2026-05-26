@@ -51,6 +51,8 @@ const DOWNSTREAM_ROLE = {
 };
 
 const PLACEHOLDER_PATTERNS = ["待补充", "TODO", "[TODO]", "{{"];
+const PLAN_VAGUE_PATTERNS = ["类似上一步", "写相关测试", "处理边界情况", "待替换为真实"];
+const PLAN_COARSE_PATTERNS = ["实现完整模块", "完成全部接口", "搭建整个项目", "创建所有测试", "接入完整业务流程"];
 const EMOJI_PATTERN = /[\u{1F1E6}-\u{1F1FF}\u{1F300}-\u{1FAFF}\u{2700}-\u{27BF}\u{2600}-\u{26FF}]/u;
 const FONT_SIZE_PATTERN = /font-size\s*:\s*([0-9]+(?:\.[0-9]+)?)px/gi;
 const REQUIRED_CLARIFICATION_CRITERIA = {
@@ -178,7 +180,7 @@ function saveState(root, state) {
 
 function extractIds(text, prefix) {
   if (prefix === "feature") {
-    return new Set(text.match(/\bM\d+-F\d+\b/g) || []);
+    return new Set(text.match(/M\d+-F\d+/g) || []);
   }
   if (prefix === "task") {
     return new Set(text.match(/\bT\d{3,}\b/g) || []);
@@ -205,11 +207,7 @@ function missingClarificationCriteria(state) {
 
 function hasBlockingAnalyzeQuestions(state, prd) {
   const pending = state.pending_user_questions || [];
-  if (pending.length) return true;
-  if (/当前状态[：:]\s*draft/i.test(prd)) return true;
-  if (prd.includes("用户问题是否已回答：否") || prd.includes("用户问题是否已回答: 否")) return true;
-  const unansweredBlockingRow = /\|[^|\n]+未回答[^|\n]*\|[^|\n]*是[^|\n]*\|/.test(prd);
-  return prd.includes("## 待用户回答问题") && unansweredBlockingRow;
+  return pending.length > 0;
 }
 
 function designUiRuleViolations(root) {
@@ -348,6 +346,7 @@ function scoreStage(root, stage) {
   const initMissingCriteria = stage === "init" ? missingClarificationCriteria(state) : [];
   const analyzeHasOpenQuestions = stage === "analyze" && hasBlockingAnalyzeQuestions(state, readText(path.join(root, "docs", "prd.md")));
   const designUiViolations = stage === "design" ? designUiRuleViolations(root) : [];
+  const planViolations = stage === "plan" ? planQualityViolations(root) : [];
 
   if (initNotConfirmed) {
     if (clarification.status !== "user_confirmed") missing.push("docs/workflow-state.json: clarification.status=user_confirmed");
@@ -357,16 +356,18 @@ function scoreStage(root, stage) {
     }
   }
   if (initConceptsNotAligned) missing.push("docs/workflow-state.json: clarification.concepts_aligned=true");
-  if (analyzeHasOpenQuestions) missing.push("docs/prd.md: 待用户回答问题未清空或文档仍为 draft");
+  if (analyzeHasOpenQuestions) missing.push("docs/workflow-state.json: pending_user_questions 未清空");
   missing.push(...designUiViolations);
+  missing.push(...planViolations);
 
   let completeness = missing.length ? Math.max(1, Math.round((10 * presentCount) / Math.max(requiredCount, 1))) : 10;
   if (hasPlaceholder) completeness = Math.min(completeness, 6);
-  if (initNotConfirmed || analyzeHasOpenQuestions || designUiViolations.length) completeness = Math.min(completeness, 5);
+  if (initNotConfirmed || analyzeHasOpenQuestions || designUiViolations.length || planViolations.length) completeness = Math.min(completeness, 5);
 
   let clarity = totalChars > 2500 && !hasPlaceholder ? 9 : totalChars > 800 ? 6 : 3;
+  if (stage === "plan" && !planViolations.length && !hasPlaceholder) clarity = Math.max(clarity, 8);
   if (hasPlaceholder) clarity = Math.min(clarity, 5);
-  if (analyzeHasOpenQuestions || designUiViolations.length) clarity = Math.min(clarity, 5);
+  if (analyzeHasOpenQuestions || designUiViolations.length || planViolations.length) clarity = Math.min(clarity, 5);
 
   let [consistency, consistencyNote] = consistencyScore(root, stage);
   if (initNotConfirmed) {
@@ -374,7 +375,7 @@ function scoreStage(root, stage) {
     consistencyNote = "需求澄清尚未获得用户确认或关键术语概念未对齐，不能视为初始化完成。";
   }
   let executability = executabilityScore(contents, stage, hasPlaceholder);
-  if (initNotConfirmed || analyzeHasOpenQuestions || designUiViolations.length) executability = Math.min(executability, 5);
+  if (initNotConfirmed || analyzeHasOpenQuestions || designUiViolations.length || planViolations.length) executability = Math.min(executability, 5);
 
   const scores = {
     completeness,
@@ -390,7 +391,111 @@ function scoreStage(root, stage) {
   scores.init_concepts_not_aligned = initConceptsNotAligned;
   scores.analyze_has_open_questions = analyzeHasOpenQuestions;
   scores.design_ui_violations = designUiViolations;
+  scores.plan_violations = planViolations;
   return scores;
+}
+
+function planQualityViolations(root) {
+  const tasks = readText(path.join(root, "docs", "dev-tasks.md"));
+  const prd = readText(path.join(root, "docs", "prd.md"));
+  const violations = [];
+  if (!tasks.trim()) return ["docs/dev-tasks.md 为空，无法审核开发任务规划。"];
+
+  const requiredMarkers = [
+    "实施计划",
+    "执行规则",
+    "任务拆分规则",
+    "_需求:",
+    "验收/测试",
+    "技术基线",
+    "语言",
+    "框架",
+    "版本",
+    "包管理器",
+    "脚手架",
+    "安装命令",
+    "启动命令",
+    "测试命令",
+  ];
+  const missingMarkers = requiredMarkers.filter((marker) => !tasks.includes(marker));
+  if (missingMarkers.length) {
+    violations.push(`docs/dev-tasks.md 缺少 Kiro 风格实施计划结构：${missingMarkers.join(", ")}`);
+  }
+
+  const vagueHits = PLAN_VAGUE_PATTERNS.filter((pattern) => tasks.includes(pattern));
+  if (vagueHits.length) {
+    violations.push(`docs/dev-tasks.md 存在空泛或未替换语句：${vagueHits.join(", ")}`);
+  }
+  const coarseHits = PLAN_COARSE_PATTERNS.filter((pattern) => tasks.includes(pattern));
+  if (coarseHits.length) {
+    violations.push(`docs/dev-tasks.md 存在粒度过粗的任务表述：${coarseHits.join(", ")}`);
+  }
+
+  const taskSections = extractPlanTaskSections(tasks);
+  if (!taskSections.length) {
+    violations.push("docs/dev-tasks.md 未找到 `- [ ] 1. 任务名` 形式的编号任务。");
+  }
+  if (taskSections.length && !/(技术基线|语言|框架|版本|包管理器|脚手架)/.test(taskSections[0].body)) {
+    violations.push("第一个编号任务必须锁定技术基线、版本、包管理器和脚手架方案。");
+  }
+
+  for (const section of taskSections) {
+    const missing = [];
+    const actionCount = (section.body.match(/^\s{2,}-\s+/gm) || []).length;
+    if (actionCount < 3 || actionCount > 7) missing.push(`动作数量应为 3-6 条，当前 ${actionCount} 条`);
+    if (!/_需求:\s*[^_]+_/.test(section.body)) missing.push("_需求: ..._ 追溯");
+    if (!/(验收\/测试|验收|测试|验证|运行).+/.test(section.body)) missing.push("测试/验收动作");
+    if (PLAN_COARSE_PATTERNS.some((pattern) => section.title.includes(pattern))) missing.push("任务标题粒度过粗");
+    if (missing.length) violations.push(`任务 ${section.id} 缺少或不合格：${missing.join(", ")}`);
+  }
+
+  if (/requirements\.txt/.test(tasks) && /\buv\b/.test(tasks) && !/不生成\s+requirements\.txt|不得.{0,12}requirements\.txt|禁止.{0,12}requirements\.txt/.test(tasks)) {
+    violations.push("docs/dev-tasks.md 同时出现 uv 和 requirements.txt，需确认依赖管理方式，不能混用默认方案。");
+  }
+  if (/Next\.?js|nextjs|next\.js/i.test(tasks) && /手工创建\s*`?package\.json`?|手写\s*`?package\.json`?/i.test(tasks)) {
+    violations.push("Next.js 新项目不得绕过官方脚手架手工创建 package.json 和目录结构。");
+  }
+
+  const p0FeatureIds = extractP0FeatureIds(prd);
+  const taskFeatureIds = extractIds(tasks, "feature");
+  for (const featureId of p0FeatureIds) {
+    if (!taskFeatureIds.has(featureId)) {
+      violations.push(`P0 功能 ${featureId} 未映射到 docs/dev-tasks.md 的编号任务。`);
+      continue;
+    }
+    if (!featureHasNumberedTaskAndValidation(tasks, featureId)) {
+      violations.push(`P0 功能 ${featureId} 缺少编号任务或测试/验收动作追溯。`);
+    }
+  }
+
+  return violations;
+}
+
+function extractPlanTaskSections(text) {
+  const headingPattern = /^- \[[ xX]\]\s+(\d+)\.\s+(.+)$/gm;
+  const matches = [...text.matchAll(headingPattern)];
+  return matches.map((match, index) => {
+    const next = matches[index + 1];
+    return {
+      id: match[1],
+      title: match[2],
+      body: text.slice(match.index, next ? next.index : text.length),
+    };
+  });
+}
+
+function extractP0FeatureIds(prd) {
+  const ids = [];
+  for (const line of prd.split(/\r?\n/)) {
+    if (!/\bP0\b/.test(line)) continue;
+    const matches = line.match(/\bM\d+-F\d+\b/g) || [];
+    ids.push(...matches);
+  }
+  return uniqueSorted(ids);
+}
+
+function featureHasNumberedTaskAndValidation(tasks, featureId) {
+  return extractPlanTaskSections(tasks).some((section) => section.body.includes(featureId) && /(验收\/测试|验收|测试|验证|运行)/.test(section.body));
 }
 
 function consistencyScore(root, stage) {
@@ -421,10 +526,10 @@ function consistencyScore(root, stage) {
 function executabilityScore(contents, stage, hasPlaceholder) {
   const requiredTerms = {
     init: ["下一步", "工作量", "核心场景"],
-    analyze: ["验收", "P0", "不做"],
+    analyze: ["P0", "不在范围", "业务规则", "异常", "接口", "权限"],
     architect: ["接口", "数据库", "部署"],
     design: ["原型", "状态", "prototype", "directions", "impeccable", "screenshots"],
-    plan: ["T001", "验证方式", "前置依赖"],
+    plan: ["实施计划", "- [ ]", "_需求:", "验收/测试", "技术基线", "包管理器", "脚手架"],
     deliver: ["AGENTS", "dev-tasks", "prototype"],
   }[stage];
   const hits = requiredTerms.filter((term) => contents.includes(term)).length;
@@ -511,8 +616,9 @@ function buildIssues(scores, roundNo) {
   if (scores.has_placeholder) issues.push("- 文档仍包含“待补充”或 TODO，占位内容需要替换为真实决策。");
   if (scores.init_not_confirmed) issues.push("- 需求澄清尚未获得用户确认，`init` 不能判定完成。");
   if (scores.init_concepts_not_aligned) issues.push("- 关键术语和概念尚未对齐，容易导致 AI 与用户说的是不同东西。");
-  if (scores.analyze_has_open_questions) issues.push("- PRD 仍是草稿或存在待用户回答问题，不能触发 analyze 通过。");
+  if (scores.analyze_has_open_questions) issues.push("- workflow-state 仍存在 pending_user_questions，不能触发 analyze 通过。");
   if (scores.design_ui_violations.length) issues.push("- UI 原型存在 emoji 或主体字号小于 16px 的问题，需要改为图标资源并提高默认字号。");
+  if ((scores.plan_violations || []).length) issues.push(`- 开发任务规划不符合 Kiro 风格实施计划要求：${scores.plan_violations.join("；")}`);
   if (scores.consistency < 6) issues.push("- 跨阶段追溯不足，需求功能编号没有完整映射到当前阶段产物。");
   if (scores.executability < 6) issues.push("- 下游执行信号不足，缺少验收、验证、接口、状态或任务粒度信息。");
   if (roundNo >= 3 && scores.average < 8) issues.push("- 已达到第三轮未通过，建议停止推进并先修复关键问题。");
@@ -523,10 +629,10 @@ function buildRework(stage, result, scores, roundNo) {
   if (result === "通过") return "本阶段已通过，无需返工。可根据用户偏好做非阻塞微调。";
   const suggestions = {
     init: "补齐 8 个澄清判断锚点、六个核心问题、高频真实需求、最值得先做的一段流程、Agent 能力、结果落点、最小 demo 边界和工作量粗估。",
-    analyze: "先让用户回答 PRD 草稿中的待确认问题，再补齐 P0/P1/P2、Mx-Fx 功能编号、业务规则、不做清单和验收标准，并把文档状态改为 final。",
+    analyze: "先让用户回答 pending_user_questions，再补齐新 PRD 的功能范围、核心业务流程、4.x 功能详细设计、数据模型、权限、非功能、Mx-Fx 功能编号和异常边界。",
     architect: "补齐需求到数据库、字段、接口、部署配置和技术风险的映射。",
     design: "补齐 2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、docs/prototype-review.md、Playwright 截图证据、Impeccable 审查记录、页面清单、需求到界面映射和完整原型路径。",
-    plan: "补齐 Txxx 任务、前置依赖、涉及文件、执行指令、验证方式和边缘情况。",
+    plan: "补齐 Kiro 风格实施计划结构、技术基线锁定、编号 checklist、3-6 条具体动作、测试/验收动作、_需求 追溯，并继续拆小粒度过粗的任务。",
     deliver: "补齐缺失文档、审核报告、AGENTS.md 和 prototype 后重新打包。",
   };
   const extra = roundNo >= 3 && scores.average < 8 ? "\n\n第三轮仍未通过：请向用户报告继续推进的具体风险。" : "";

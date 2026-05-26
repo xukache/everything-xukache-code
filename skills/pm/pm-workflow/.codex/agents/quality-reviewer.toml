@@ -20,10 +20,13 @@ node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|a
 ## 新增硬检查
 
 - `init` 阶段：必须确认 `workflow-state.json` 中 `clarification.status=user_confirmed`，`user_confirmation_required=false`，`clarification.concepts_aligned=true`，并且 8 个判断锚点均为 true。尤其是 `high_frequency_need`、`core_usage_flow`、结果落点、最值得先做的一段和最小可用 demo 边界必须清楚，否则不能判定通过。
-- `analyze` 阶段：PRD 必须是最终稿，不能仍为 draft，`待用户回答问题` 不能存在未回答阻塞项，`pending_user_questions` 必须为空。草稿阶段不能触发通过。
+- `analyze` 阶段：PRD 必须符合新 1-8 章格式，`pending_user_questions` 必须为空。草稿阶段或仍有阻塞问题时不能触发通过。
 - `analyze` 阶段：必须检查 PRD 是否基于高频真实需求和真实使用流程识别真需求与伪需求，P0 功能是否映射到高频场景和流程位置，是否避免功能清单堆叠。
 - `design` 阶段：UI 可见内容不能使用 emoji；正文、表单、按钮、列表文本默认不小于 16px，辅助说明不得低于 14px。
 - `design` 阶段：必须检查页面访问逻辑是否来自真实使用流程，页面数量是否服务高频路径，能合并的入口、状态、表单、列表、详情是否已合并并记录理由。
+- `plan` 阶段：`docs/dev-tasks.md` 必须是单文件 Kiro 风格实施计划，使用 `- [ ] 1. 任务名` checklist。
+- `plan` 阶段：每个编号任务必须有 3-6 条具体动作、测试/验收动作和 `_需求: ..._` 追溯；每个 P0 `Mx-Fx` 必须出现在至少一个编号任务中。
+- `plan` 阶段：必须检查第一个编号任务是否锁定语言/框架版本、包管理器、依赖文件形态、脚手架命令、安装命令、启动命令和测试命令；缺失时不能通过。
 - 所有阶段：如果下游文档改变了上游事实，必须检查上游源文档是否同步回写，并查看 workflow-state notes 是否记录同步说明。
 
 ## 三重审核机制
@@ -54,7 +57,7 @@ node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|a
 
 - 需求功能编号到技术架构接口、数据表、字段、部署配置。
 - 需求功能编号到界面页面、控件、状态、原型路径。
-- 需求功能编号到开发任务。
+- 需求功能编号到开发任务和测试/验收动作。
 - 数据库字段到接口参数。
 - 界面页面元素到接口或本地状态支撑。
 - design 阶段还必须检查每个候选设计方向是否有可打开的首页 demo，并通过 prototype/directions/index.html 提供预览索引；只有文字方向说明不通过。

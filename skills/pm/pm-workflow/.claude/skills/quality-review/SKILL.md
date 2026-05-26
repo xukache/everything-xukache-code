@@ -37,11 +37,15 @@ node .claude/skills/pm-workflow/scripts/review_stage.js --root . --stage <stage>
 - 平均分是否 >= 8，且单项是否都 >= 6。
 - 是否存在待补充、待办占位或空表。
 - init 阶段是否已经在 `workflow-state.json` 中达到 `clarification.status=user_confirmed`、`clarification.concepts_aligned=true`，且 8 项澄清标准均完成。
-- analyze 阶段是否为 `文档状态：final`，并且没有未回答的阻塞问题。
+- analyze 阶段是否已清空 `docs/workflow-state.json.pending_user_questions`，并且没有未回答的阻塞问题。
 - init 阶段 8 个判断锚点是否全部完成，尤其是高频真实需求、最值得先做的一段流程、Agent 能力、结果落点和最小可用 demo 边界。
 - analyze 阶段是否基于高频真实需求和真实使用流程识别真需求与伪需求，P0 是否映射到高频场景和流程位置。
 - design 阶段 UI 可见内容是否使用 emoji，主体字号是否低于 16px。
 - design 阶段页面访问逻辑是否来自真实使用流程，页面和模块是否避免堆叠并记录整合理由。
+- plan 阶段是否为单文件 Kiro 风格实施计划，使用 `- [ ] 1. 任务名` checklist。
+- plan 阶段每个编号任务是否包含 3-6 条具体动作、测试/验收动作和 `_需求: ..._` 追溯。
+- plan 阶段第一个编号任务是否锁定语言/框架版本、包管理器、依赖文件形态、脚手架命令、安装命令、启动命令和测试命令。
+- plan 阶段每个 P0 `Mx-Fx` 是否出现在至少一个编号任务中，并且每个最小任务要求测试/验收通过后才能继续。
 - 下游文档如改变上游事实，是否同步回写上游源文档，并在 `workflow-state.json` notes 记录同步说明。
 - 是否存在跨阶段新增范围。
 - design 阶段是否为每个候选方向生成可打开的首页 demo，并提供 `prototype/directions/index.html` 预览索引。
