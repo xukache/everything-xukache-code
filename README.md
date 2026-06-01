@@ -6,6 +6,7 @@
 
 ```text
 skills/
+  ai-coding-prompt-optimize/  # 编程类 AI 提示词优化 skill
   projects/   # 项目理解、文档维护、代码审查类 skill
   pm/         # PM Workflow 和 skill 迭代流程
   uiux/       # UI/UX 设计知识库
@@ -15,6 +16,7 @@ skills/
 
 | Skill | 路径 | 简单介绍 | 常见使用方式 |
 | --- | --- | --- | --- |
+| `ai-coding-prompt-optimize` | `skills/ai-coding-prompt-optimize` | 根据用户的原始编程需求、报错描述、代码修改目标、重构想法或审查请求，优化生成更具体、更有约束、更能指导 AI 编程工具执行的提示词。 | “用编程提示词 Skill 优化：xxx”、“把下面这段需求改成更适合 Claude Code 执行的提示词”。 |
 | `codebase-onboarding` | `skills/projects/codebase-onboarding` | 分析陌生代码库，生成结构化入门指南、架构地图、关键入口、项目约定和 `AGENTS.md`。 | “帮我理解这个仓库”、“给这个项目生成 AGENTS.md”。 |
 | `code-documentation` | `skills/projects/code-documentation` | 维护项目文档，覆盖 README、API 文档、架构说明、开发者指南、迁移说明、代码注释和文档影响检查。 | “更新 README”、“补充接口文档”、“代码改完后检查文档是否同步”。 |
 | `backend-code-review` | `skills/projects/backend-code-review` | 来自 Dify 的后端代码审查 skill，面向 `api/` 下 Python 后端代码，检查安全、性能、架构分层、SQLAlchemy、数据库模型和 repository 抽象等问题。 | “review 这次后端改动”、“检查 `api/...` 这个文件”。 |
@@ -34,6 +36,7 @@ skills/
 请使用 skills/projects/frontend-code-review 检查 web/app/components/Foo.tsx
 请使用 skills/projects/code-documentation 更新 README 和架构说明
 请使用 skills/projects/codebase-onboarding 帮我梳理这个仓库
+请使用 skills/ai-coding-prompt-optimize 优化下面这段编程需求
 ```
 
 如果需要安装到 Codex 全局技能目录，可以将对应目录复制到 `$CODEX_HOME/skills/`；安装后重启 Codex 才会被自动发现。
