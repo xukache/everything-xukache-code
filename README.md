@@ -1,49 +1,96 @@
+<div align="center">
+
 # everything-xukache-code
 
-日常必备的 Codex/Agent skill 集合，按用途存放在 `skills/` 下。
+**日常 AI 编程必备的 Agent Skills 集合**
+
+将实用的 Agent Skills 按用途组织，适配 Claude Code / Codex / Cursor / Copilot 等 AI 编程工具。
+
+[![Agent Skills](https://img.shields.io/badge/Agent_Skills-Specification-blue)](https://agentskills.io/specification)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+[English](README_en.md) | 简体中文
+
+</div>
+
+---
+
+## 项目简介
+
+这是一个精心整理的 Agent Skills 集合仓库，收录了 AI 编程场景下的常用技能包。每个 Skill 遵循 [Agent Skills 开放规范](https://agentskills.io/specification)，支持渐进式加载，可以在任何兼容的 AI 编程工具中使用。
 
 ## 目录结构
 
-```text
+```
 skills/
-  ai-coding-prompt-optimize/  # 编程类 AI 提示词优化 skill
-  projects/   # 项目理解、文档维护、代码审查类 skill
-  pm/         # PM Workflow 和 skill 迭代流程
-  uiux/       # UI/UX 设计知识库
+├── ai-coding-task-planner/   # AI 编程需求拆解与提示词优化
+├── projects/                  # 项目理解、文档维护、代码审查
+│   ├── codebase-onboarding/
+│   ├── code-documentation/
+│   ├── backend-code-review/
+│   └── frontend-code-review/
+├── pm/                        # 产品工作流与 Skill 迭代
+│   ├── pm-workflow/
+│   └── skill-iteration-retrospective/
+└── uiux/                      # UI/UX 设计知识库
+    └── ui-ux-pro-max/
 ```
 
-## 已有技能
+## 技能一览
 
-| Skill | 路径 | 简单介绍 | 常见使用方式 |
-| --- | --- | --- | --- |
-| `ai-coding-prompt-optimize` | `skills/ai-coding-prompt-optimize` | 根据用户的原始编程需求、报错描述、代码修改目标、重构想法或审查请求，优化生成更具体、更有约束、更能指导 AI 编程工具执行的提示词。 | “用编程提示词 Skill 优化：xxx”、“把下面这段需求改成更适合 Claude Code 执行的提示词”。 |
-| `codebase-onboarding` | `skills/projects/codebase-onboarding` | 分析陌生代码库，生成结构化入门指南、架构地图、关键入口、项目约定和 `AGENTS.md`。 | “帮我理解这个仓库”、“给这个项目生成 AGENTS.md”。 |
-| `code-documentation` | `skills/projects/code-documentation` | 维护项目文档，覆盖 README、API 文档、架构说明、开发者指南、迁移说明、代码注释和文档影响检查。 | “更新 README”、“补充接口文档”、“代码改完后检查文档是否同步”。 |
-| `backend-code-review` | `skills/projects/backend-code-review` | 来自 Dify 的后端代码审查 skill，面向 `api/` 下 Python 后端代码，检查安全、性能、架构分层、SQLAlchemy、数据库模型和 repository 抽象等问题。 | “review 这次后端改动”、“检查 `api/...` 这个文件”。 |
-| `frontend-code-review` | `skills/projects/frontend-code-review` | 来自 Dify 的前端代码审查 skill，面向 `.tsx`、`.ts`、`.js` 等前端代码，按代码质量、性能和业务逻辑清单输出审查意见。 | “review 这次前端改动”、“检查这个组件有没有问题”。 |
-| `pm-workflow` | `skills/pm/pm-workflow` | AI 产品开发工作室和 CLI，覆盖需求澄清、需求分析、架构设计、界面原型、开发规划、质量审核和交付打包。目录内维护 Codex 与 Claude Code 两套结构镜像。 | `pmflow init --ai codex --root ./demo --name "产品名"`，或在生成后的工作室里使用 `init`、`analyze`、`architect`、`design`、`plan`、`review`、`deliver`、`status`。 |
-| `skill-iteration-retrospective` | `skills/pm/skill-iteration-retrospective` | 复盘并迭代指定 skill，基于失败样本诊断触发条件、输入结构、判断规则、输出接口和停止条件。 | “这个 skill 不好用，帮我复盘并改进”。 |
-| `ui-ux-pro-max` | `skills/uiux/ui-ux-pro-max` | UI/UX 设计知识库，包含风格、配色、字体、UX 指南、图表和技术栈设计建议，并提供搜索脚本。 | “给这个页面做 UI/UX 设计建议”、“查找适合 SaaS 后台的设计风格”。 |
+### 🧠 编程辅助
 
-## 使用说明
+| Skill | 介绍 | 使用方式 |
+| --- | --- | --- |
+| [`ai-coding-task-planner`](skills/ai-coding-task-planner/) | 将原始编程需求处理成 AI 能稳定完成的原子任务和高质量提示词。大需求先拆解（含依赖和完成标准），再逐个优化提示词。采用渐进式加载架构。 | "帮我把这个需求拆给 Cursor 做"<br>"用编程提示词 Skill 优化：xxx" |
 
-在 Codex 或其他支持 Agent Skills 的环境中，把需要的 skill 目录放入对应的 skills 搜索路径，或在当前仓库中直接引用 `skills/<分类>/<skill-name>/SKILL.md`。每个 skill 的入口文件都是 `SKILL.md`，其中包含触发场景、工作流程、检查清单和输出格式。
+### 📂 项目工程
 
-常用调用方式：
+| Skill | 介绍 | 使用方式 |
+| --- | --- | --- |
+| [`codebase-onboarding`](skills/projects/codebase-onboarding/) | 分析陌生代码库，生成结构化入门指南、架构地图、关键入口、项目约定和 `AGENTS.md`。 | "帮我理解这个仓库" |
+| [`code-documentation`](skills/projects/code-documentation/) | 维护项目文档，覆盖 README、API 文档、架构说明、开发者指南、代码注释和文档同步检查。 | "更新 README"、"补充接口文档" |
+| [`backend-code-review`](skills/projects/backend-code-review/) | 后端代码审查，面向 Python 后端，检查安全、性能、架构分层、SQLAlchemy 等问题。 | "review 这次后端改动" |
+| [`frontend-code-review`](skills/projects/frontend-code-review/) | 前端代码审查，面向 `.tsx`、`.ts`、`.js`，按质量、性能和业务逻辑清单输出意见。 | "review 这次前端改动" |
 
-```text
+### 🚀 产品工作流
+
+| Skill | 介绍 | 使用方式 |
+| --- | --- | --- |
+| [`pm-workflow`](skills/pm/pm-workflow/) | AI 产品开发工作室，覆盖需求分析、架构设计、界面原型、开发规划、质量审核和交付打包。 | `pmflow init --ai codex --root ./demo --name "产品名"` |
+| [`skill-iteration-retrospective`](skills/pm/skill-iteration-retrospective/) | 复盘并迭代指定 Skill，基于失败样本诊断触发条件和输出接口。 | "这个 skill 不好用，帮我复盘" |
+
+### 🎨 设计
+
+| Skill | 介绍 | 使用方式 |
+| --- | --- | --- |
+| [`ui-ux-pro-max`](skills/uiux/ui-ux-pro-max/) | UI/UX 设计知识库，含 50+ 风格、161 配色方案、57 字体搭配、99 条 UX 指南等。 | "给这个页面做 UI/UX 设计建议" |
+
+## 快速使用
+
+在支持 Agent Skills 的环境中，将需要的 Skill 目录放入 skills 搜索路径即可。
+
+```bash
+# 常用调用方式
+请使用 skills/ai-coding-task-planner 帮我把这个大需求拆成小任务
 请使用 skills/projects/backend-code-review review 当前后端改动
-请使用 skills/projects/frontend-code-review 检查 web/app/components/Foo.tsx
 请使用 skills/projects/code-documentation 更新 README 和架构说明
 请使用 skills/projects/codebase-onboarding 帮我梳理这个仓库
-请使用 skills/ai-coding-prompt-optimize 优化下面这段编程需求
 ```
 
-如果需要安装到 Codex 全局技能目录，可以将对应目录复制到 `$CODEX_HOME/skills/`；安装后重启 Codex 才会被自动发现。
+安装到全局技能目录：
+
+```bash
+# Codex
+cp -r skills/<skill-name> $CODEX_HOME/skills/
+
+# Claude Code
+cp -r skills/<skill-name> ~/.claude/skills/
+```
 
 ## PM Workflow CLI
 
-`pm-workflow` 已发布为 npm 包：`pm-workflow-studio`。安装后可以用 `pmflow` 一条命令生成 Codex 或 Claude Code 工作室结构。
+`pm-workflow` 已发布为 npm 包 `pm-workflow-studio`：
 
 ```bash
 npm install -g pm-workflow-studio
@@ -51,6 +98,30 @@ pmflow init --ai codex --root ./pm-workflow-demo --name "习惯打卡"
 pmflow init --ai claude --root ./pm-workflow-claude-demo --name "习惯打卡"
 ```
 
-`pmflow` also exposes the alias `pm-workflow`. Package source lives in `skills/pm/pm-workflow/`.
+`pmflow init` 仅需 Node.js，无需 Python。
 
-`pmflow init` only requires Node.js. It does not require Python.
+## 致谢与来源
+
+本仓库中部分 Skill 来自优秀的开源项目，在此致谢：
+
+| Skill | 来源 | 链接 |
+| --- | --- | --- |
+| `backend-code-review` | Dify 项目 | [langgenius/dify](https://github.com/langgenius/dify) |
+| `frontend-code-review` | Dify 项目 | [langgenius/dify](https://github.com/langgenius/dify) |
+| `ui-ux-pro-max` | UI UX Pro Max Skill | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) |
+| `codebase-onboarding` | ECC 社区 | — |
+| `ai-coding-task-planner` | 原创 | — |
+| `pm-workflow` | 原创 | — |
+| `code-documentation` | 原创 | — |
+| `skill-iteration-retrospective` | 原创 | — |
+
+## 相关资源
+
+- [Agent Skills 官方规范](https://agentskills.io/specification)
+- [Anthropic 官方 Skills 仓库](https://github.com/anthropics/skills)
+- [awesome-agent-skills 社区合集](https://github.com/VoltAgent/awesome-claude-skills)
+- [Agent Skills Marketplace](https://skillsmp.com/)
+
+## 许可证
+
+本仓库原创内容采用 MIT 许可证。来自第三方的 Skill 保留其原始许可。
