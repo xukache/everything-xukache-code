@@ -78,15 +78,83 @@ Use skills/projects/code-documentation to update README and architecture docs
 Use skills/projects/codebase-onboarding to help me understand this repo
 ```
 
-Install to global skills directory:
+## Install Skills (AI Execution Instructions)
+
+> This section is for AI coding assistants (Claude Code / Codex / Cursor, etc.) to read and execute. Users only need to tell the AI which skills to install in natural language.
+
+**Repository URL:** `https://github.com/xukache/everything-xukache-code.git`
+
+### Skill Path Mapping
+
+| Skill Name | Path in Repository |
+| --- | --- |
+| `ai-coding-task-planner` | `skills/ai-coding-task-planner/` |
+| `codebase-onboarding` | `skills/projects/codebase-onboarding/` |
+| `code-documentation` | `skills/projects/code-documentation/` |
+| `backend-code-review` | `skills/projects/backend-code-review/` |
+| `frontend-code-review` | `skills/projects/frontend-code-review/` |
+| `pm-workflow` | `skills/pm/pm-workflow/` |
+| `skill-iteration-retrospective` | `skills/pm/skill-iteration-retrospective/` |
+| `ui-ux-pro-max` | `skills/uiux/ui-ux-pro-max/` |
+
+### User Command Examples
+
+```text
+Install ai-coding-task-planner skill globally
+Install backend-code-review skill to current project
+Install all skills globally
+Install all skills to current project
+```
+
+### AI Execution Logic
+
+When the user requests skill installation, follow these steps:
+
+**1. Clone the repository (if not already local):**
 
 ```bash
-# Codex
-cp -r skills/<skill-name> $CODEX_HOME/skills/
-
-# Claude Code
-cp -r skills/<skill-name> ~/.claude/skills/
+git clone --depth 1 https://github.com/xukache/everything-xukache-code.git /tmp/everything-xukache-code
 ```
+
+**2. Determine target directory based on scope:**
+
+| Scope | Target Path |
+| --- | --- |
+| Global (Claude Code) | `~/.claude/skills/` |
+| Global (Codex) | `~/.agents/skills/` |
+| Global (Generic) | `~/.agents/skills/` |
+| Current Project | `./.agents/skills/` or `./.claude/skills/` |
+
+**3. Copy skills:**
+
+```bash
+# Install single skill (example: ai-coding-task-planner globally)
+cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
+
+# Install single skill to current project
+cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ./.agents/skills/
+
+# Install all skills globally
+cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/projects/codebase-onboarding ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/projects/code-documentation ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/projects/backend-code-review ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/projects/frontend-code-review ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/pm/pm-workflow ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/pm/skill-iteration-retrospective ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/uiux/ui-ux-pro-max ~/.agents/skills/
+```
+
+**4. Clean up temporary files:**
+
+```bash
+rm -rf /tmp/everything-xukache-code
+```
+
+**5. After installation, inform the user:**
+- Names and count of installed skills
+- Installation location
+- How to use (reference skill name directly in conversation)
 
 ## PM Workflow CLI
 

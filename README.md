@@ -78,15 +78,84 @@ skills/
 请使用 skills/projects/codebase-onboarding 帮我梳理这个仓库
 ```
 
-安装到全局技能目录：
+## 安装技能（AI 执行指令）
+
+> 本章节供 AI 编程助手（Claude Code / Codex / Cursor 等）读取并执行。用户只需用自然语言告诉 AI 安装哪些技能即可。
+
+**仓库地址：** `https://github.com/xukache/everything-xukache-code.git`
+
+### 技能路径映射
+
+| 技能名 | 仓库内路径 |
+| --- | --- |
+| `ai-coding-task-planner` | `skills/ai-coding-task-planner/` |
+| `codebase-onboarding` | `skills/projects/codebase-onboarding/` |
+| `code-documentation` | `skills/projects/code-documentation/` |
+| `backend-code-review` | `skills/projects/backend-code-review/` |
+| `frontend-code-review` | `skills/projects/frontend-code-review/` |
+| `pm-workflow` | `skills/pm/pm-workflow/` |
+| `skill-iteration-retrospective` | `skills/pm/skill-iteration-retrospective/` |
+| `ui-ux-pro-max` | `skills/uiux/ui-ux-pro-max/` |
+
+### 用户指令示例
+
+```text
+帮我安装 ai-coding-task-planner 技能到全局
+帮我安装 backend-code-review 技能到当前项目下
+帮我安装所有技能到全局
+帮我安装所有技能到当前项目下
+```
+
+### AI 执行逻辑
+
+当用户要求安装技能时，按以下步骤执行：
+
+**1. 克隆或拉取仓库（如本地不存在）：**
 
 ```bash
-# Codex
-cp -r skills/<skill-name> $CODEX_HOME/skills/
-
-# Claude Code
-cp -r skills/<skill-name> ~/.claude/skills/
+# 克隆到临时目录
+git clone --depth 1 https://github.com/xukache/everything-xukache-code.git /tmp/everything-xukache-code
 ```
+
+**2. 根据安装范围确定目标目录：**
+
+| 范围 | 目标路径 |
+| --- | --- |
+| 全局（Claude Code） | `~/.claude/skills/` |
+| 全局（Codex） | `~/.agents/skills/` |
+| 全局（通用） | `~/.agents/skills/` |
+| 当前项目 | `./.agents/skills/` 或 `./.claude/skills/` |
+
+**3. 复制技能：**
+
+```bash
+# 安装单个技能（示例：ai-coding-task-planner 到全局）
+cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
+
+# 安装单个技能到当前项目
+cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ./.agents/skills/
+
+# 安装所有技能到全局
+cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/projects/codebase-onboarding ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/projects/code-documentation ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/projects/backend-code-review ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/projects/frontend-code-review ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/pm/pm-workflow ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/pm/skill-iteration-retrospective ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/uiux/ui-ux-pro-max ~/.agents/skills/
+```
+
+**4. 清理临时文件：**
+
+```bash
+rm -rf /tmp/everything-xukache-code
+```
+
+**5. 安装完成后告知用户：**
+- 已安装的技能名称和数量
+- 安装位置
+- 如何使用（直接在对话中引用技能名即可）
 
 ## PM Workflow CLI
 
