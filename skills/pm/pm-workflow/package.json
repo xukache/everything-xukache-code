@@ -1,7 +1,7 @@
 {
   "name": "pm-workflow-studio",
-  "version": "0.2.1",
-  "description": "AI product development studio CLI for Codex and Claude Code.",
+  "version": "2.0.0",
+  "description": "AI product development studio CLI for Codex, Claude Code and Kiro.",
   "homepage": "https://github.com/xukache/everything-xukache-code/tree/main/skills/pm/pm-workflow",
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
     "bin/",
     ".codex/",
     ".claude/",
+    ".kiro/",
     "README.md"
   ],
   "scripts": {
@@ -30,6 +31,7 @@
     "product-management",
     "codex",
     "claude-code",
+    "kiro",
     "ai-workflow"
   ],
   "license": "UNLICENSED"

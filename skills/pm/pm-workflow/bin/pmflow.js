@@ -7,20 +7,20 @@ const readline = require("node:readline");
 const PACKAGE_ROOT = path.resolve(__dirname, "..");
 const CODEX_MIRROR = path.join(PACKAGE_ROOT, ".codex");
 const CLAUDE_MIRROR = path.join(PACKAGE_ROOT, ".claude");
+const KIRO_MIRROR = path.join(PACKAGE_ROOT, ".kiro");
 const CODEX_TEMPLATES = path.join(CODEX_MIRROR, "templates");
 const CODEX_ROLE_SKILLS = path.join(CODEX_MIRROR, "role-skills");
 const CODEX_BUNDLED_SKILLS = path.join(CODEX_MIRROR, "bundled-skills");
 
 const DOC_TEMPLATES = [
   ["project-config.md", "project-config.md"],
-  ["demand-analysis/templates/requirement-alignment.md", "requirement-alignment.md"],
+  ["feature-flow-layout.md", "feature-flow-layout.md"],
   ["demand-analysis/templates/prd.md", "prd.md"],
   ["demand-analysis/templates/handoff-prd.md", "handoff-prd.md"],
   ["tech-architecture/templates/architecture-options.md", "architecture-options.md"],
   ["tech-architecture/templates/tech-architecture.md", "tech-architecture.md"],
   ["tech-architecture/templates/handoff-architecture.md", "handoff-architecture.md"],
   ["ui-prototype-design/templates/design-brief.md", "ui-design-brief.md"],
-  ["ui-prototype-design/templates/information-architecture.md", "ui-information-architecture.md"],
   ["ui-prototype-design/templates/design-tokens.md", "ui-design-tokens.md"],
   ["ui-prototype-design/templates/ui-build-tasks.md", "ui-build-tasks.md"],
   ["ui-prototype-design/templates/ui-design.md", "ui-design.md"],
@@ -36,16 +36,17 @@ Usage:
   pmflow
   pmflow init
   pmflow update
-  pmflow init [--ai auto|codex|claude] [--root <dir>] [--name <product name>]
-  pmflow update [--ai auto|codex|claude] [--root <dir>] [--name <product name>]
-  pm-workflow init [--ai auto|codex|claude] [--root <dir>] [--name <product name>]
-  pm-workflow update [--ai auto|codex|claude] [--root <dir>] [--name <product name>]
+  pmflow init [--ai auto|codex|claude|kiro] [--root <dir>] [--name <product name>]
+  pmflow update [--ai auto|codex|claude|kiro] [--root <dir>] [--name <product name>]
+  pm-workflow init [--ai auto|codex|claude|kiro] [--root <dir>] [--name <product name>]
+  pm-workflow update [--ai auto|codex|claude|kiro] [--root <dir>] [--name <product name>]
 
 Options:
   --ai, --cli   AI CLI layout to generate. Defaults to auto.
               auto: choose by target directory, empty dirs default to Codex.
               codex: generate .codex + .agents structure.
               claude: generate .claude structure for Claude Code.
+              kiro: generate .kiro structure for Kiro.
   --root        Target workspace directory. Defaults to current directory.
   --name        Product name for generated templates. Defaults to "My Product".
   --mode        Setup mode: new or update. pmflow update is the same as --mode update.
@@ -61,6 +62,7 @@ Examples:
   pmflow update --root .
   pmflow init --ai codex --root ./pm-workflow-demo --name "习惯打卡"
   pmflow init --ai claude --root ./pm-workflow-claude-demo --name "习惯打卡"
+  pmflow init --ai kiro --root ./pm-workflow-kiro-demo --name "习惯打卡"
   pmflow init --ai auto --name "习惯打卡"
 
 Runtime:
@@ -117,11 +119,8 @@ function relativeTo(root, target) {
 function normalizeAi(value) {
   const normalized = String(value || "auto").toLowerCase();
   if (normalized === "claude-code") return "claude";
-  if (["auto", "codex", "claude"].includes(normalized)) return normalized;
-  if (normalized === "kiro") {
-    fail("--ai kiro is not supported yet. Use --ai auto, --ai codex, or --ai claude.");
-  }
-  fail(`unsupported --ai value "${value}". Expected auto, codex, or claude.`);
+  if (["auto", "codex", "claude", "kiro"].includes(normalized)) return normalized;
+  fail(`unsupported --ai value "${value}". Expected auto, codex, claude, or kiro.`);
 }
 
 function normalizeMode(value) {
@@ -259,6 +258,7 @@ async function askAi(prompt, defaultValue) {
     ["1", "auto", "Auto, choose by target directory"],
     ["2", "codex", "Codex, generate .codex + .agents"],
     ["3", "claude", "Claude Code, generate .claude"],
+    ["4", "kiro", "Kiro, generate .kiro"],
   ];
 
   if (!prompt.input.isTTY || !prompt.output.isTTY) {
@@ -524,6 +524,7 @@ function sameFileContent(a, b) {
 
 function detectCli(root, requested) {
   if (requested !== "auto") return requested;
+  if (exists(path.join(root, ".kiro"))) return "kiro";
   if (exists(path.join(root, ".claude"))) return "claude";
   if (exists(path.join(root, ".codex")) || exists(path.join(root, ".agents"))) return "codex";
   return "codex";
@@ -870,6 +871,15 @@ function createClaudeStructure(root, productName) {
   return [created, copiedClaude, []];
 }
 
+function createKiroStructure(root, productName) {
+  const created = createCommonStructure(root, productName, true);
+  const copiedKiro = copyMirrorChildren(KIRO_MIRROR, path.join(root, ".kiro"), {
+    reportRoot: root,
+  });
+  removeCodexAgentManifest(path.join(root, ".kiro", "skills", "impeccable"));
+  return [created, copiedKiro, []];
+}
+
 function updateCodexStructure(root, productName, backupRoot) {
   [
     path.join(root, ".codex", "agents"),
@@ -915,6 +925,17 @@ function updateClaudeStructure(root, productName, backupRoot) {
   return [created, platform, { created: [], updated: [], backedUp: [] }];
 }
 
+function updateKiroStructure(root, productName, backupRoot) {
+  const created = createCommonStructure(root, productName, true);
+  const platform = updateMirrorChildren(KIRO_MIRROR, path.join(root, ".kiro"), {
+    root,
+    backupRoot,
+    reportRoot: root,
+  });
+  removeCodexAgentManifest(path.join(root, ".kiro", "skills", "impeccable"));
+  return [created, platform, { created: [], updated: [], backedUp: [] }];
+}
+
 function printUpdateSummary(label, result) {
   const created = result.created || [];
   const updated = result.updated || [];
@@ -935,7 +956,10 @@ function createStructure(rootInput, productName, cli, mode = "new") {
   const root = path.resolve(rootInput);
   ensureDir(root);
   const hadPlatformMarker =
-    exists(path.join(root, ".claude")) || exists(path.join(root, ".codex")) || exists(path.join(root, ".agents"));
+    exists(path.join(root, ".kiro")) ||
+    exists(path.join(root, ".claude")) ||
+    exists(path.join(root, ".codex")) ||
+    exists(path.join(root, ".agents"));
   const selectedCli = detectCli(root, cli);
   const setupMode = normalizeMode(mode);
   const backupRoot = path.join(root, ".pmflow", "backups", timestampForBackup());
@@ -947,7 +971,13 @@ function createStructure(rootInput, productName, cli, mode = "new") {
   let directorySummary;
   let nextStep;
 
-  if (selectedCli === "claude") {
+  if (selectedCli === "kiro") {
+    [created, copiedPlatform, copiedSkills] =
+      setupMode === "update" ? updateKiroStructure(root, productName, backupRoot) : createKiroStructure(root, productName);
+    platformName = "Kiro";
+    directorySummary = "docs/, prototype/, prototype/review/screenshots/, outputs/dev-package/, .kiro/";
+    nextStep = "Next step: open this directory in Kiro, then describe your product idea or use `/product-manager` to start.";
+  } else if (selectedCli === "claude") {
     [created, copiedPlatform, copiedSkills] =
       setupMode === "update" ? updateClaudeStructure(root, productName, backupRoot) : createClaudeStructure(root, productName);
     platformName = "Claude Code";
@@ -964,7 +994,7 @@ function createStructure(rootInput, productName, cli, mode = "new") {
   console.log(setupMode === "update" ? `Project structure updated: ${root}` : `Project structure created: ${root}`);
   console.log(`Selected CLI structure: ${platformName}`);
   if (cli === "auto" && selectedCli === "codex" && !hadPlatformMarker) {
-    console.log("Auto mode defaulted to Codex for an empty directory. Use `--ai claude` to create a Claude Code workspace.");
+    console.log("Auto mode defaulted to Codex for an empty directory. Use `--ai claude` or `--ai kiro` for other harnesses.");
   }
   console.log(`Created or confirmed directories: ${directorySummary}`);
   if (setupMode === "update") {
@@ -988,13 +1018,15 @@ function createStructure(rootInput, productName, cli, mode = "new") {
     console.log(`${platformName} platform files already existed or source package was unavailable.`);
   }
 
-  if (setupMode === "update") {
-    printUpdateSummary("Repo-scoped skill", copiedSkills);
-  } else if (copiedSkills.length) {
-    console.log("Repo-scoped skills copied:");
-    for (const item of copiedSkills) console.log(`  + ${item}`);
-  } else {
-    console.log("Repo-scoped skills already existed or not used by this CLI structure.");
+  if (selectedCli === "codex") {
+    if (setupMode === "update") {
+      printUpdateSummary("Repo-scoped skill", copiedSkills);
+    } else if (copiedSkills.length) {
+      console.log("Repo-scoped skills copied:");
+      for (const item of copiedSkills) console.log(`  + ${item}`);
+    } else {
+      console.log("Repo-scoped skills already existed or not used by this CLI structure.");
+    }
   }
 
   const backedUp = [...new Set([...(copiedPlatform.backedUp || []), ...(copiedSkills.backedUp || [])])].sort();
