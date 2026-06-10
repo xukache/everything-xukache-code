@@ -5,7 +5,7 @@
 | 阶段 | 产物 | 状态 | 用户确认 |
 |---|---|---|---|
 | 设计简报 | `docs/ui-design-brief.md` | 待补充 | 待确认 |
-| 信息架构 | `docs/ui-information-architecture.md` | 待补充 | 待确认 |
+| 蓝图(信息架构/流程/页面/功能/交互) | `docs/feature-flow-layout.md` | 待补充(上游) | 待确认 |
 | 设计系统和 tokens | `docs/ui-design-tokens.md` | 待补充 | 待确认 |
 | UI 构建任务 | `docs/ui-build-tasks.md` | 待补充 | 待确认 |
 | 方向 demo | `prototype/directions/index.html` | 待补充 | 待确认 |
@@ -14,12 +14,10 @@
 
 ## 上游前置审查
 
-- 需求文档是否清晰：
-- 技术架构是否清晰：
-- 高频真实需求是否清晰：
-- 真实使用流程是否清晰：
-- 是否已询问用户上下文是否足够理解显性需求和隐藏需求：
-- 待确认问题：
+- 蓝图(`docs/feature-flow-layout.md`)五层是否定稿:
+- project-config 是否清晰:
+- 是否已询问用户上下文是否足够理解显性需求和隐藏需求:
+- 待确认问题:
 
 ## 设计简报摘要
 
@@ -32,14 +30,14 @@
 - 反向参考：
 - 不做范围：
 
-## 信息架构摘要
+## 信息架构来源(蓝图)
 
-- 信息架构：`docs/ui-information-architecture.md`
-- 核心页面数量：
-- 主导航模型：
-- 用户 80% 时间所在页面：
-- 关键入口和退出路径：
-- 页面边界确认状态：
+- 蓝图来源:`docs/feature-flow-layout.md` 第 1 层(信息架构)、第 2 层(核心流程)、第 3 层(逐个页面骨架)
+- 核心页面数量:
+- 主导航模型:
+- 用户 80% 时间所在页面:
+- 关键入口和退出路径:
+- 页面边界确认状态(若需调整,按 craft-principles 重大变革协议回 blueprint):
 
 ## 设计系统与 Tokens 摘要
 
@@ -189,7 +187,7 @@
 - 用户意见：
 - 修正记录：
 - 门禁要求：未确认不得进入原型实现。
-- 同步文档：确认或修正后必须同步 `docs/ui-information-architecture.md`、`docs/ui-build-tasks.md` 和本文件。
+- 同步文档:确认或修正后必须按 craft-principles 重大变革协议处理 — 影响蓝图的回写 `docs/feature-flow-layout.md` 对应层,影响构建任务的同步 `docs/ui-build-tasks.md`,本文件作汇总。
 
 | 确认项 | 内容摘要 | 状态 |
 |---|---|---|
@@ -294,8 +292,3 @@ prototype/
 | Impeccable adapt | 桌面、平板、移动适配 | 待确认 |
 | Impeccable polish | 最终综合打磨 | 待确认 |
 
-## 文档同步检查
-
-| 变更项 | 影响类型 | 是否影响上游事实 | 已检查文档 | 已同步文档 | 不需要同步原因 | 责任阶段 | 检查结论 |
-|---|---|---|---|---|---|---|---|
-| UI 设计汇总 | 页面/模块/路径/交互/字段/状态/验收 | 是/否 | `docs/prd.md`、`docs/handoff-prd.md`、`docs/tech-architecture.md`、`docs/handoff-architecture.md`、`docs/handoff-ui.md` | 待填写 | 待填写 | design | 待确认 |

@@ -1,58 +1,68 @@
 ---
 name: demand-analysis
-description: "需求分析师使用：把项目配置和用户补充说明整理为需求文档、功能编号、优先级、边界和验收标准。"
+description: "需求分析师使用(2.0 PRD 后置):基于已确认的蓝图 feature-flow-layout.md 与 UI 定稿回填生成 PRD,沿用蓝图 Mx-Fx 编号。"
 ---
 
-# 需求分析角色技能
+# 需求分析角色技能(2.0 PRD 后置)
 
-服务于本工作室的需求分析师角色。
+服务于本工作室的需求分析师角色。**2.0 起 PRD 后置**:基于已确认的蓝图与 UI 定稿回填成文,而非凭空起草。
+
+## 工艺准则
+
+贯穿全程遵守 craft-principles(详见 `references/craft-principles.md`):一次只抛一项、决策三件套、守边界、重大变革协议、一致性检查、可追溯。
 
 ## 输入
 
 - `docs/project-config.md`
+- **`docs/feature-flow-layout.md`**(蓝图,核心上游;Mx-Fx 功能编号在第 4 层落定)
+- `docs/ui-design.md`、`prototype/`(界面定稿与高保真原型)
 - `docs/workflow-state.json`
 - 用户补充说明
-- 产品经理记录的开放问题
-
-如果需求分析改变产品定位、目标用户、平台、范围或 MVP 边界，必须同步回写 `docs/project-config.md`，并在 `docs/workflow-state.json` 的 `notes` 记录同步说明。阶段结束前必须在 `docs/requirement-alignment.md`、`docs/prd.md`、`docs/handoff-prd.md` 填写 `## 文档同步检查`。
 
 ## 输出
 
-- `docs/requirement-alignment.md`
 - `docs/prd.md`
 - `docs/handoff-prd.md`
 
+## 前置检查
+
+- 确认 `docs/feature-flow-layout.md` 五层均已定稿。蓝图缺失或某层未确认时,先回到 `blueprint`。
+- 确认 `docs/ui-design.md` 与 `prototype/` 已通过 `review design`。UI 未通过时,先回到 `design`。
+
+如果回填过程中发现产品定位、目标用户、平台、范围或 MVP 边界与 `docs/project-config.md` 不一致,按 craft-principles 第 4 条「重大变革协议」处理:验证 → 梳理连锁影响 → 确认范围 → 全文一致传播(必要时回写 project-config / blueprint)→ 一致性检查。2.0 起不再要求固定 `## 文档同步检查` 表格;`review analyze` 做兜底。
+
 ## 工作法
 
-1. 开始前输出阶段开场卡：当前用户情况、推荐方案、选择原因、接下来产物。
-2. 检查 `clarification.status=user_confirmed`；未确认时交回产品经理澄清，用户坚持跳过则记录风险。
-3. 在写 PRD 之前，先生成并维护 `docs/requirement-alignment.md`，逐模块、逐页面、逐业务流程列出理解、边界、模糊点和推荐理解。
-4. 产品经理必须把 `docs/requirement-alignment.md` 中的模块、页面、业务流程一个个提交给用户确认；每项确认前不得把相关内容写成 PRD 正式结论。
-5. 只有 `docs/requirement-alignment.md` 整体确认状态为 `已确认`，且用户明确同意“可以开始写 PRD”，才能生成符合新 1-8 章格式的 PRD 草稿。
-6. 对齐通过后生成 PRD 草稿，未解决问题只写入 `docs/workflow-state.json.pending_user_questions`，不写进 PRD 正文。
-7. 草稿阶段不触发审核；最终稿完成后清空 `pending_user_questions`，把 `recommended_next` 设置为 `review analyze`，并自动触发 `quality_reviewer` 审核 analyze。
-8. 做四轮引导并映射到新 PRD：产品概述与目标用户、功能范围、核心业务流程、功能详细设计/规则/异常/接口、数据模型/权限/非功能。
-9. 先基于高频真实需求、使用人群、触发点和真实使用流程识别真需求与伪需求；低频、炫技、重复、增加理解成本或偏离高频路径的需求必须标记为合并、后置或删除。
-10. 功能模块必须优先合并同类能力，避免写成一长串功能清单。
-11. 每个功能必须有 `M{模块号}-F{功能号}`。
-12. 每个功能必须标记 P0/P1/P2；每个 P0 必须说明对应的高频场景和流程位置。
-13. P0 功能必须有业务规则、页面字段、页面操作、状态流转、权限、异常边界、初步接口需求和验收信号。
-14. 明确不在范围内的功能，防止范围失控。
-15. 下游分析若改变上游事实，必须同步回写上游源文档，不能只改 PRD。
-16. 必须填写文档同步检查表，列包含变更项、影响类型、是否影响上游事实、已检查文档、已同步文档、不需要同步原因、责任阶段、检查结论；不得留空或写 `待补充`。
+1. 开始前输出阶段开场卡:当前用户情况、推荐方案(回填而非起草)、为什么这样选(避免脱离蓝图与 UI)、接下来产出。
+2. 把蓝图功能编号、模块边界、流程、规则、交互逻辑映射为 PRD 1-8 章结构;UI 定稿的页面字段、操作、状态作为 4.x 详细设计的可视化依据。
+3. 草稿阶段把仍需用户回答的阻塞问题写入 `docs/workflow-state.json.pending_user_questions`,不写进 PRD 正文。
+4. 草稿阶段不触发审核;最终稿完成后清空 `pending_user_questions`,把 `recommended_next` 设置为 `review analyze`,并自动触发 `quality_reviewer` 审核 analyze。
+5. 功能编号沿用蓝图第 4 层定下的 `M{模块号}-F{功能号}`,不重新编号。
+6. 每个功能保留蓝图给出的 P0/P1/P2 标记;P0 必须能映射到高频场景和流程位置(沿用蓝图第 2 层)。
+7. P0 功能必须有业务规则、页面字段、页面操作、状态流转、权限、异常边界、初步接口需求和验收信号。
+8. 明确不在范围内的功能(沿用蓝图 MVP 边界)。
+
+## 回填映射表
+
+| PRD 章节 | 来源 |
+|---|---|
+| 1. 产品概述、产品目标、目标用户 | `docs/project-config.md` |
+| 2. 功能范围、功能模块总览(Mx-Fx) | 蓝图第 1、4 层 |
+| 3. 核心业务流程、优先级与边界 | 蓝图第 2 层 |
+| 4.x 业务规则、异常边界、初步接口 | 蓝图第 4、5 层 |
+| 4.x 页面字段、操作、状态 | `docs/ui-design.md`、`prototype/` |
+| 5. 数据模型、5.2 状态流转 | 蓝图第 4 层 + UI 定稿 |
+| 6. 权限、7. 非功能性需求 | `docs/project-config.md` + 蓝图 |
 
 ## 检查表
 
-- 是否有目标用户和核心场景。
-- 是否有高频真实需求、使用触发点和真实使用流程。
-- 是否识别并处理了低频、炫技、重复、增加理解成本的伪需求。
-- 是否有功能编号体系。
-- PRD 编写前是否已完成 `docs/requirement-alignment.md`，并逐模块、逐页面、逐业务流程获得用户确认。
-- 模块、页面、业务流程中的模糊点是否全部有用户最终确认。
-- 是否有 P0/P1/P2。
-- P0 是否都能映射到高频场景和流程步骤。
-- 是否有不在范围内的功能。
+- 是否有目标用户和核心场景(来自 project-config)。
+- 是否引用蓝图作为功能编号、模块、流程的来源。
+- 是否引用 UI 定稿作为页面字段、操作、状态的来源。
+- 功能编号是否与蓝图第 4 层完全一致(不得重新编号)。
+- 是否标记 P0/P1/P2(沿用蓝图)。
+- P0 是否都能映射到蓝图第 2 层的高频场景和流程步骤。
+- 是否有不在范围内的功能(沿用蓝图 MVP 边界)。
 - 是否每个 P0 都能交给架构师继续设计。
 - 是否没有 `pending_user_questions` 阻塞问题。
 - 是否只有 `pending_user_questions` 清空后才触发 analyze 审核。
-- 是否完成 `## 文档同步检查`，并明确 `docs/project-config.md`、`docs/prd.md`、`docs/handoff-prd.md` 的检查和同步结果。

@@ -18,13 +18,13 @@
 
 1. 确定目标阶段：优先使用用户显式参数，其次使用 workflow state 中的 `current_stage`。
 2. 启动 `quality_reviewer` 子 agent，并把目标阶段、工作室根目录、当前阶段产物路径传给它。
-3. 由 `quality_reviewer` 运行或等价执行：
-   `node .claude/skills/pm-workflow/scripts/review_stage.js --root . --stage <stage>`
-4. 由 `quality_reviewer` 执行三重审核机制：
+3. 由 `quality_reviewer` 运行或等价执行:
+   `node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <stage>`(stage ∈ init|blueprint|design|analyze|architect|plan|deliver)
+4. 由 `quality_reviewer` 执行三重审核机制:
    - 对完整性、清晰度、一致性、可执行性评分
    - 模拟下游角色使用产物
-   - 做结构化追溯对账
-   - 执行文档同步硬门禁：任何阶段缺少有效 `## 文档同步检查`，或变更需求/范围/功能编号/接口/数据/技术约束/页面/交互/验收/测试/开发执行方式但未记录已同步文档或不需要同步原因，直接判为不通过
+   - 做结构化追溯对账(蓝图 Mx-Fx 编号在 design / analyze / architect / plan 各阶段是否一致)
+   - 执行一致性硬门禁:任何阶段明显改变上游事实但未按 craft-principles 第 4 条「重大变革协议」回写上游(蓝图/PRD/架构/UI),直接判为不通过
    - design 阶段额外核对 `docs/prototype-review.md`、`prototype/review/screenshots/`、Playwright 三视口截图和 Impeccable 审查修正记录
 5. 如果阶段未通过，给出具体返工指令，并询问用户现在修复还是带风险继续推进。
 6. 如果这是第三轮未通过，必须明确告知风险，并建议先停止推进、修复产物。

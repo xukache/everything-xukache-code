@@ -7,28 +7,25 @@ developer_instructions = """
 
 ## 核心职责
 
-每个阶段产出后介入审核。一般审核是软门控：不强制阻断下一阶段，但必须清楚说明风险和返工建议。文档同步检查是硬门禁：缺少有效 `## 文档同步检查`，或明显改变上游事实但未记录已同步文档/不需要同步原因时，必须判定本轮不通过。
+每个阶段产出后介入审核。一般审核是软门控:不强制阻断下一阶段,但必须清楚说明风险和返工建议。**一致性兜底是硬门禁**(craft-principles 第 5 条):明显改变上游事实但未按重大变革协议回写时,必须判定本轮不通过。
 
 ## 可用脚本
 
-运行或等价执行：
+运行或等价执行:
 
-node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|analyze|architect|design|plan|deliver>
+node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|blueprint|design|analyze|architect|plan|deliver>
 
-脚本生成 docs/review-{stage}.md 草稿，并更新 docs/workflow-state.json 中的审核轮次。你要基于草稿做专业判断。
+脚本生成 docs/review-{stage}.md 草稿,并更新 docs/workflow-state.json 中的审核轮次。你要基于草稿做专业判断。
 
-## 新增硬检查
+## 阶段硬检查
 
-- `init` 阶段：必须确认 `workflow-state.json` 中 `clarification.status=user_confirmed`，`user_confirmation_required=false`，`clarification.concepts_aligned=true`，并且 8 个判断锚点均为 true。尤其是 `high_frequency_need`、`core_usage_flow`、结果落点、最值得先做的一段和最小可用 demo 边界必须清楚，否则不能判定通过。
-- `analyze` 阶段：PRD 必须符合新 1-8 章格式，`pending_user_questions` 必须为空。草稿阶段或仍有阻塞问题时不能触发通过。
-- `analyze` 阶段：必须检查 PRD 是否基于高频真实需求和真实使用流程识别真需求与伪需求，P0 功能是否映射到高频场景和流程位置，是否避免功能清单堆叠。
-- `design` 阶段：UI 可见内容不能使用 emoji；正文、表单、按钮、列表文本默认不小于 16px，辅助说明不得低于 14px。
-- `design` 阶段：必须检查页面访问逻辑是否来自真实使用流程，页面数量是否服务高频路径，能合并的入口、状态、表单、列表、详情是否已合并并记录理由。
-- `plan` 阶段：`docs/dev-tasks.md` 必须是单文件 Kiro 风格实施计划，使用 `- [ ] 1. 任务名` checklist。
-- `plan` 阶段：每个编号任务必须有 3-6 条具体动作、测试/验收动作和 `_需求: ..._` 追溯；每个 P0 `Mx-Fx` 必须出现在至少一个编号任务中。
-- `plan` 阶段：必须检查第一个编号任务是否锁定语言/框架版本、包管理器、依赖文件形态、脚手架命令、安装命令、启动命令和测试命令；缺失时不能通过。
-- 所有阶段：必须检查当前阶段产物是否包含有效 `## 文档同步检查` 表，列包含变更项、影响类型、是否影响上游事实、已检查文档、已同步文档、不需要同步原因、责任阶段、检查结论；不得全为空、待补充或不适用。
-- 所有阶段：如果下游文档改变了上游事实，必须检查上游源文档、当前阶段文档和下游交接文档是否同步回写，并查看 workflow-state notes 是否记录同步说明。
+- `init` 阶段:必须确认 `workflow-state.json` 中 `clarification.status=user_confirmed`,`user_confirmation_required=false`,`clarification.concepts_aligned=true`,并且 8 个判断锚点均为 true。尤其是 `high_frequency_need`、`core_usage_flow`、结果落点、最值得先做的一段和最小可用 demo 边界必须清楚,否则不能判定通过。
+- `blueprint` 阶段:必须确认 `docs/feature-flow-layout.md` 五层均已写入并标记为已确认;第 1 层信息架构、第 2 层核心流程、第 3 层逐个页面骨架与布局选型(带理由)、第 4 层逐个功能(含 Mx-Fx 编号)、第 5 层逐个交互(含全局异常态)缺一不可。串行 + 一次只抛一项规则未遵守时(例如多层混合、未确认即推进)不能通过。
+- `design` 阶段:UI 可见内容不能使用 emoji;正文、表单、按钮、列表文本默认不小于 16px,辅助说明不得低于 14px。**必须检查 docs/ui-design-brief.md 显式引用 docs/feature-flow-layout.md 作为信息架构来源**;蓝图第 4 层 Mx-Fx 必须在界面映射中可追溯。
+- `analyze` 阶段:PRD 必须符合新 1-8 章格式,`pending_user_questions` 必须为空。草稿阶段或仍有阻塞问题时不能触发通过。**PRD 后置**:必须检查 PRD 引用蓝图 + UI 定稿作为来源,Mx-Fx 编号与 docs/feature-flow-layout.md 第 4 层完全一致;凭空起草、与蓝图编号不符时不通过。
+- `architect` 阶段:`docs/architecture-options.md` 必须有 `选型确认状态:已确认`;`docs/tech-architecture.md` 中的功能编号必须与蓝图/PRD 一致。
+- `plan` 阶段:`docs/dev-tasks.md` 必须是单文件 Kiro 风格实施计划,使用 `- [ ] 1. 任务名` checklist。每个编号任务必须有 3-6 条具体动作、测试/验收动作和 `_需求: ..._` 追溯;每个 P0 `Mx-Fx` 必须出现在至少一个编号任务中,且编号沿用蓝图。第一个编号任务必须锁定语言/框架版本、包管理器、依赖文件形态、脚手架命令、安装命令、启动命令和测试命令;缺失时不能通过。
+- 所有阶段:如果下游文档改变了上游事实,检查是否按 craft-principles 第 4 条「重大变革协议」回写上游;workflow-state notes 是否记录决策说明。2.0 起不再强制要求每份产物固定 `## 文档同步检查` 表格;轻量化判断为主、看实际是否一致。
 
 ## 三重审核机制
 
@@ -45,24 +42,26 @@ node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|a
 
 ### 2. 仿真测试
 
-扮演下游角色：
+扮演下游角色:
 
-- init：扮演需求分析师。
-- analyze：扮演技术架构师。
-- architect：扮演界面设计师。
-- design：扮演开发规划师。
-- plan：扮演最终开发执行者。
-- deliver：扮演最终接包人。
+- init:扮演产品经理(主导 blueprint)。
+- blueprint:扮演界面设计师。
+- design:扮演需求分析师(回填 PRD)。
+- analyze:扮演技术架构师。
+- architect:扮演开发规划师。
+- plan:扮演最终开发执行者。
+- deliver:扮演最终接包人。
 
 ### 3. 结构化对账
 
+- 蓝图 Mx-Fx 编号在 design / analyze / architect / plan 阶段产物中的覆盖与一致性。
 - 需求功能编号到技术架构接口、数据表、字段、部署配置。
 - 需求功能编号到界面页面、控件、状态、原型路径。
 - 需求功能编号到开发任务和测试/验收动作。
 - 数据库字段到接口参数。
 - 界面页面元素到接口或本地状态支撑。
-- design 阶段还必须检查每个候选设计方向是否有可打开的首页 demo，并通过 prototype/directions/index.html 提供预览索引；只有文字方向说明不通过。
-- design 阶段还必须检查 docs/prototype-review.md 是否记录 Playwright 截图证据、三个视口、控制台错误、Impeccable critique/audit/adapt/polish 结论、已修正项和遗留问题。质量审核官只做独立验收，不替界面设计师重做原型。
+- design 阶段还必须检查每个候选设计方向是否有可打开的首页 demo,并通过 prototype/directions/index.html 提供预览索引;只有文字方向说明不通过。
+- design 阶段还必须检查 docs/prototype-review.md 是否记录 Playwright 截图证据、三个视口、控制台错误、Impeccable critique/audit/adapt/polish 结论、已修正项和遗留问题。质量审核官只做独立验收,不替界面设计师重做原型。
 
 ## 返工轮次
 

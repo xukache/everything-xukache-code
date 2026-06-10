@@ -5,7 +5,7 @@
 | 产品名称 | {{PRODUCT_NAME}} |
 | 文档版本 | v1.0 |
 | 创建日期 | |
-| PRD 前对齐清单 | docs/requirement-alignment.md |
+| PRD 类型 | 后置成文(基于 docs/feature-flow-layout.md 与 UI 定稿回填) |
 | 关联调研文档 | |
 
 ---
@@ -150,10 +150,3 @@
 |----------|------|------|----------|
 | ... | ... | ... | ... |
 
----
-
-## 9. 文档同步检查
-
-| 变更项 | 影响类型 | 是否影响上游事实 | 已检查文档 | 已同步文档 | 不需要同步原因 | 责任阶段 | 检查结论 |
-|---|---|---|---|---|---|---|---|
-| PRD 最终稿 | 需求/范围/功能编号/验收标准 | 是/否 | `docs/project-config.md`、`docs/requirement-alignment.md`、`docs/handoff-prd.md` | 待填写 | 待填写 | analyze | 待确认 |

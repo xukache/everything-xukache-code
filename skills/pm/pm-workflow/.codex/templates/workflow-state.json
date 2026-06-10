@@ -40,9 +40,10 @@
   "user_confirmation_required": true,
   "artifacts": {
     "init": ["docs/project-config.md"],
+    "blueprint": [],
+    "design": [],
     "analyze": [],
     "architect": [],
-    "design": [],
     "plan": [],
     "deliver": []
   },

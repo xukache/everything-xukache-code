@@ -8,6 +8,7 @@ const TEMPLATE_DIR = path.join(SKILL_ROOT, "templates");
 
 const CORE_DOCS = [
   "project-config.md",
+  "feature-flow-layout.md",
   "prd.md",
   "handoff-prd.md",
   "tech-architecture.md",

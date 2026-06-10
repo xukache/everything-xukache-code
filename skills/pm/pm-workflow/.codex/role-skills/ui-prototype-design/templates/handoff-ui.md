@@ -1,30 +1,34 @@
 # 界面与体验交接摘要
 
+## 上游来源
+
+- 蓝图:`docs/feature-flow-layout.md`(Mx-Fx 编号、流程、页面骨架、交互定稿)
+- 项目配置:`docs/project-config.md`
+
 ## 选定设计方向
 
-- 主题：
-- 视觉原则：
-- 交互原则：
+- 主题:
+- 视觉原则:
+- 交互原则:
 
 ## 阶段产物
 
-- 设计简报：`docs/ui-design-brief.md`
-- 信息架构：`docs/ui-information-architecture.md`
-- 设计系统和 tokens：`docs/ui-design-tokens.md`
-- UI 构建任务：`docs/ui-build-tasks.md`
-- 汇总设计文档：`docs/ui-design.md`
-- 原型自审：`docs/prototype-review.md`
+- 设计简报:`docs/ui-design-brief.md`
+- 设计系统和 tokens:`docs/ui-design-tokens.md`
+- UI 构建任务:`docs/ui-build-tasks.md`
+- 汇总设计文档:`docs/ui-design.md`
+- 原型自审:`docs/prototype-review.md`
 
 ## 原型入口
 
-- 主入口：`prototype/index.html`
-- 多页面目录：`prototype/pages/`
-- 复用布局：`prototype/layout/`
-- 公共资源：`prototype/assets/`
-- 高频页面路径：
-- 页面/模块整合原则：
-- 原型自审：`docs/prototype-review.md`
-- 截图证据：`prototype/review/screenshots/`
+- 主入口:`prototype/index.html`
+- 多页面目录:`prototype/pages/`
+- 复用布局:`prototype/layout/`
+- 公共资源:`prototype/assets/`
+- 高频页面路径:
+- 页面/模块整合原则:
+- 原型自审:`docs/prototype-review.md`
+- 截图证据:`prototype/review/screenshots/`
 
 ## 复用布局说明
 
@@ -32,7 +36,7 @@
 |---|---|---|---|
 | 待补充 | prototype/layout/待补充.html | 待补充 | 待补充 |
 
-## 页面与功能覆盖
+## 页面与功能覆盖(沿用蓝图 Mx-Fx)
 
 | 功能编号 | 高频流程位置 | 原型页面 | 关键控件 | 需要开发实现的状态 |
 |---|---|---|---|---|
@@ -47,9 +51,3 @@
 | 问题 | 影响 | 是否阻塞开发 |
 |---|---|---|
 | 待补充 | 待补充 | 待补充 |
-
-## 文档同步检查
-
-| 变更项 | 影响类型 | 是否影响上游事实 | 已检查文档 | 已同步文档 | 不需要同步原因 | 责任阶段 | 检查结论 |
-|---|---|---|---|---|---|---|---|
-| UI 交接摘要 | 开发输入/页面路径/状态/组件 | 是/否 | `docs/prd.md`、`docs/tech-architecture.md`、`docs/ui-design.md`、`docs/prototype-review.md`、`docs/dev-tasks.md` | 待填写 | 待填写 | design | 待确认 |

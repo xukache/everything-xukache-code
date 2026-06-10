@@ -33,15 +33,18 @@ outputs/dev-package/
 ## 开始使用
 
 1. 在本目录启动开发会话。
-2. 直接输入你的产品想法，例如：`我想做一个每天记录习惯的 App`，或先说 `澄清需求`。
-3. 产品经理会先用普通聊天方式帮你澄清真实需求，每轮最多问 3 个问题，重点判断解决什么问题、哪一段最值得先做、需要什么 Agent 能力、结果落到哪里，以及如何收束成最小可用 demo；等你确认理解无误后，再进入需求、架构、界面、任务规划、审核和打包。
+2. 直接输入你的产品想法,例如:`我想做一个每天记录习惯的 App`,或先说 `澄清需求`。
+3. 产品经理会先用普通聊天方式帮你澄清真实需求(init);确认后进入 blueprint 五层递进梳理,把信息架构、核心流程、页面、功能、交互逐层拍板;然后做 UI 设计与高保真原型;接着回填 PRD;再做技术架构、任务规划、审核与打包。
 
-常用自然语言：
+阶段顺序(2.0+):`init → blueprint → design → analyze(PRD,后置) → architect → plan → deliver`。
 
-- `澄清需求`
-- `开始分析需求`
+常用自然语言:
+
+- `澄清需求`(init)
+- `做设计底稿` / `梳理流程` / `五层确认`(blueprint)
+- `开始界面原型设计`(design)
+- `开始分析需求`(PRD,后置)
 - `开始设计技术架构`
-- `开始界面原型设计`
 - `开始规划`
 - `审核一下`
 - `开始打包`
@@ -50,19 +53,19 @@ outputs/dev-package/
 ## 脚本
 
 ```bash
-node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage analyze
+node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage blueprint
 node .agents/skills/pm-workflow/scripts/package_delivery.js --root .
-node .claude/skills/pm-workflow/scripts/review_stage.js --root . --stage analyze
+node .claude/skills/pm-workflow/scripts/review_stage.js --root . --stage blueprint
 node .claude/skills/pm-workflow/scripts/package_delivery.js --root .
 ```
 
 ## 流程规则
 
-- 文档同步是硬门禁：任何阶段如果改动需求、范围、功能编号、接口、数据、技术约束、页面路径、交互流程、状态、验收标准、测试策略或开发执行方式，必须检查上游源文档、当前阶段文档和下游交接文档，并在阶段产物中填写 `## 文档同步检查`。
-- `## 文档同步检查` 表必须包含：变更项、影响类型、是否影响上游事实、已检查文档、已同步文档、不需要同步原因、责任阶段、检查结论；不得留空、不得写 `待补充`，也不得用泛泛“不适用”替代。
-- 每个阶段结束后先做文档同步检查，再运行 `review <stage>`；下游阶段不能只改自己的产物。
-- 需求分析必须基于高频真实需求和真实使用流程识别真需求与伪需求，合并同类能力，避免功能清单堆叠。
-- 写 PRD 前必须完成 `docs/requirement-alignment.md`，一个模块一个模块、一个页面一个页面、一个业务流程一个业务流程和用户确认；整体状态未到 `已确认` 前不得编写 PRD 正式内容。
-- UI 页面访问逻辑必须从真实使用流程推导，页面数量以完成高频路径为准，能合并的页面/模块必须合并并记录理由。
-- UI 原型页面可见文案、按钮、导航、空状态和提示语禁止使用 emoji；图标必须使用图标库、SVG 或图片资源。
-- UI 正文、表单、按钮、列表文本默认不小于 16px，辅助说明不得低于 14px。
+- 工艺准则贯穿全程(craft-principles):一次只抛一项、决策三件套(推荐+理由+取舍)、守边界(MVP)、重大变革协议、一致性检查、可追溯。
+- blueprint 五层递进(blueprint-method):第 1 层信息架构 → 第 2 层核心流程 → 第 3 层逐个页面 → 第 4 层逐个功能(Mx-Fx 编号在此落定) → 第 5 层逐个交互。前一层未通过不进下一层。
+- design 直接消费蓝图作为信息架构来源,不再单独产出 `docs/ui-information-architecture.md`。
+- analyze(PRD)后置:基于已确认的蓝图与 UI 定稿回填成文,而非凭空起草。
+- 一致性检查(craft-principles 第 5 条):任一阶段改动牵动上下游事实时,按重大变革协议五步处理(验证洞察 → 梳理连锁影响 → 确认范围 → 全文一致传播 → 一致性检查)。不再要求固定表格格式;review 阶段做兜底检查。
+- UI 页面访问逻辑必须从蓝图的信息架构和核心流程推导,页面数量以完成高频路径为准,能合并的页面/模块必须合并并记录理由。
+- UI 原型页面可见文案、按钮、导航、空状态和提示语禁止使用 emoji;图标必须使用图标库、SVG 或图片资源。
+- UI 正文、表单、按钮、列表文本默认不小于 16px,辅助说明不得低于 14px。

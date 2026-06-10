@@ -1,33 +1,40 @@
 ---
 name: pm-workflow
-description: "用于把模糊产品想法推进为可评审、可设计、可开发、可交付的产品开发蓝图。覆盖初始化、需求、架构、界面原型、任务规划、质量审核和交付打包。"
-argument-hint: "[init|analyze|architect|design|plan|review [stage]|deliver|status|help] [product idea or target]"
+description: "用于把模糊产品想法推进为可评审、可设计、可开发、可交付的产品开发蓝图。覆盖初始化、五层蓝图、界面原型、PRD(后置)、技术架构、任务规划、质量审核和交付打包。"
+argument-hint: "[init|blueprint|design|analyze|architect|plan|review [stage]|deliver|status|help] [product idea or target]"
 user-invocable: true
 ---
 
 # AI 产品开发工作室
 
-把一句模糊的产品想法，逐步变成可评审、可设计、可开发、可交付的施工蓝图。工作室按阶段串行推进，由 6 个角色协作：产品经理、需求分析师、技术架构师、界面设计师、开发规划师、质量审核官。
+把一句模糊的产品想法,逐步变成可评审、可设计、可开发、可交付的施工蓝图。工作室按阶段串行推进,由 6 个角色协作:产品经理、需求分析师、技术架构师、界面设计师、开发规划师、质量审核官。
 
-当前 npm 包目录只维护两套平台镜像：`.codex/` 和 `.claude/`。用户通过 `pmflow init` 生成真正使用的工作室目录后，Codex 主入口位于 `.agents/skills/pm-workflow/`，Claude Code 主入口位于 `.claude/skills/pm-workflow/`。
+> 2.0 阶段顺序:`init → blueprint → design → analyze(PRD,后置) → architect → plan → deliver`。蓝图(blueprint)是 init 与 design 之间的桥梁,产出 UI 设计的直接输入;PRD 后置成文。
+
+## 工艺准则与五层蓝图法
+
+贯穿全程的**工艺准则**(怎么做):见 [references/craft-principles.md](references/craft-principles.md)——一次只抛一项、决策三件套、守边界、重大变革协议、一致性检查、可追溯。
+
+蓝图阶段的**五层递进方法**:见 [references/blueprint-method.md](references/blueprint-method.md)——信息架构 → 流程 → 页面 → 功能 → 交互。
+
+当前 npm 包目录只维护两套平台镜像:`.codex/` 和 `.claude/`。用户通过 `pmflow init` 生成真正使用的工作室目录后,Codex 主入口位于 `.agents/skills/pm-workflow/`,Claude Code 主入口位于 `.claude/skills/pm-workflow/`。
 
 ## 平台结构
 
-本技能同时维护两套平台结构，避免外层源码目录和样例目录反复同步：
+本技能同时维护两套平台结构,避免外层源码目录和样例目录反复同步:
 
-- `.codex/`：Codex 版结构镜像，保留当前 `SKILL.md`、TOML agents、references、scripts、templates、role-skills、assets 和 bundled-skills。
-- `.claude/`：Claude Code 版结构，包含 `CLAUDE.md`、`settings.json`、Markdown subagents、slash commands 和 Claude Code 可识别的 `.claude/skills/`。
-
-维护时只需要同步 `.codex/` 和 `.claude/` 中对应的流程契约。不要再依赖外层 `agents/`、`assets/`、`references/`、`role-skills/`、`templates/` 或 `frameworks/pm-workflow` 样例。
+- `.codex/`:Codex 版结构镜像,保留当前 `SKILL.md`、TOML agents、references、scripts、templates、role-skills、assets 和 bundled-skills。
+- `.claude/`:Claude Code 版结构,包含 `CLAUDE.md`、`settings.json`、Markdown subagents、slash commands 和 Claude Code 可识别的 `.claude/skills/`。
 
 ## 命令菜单
 
 | 命令 | 自然语言触发 | 主角色 | 产物 |
 |---|---|---|---|
 | `init` | `$pm-workflow`、"我想做一个..."、"澄清需求"、"需求澄清" | 产品经理 | `docs/project-config.md` |
-| `analyze` | "开始分析需求"、"需求分析" | 需求分析师 | `docs/requirement-alignment.md`, `docs/prd.md`, `docs/handoff-prd.md` |
+| `blueprint` | "做设计底稿"、"梳理流程"、"五层确认"、"梳理页面与流程" | 产品经理 | `docs/feature-flow-layout.md` |
+| `design` | "开始界面设计"、"开始界面原型设计" | 界面设计师 | `docs/ui-design-brief.md`, `docs/ui-design-tokens.md`, `docs/ui-build-tasks.md`, `docs/ui-design.md`, `docs/handoff-ui.md`, `prototype/` |
+| `analyze` | "开始分析需求"、"补齐 PRD"、"写 PRD" | 需求分析师 | `docs/prd.md`, `docs/handoff-prd.md` |
 | `architect` | "开始设计技术架构"、"技术架构" | 技术架构师 | `docs/architecture-options.md`, `docs/tech-architecture.md`, `docs/handoff-architecture.md` |
-| `design` | "开始界面设计"、"开始界面原型设计" | 界面设计师 | `docs/ui-design-brief.md`, `docs/ui-information-architecture.md`, `docs/ui-design-tokens.md`, `docs/ui-build-tasks.md`, `docs/ui-design.md`, `docs/handoff-ui.md`, `prototype/` |
 | `plan` | "开始规划"、"开发规划"、"任务拆解" | 开发规划师 | `docs/dev-tasks.md` |
 | `review [stage]` | "审核一下"、"检查文档"、"质量把关" | 质量审核官 | `docs/review-{stage}.md` |
 | `deliver` | "开始打包"、"打包交付" | 产品经理 | `outputs/dev-package/` |
@@ -36,49 +43,43 @@ user-invocable: true
 
 ## 路由规则
 
-按以下规则路由：
+按以下规则路由:
 
-1. **无参数**：读取 [references/commands/help.md](references/commands/help.md)，展示命令菜单，并询问用户要进入哪个阶段。
-2. **首词命中命令**：读取 `references/commands/` 下对应的阶段说明并执行；命令后的内容作为目标或上下文。
-3. **首词没有命中命令**：把完整输入当作产品想法，进入 `init`。
-4. **自然语言命中触发词**：即使没有明确命令，也进入对应阶段；"澄清需求"、"需求澄清"、模糊产品想法都进入 `init` 内的需求澄清协议。
-5. **进入 analyze 前的默认硬门槛**：`docs/workflow-state.json` 中 `clarification.status` 必须为 `user_confirmed`。若用户强行跳过，必须把风险写入 `notes` 和下一阶段文档，并保留 `user_confirmation_required=true`。
-6. **每阶段开始时**：先输出“阶段开场卡”，说明当前用户情况、推荐方案、选择原因、接下来会产出什么。
-7. **每阶段结束后**：必须请用户选择下一步：审核、修改当前阶段、进入推荐下一阶段。
-8. **审核是软门控，硬门禁除外**：一般审核意见用于引导流程，不强制阻断下一命令；但需求确认、架构选型、原型开发前确认和文档同步检查属于硬门禁，未满足时不得伪装为通过。
-9. **文档同步硬门禁**：下游阶段不得静默改变上游事实。任何阶段如果改动需求、范围、功能编号、接口、数据、技术约束、页面路径、交互流程、状态、验收标准、测试策略或开发执行方式，必须检查并记录上游源文档、当前阶段文档和下游交接文档是否已同步。每个阶段结束前必须在对应产物中填写 `## 文档同步检查`，包含 `变更项 / 影响类型 / 是否影响上游事实 / 已检查文档 / 已同步文档 / 不需要同步原因 / 责任阶段 / 检查结论`；不得留空、不得写 `待补充`、不得用泛泛的“不适用”替代。`review <stage>` 发现缺失或明显未同步时直接不通过。
-
-阶段同步映射：
-
-- `analyze`：改产品定位、范围、平台、MVP、术语时同步 `docs/project-config.md`，最终同步 `docs/prd.md` 和 `docs/handoff-prd.md`。
-- `architect`：改接口、数据、权限、部署、技术限制时同步 `docs/tech-architecture.md` 和 `docs/handoff-architecture.md`；影响功能边界或验收时回写 `docs/prd.md` / `docs/handoff-prd.md`。
-- `design`：改页面、模块、交互路径、字段、状态、响应式、验收信号时同步 `docs/prd.md`、`docs/handoff-prd.md`、必要时 `docs/tech-architecture.md` / `docs/handoff-architecture.md`，并同步 `docs/handoff-ui.md`。
-- `plan`：发现环境、脚手架、框架版本、模块边界、接口、测试策略或验收标准与前文不一致时，先回写 PRD/架构/UI/handoff 文档，并在 `docs/dev-tasks.md` 记录同步检查。
-- `deliver`：最终对 PRD、架构、UI、dev-tasks、handoff 和 `AGENTS.md` 做全链路一致性检查。
+1. **无参数**:读取 [references/commands/help.md](references/commands/help.md),展示命令菜单,并询问用户要进入哪个阶段。
+2. **首词命中命令**:读取 `references/commands/` 下对应的阶段说明并执行;命令后的内容作为目标或上下文。
+3. **首词没有命中命令**:把完整输入当作产品想法,进入 `init`。
+4. **自然语言命中触发词**:即使没有明确命令,也进入对应阶段;"澄清需求"、"需求澄清"、模糊产品想法都进入 `init` 内的需求澄清协议。
+5. **进入 blueprint 前的默认硬门槛**:`docs/workflow-state.json` 中 `clarification.status` 必须为 `user_confirmed`,且 `concepts_aligned=true`、`user_confirmation_required=false`。若用户强行跳过,必须把风险写入 `notes` 和下一阶段文档,并保留 `user_confirmation_required=true`。
+6. **每阶段开始时**:先输出"阶段开场卡",说明当前用户情况、推荐方案、选择原因、接下来会产出什么。
+7. **每阶段结束后**:必须请用户选择下一步:审核、修改当前阶段、进入推荐下一阶段。
+8. **审核是软门控,硬门禁除外**:一般审核意见用于引导流程,不强制阻断下一命令;但需求确认、蓝图五层定稿、架构选型、原型开发前确认属于硬门禁,未满足时不得伪装为通过。
+9. **一致性检查(craft-principles 第 5 条)**:任一阶段改动牵动上下游事实时,按 craft-principles 第 4 条「重大变革协议」处理(验证洞察 → 梳理连锁影响 → 确认范围 → 全文一致传播 → 一致性检查)。2.0 起不再要求每份产物固定表格;`review <stage>` 做兜底检查。
 
 ## Agent 调度规则
 
-除阶段 00 的需求澄清外，每个阶段都必须先启动当前 CLI 结构下对应的项目子 agent：Codex 使用 `.codex/agents/*.toml`，Claude Code 使用 `.claude/agents/*.md`。阶段 00 是特殊例外：用户刚输入产品想法时，主 agent 拥有最完整的对话上下文，必须亲自完成欢迎、复述、追问、整理缺口和请用户确认，禁止把“待澄清需求”先总结后交给 `product_manager` 或任何子 agent 继续澄清。若当前环境无法启动后续阶段所需的项目子 agent，必须停止对应阶段执行，不生成或修改阶段产物，不运行阶段脚本，并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
+除阶段 00 的需求澄清和 blueprint 阶段外,每个阶段都必须先启动当前 CLI 结构下对应的项目子 agent:Codex 使用 `.codex/agents/*.toml`,Claude Code 使用 `.claude/agents/*.md`。阶段 00 是特殊例外:用户刚输入产品想法时,主 agent 拥有最完整的对话上下文,必须亲自完成欢迎、复述、追问、整理缺口和请用户确认,禁止把"待澄清需求"先总结后交给 `product_manager` 或任何子 agent 继续澄清。blueprint 阶段由产品经理(主控)主导,无单独子 agent。若当前环境无法启动后续阶段所需的项目子 agent,必须停止对应阶段执行,不生成或修改阶段产物,不运行阶段脚本,并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
 
 | 命令 | 调度方式 | 配置文件 |
 |---|---|---|
-| `init` | 需求澄清由主 agent 直接完成；用户确认后可由主 agent 写入配置，或启动 `product_manager` 只做文档沉淀和状态维护 | Codex: `.codex/agents/product-manager.toml`; Claude: `.claude/agents/product-manager.md` |
+| `init` | 需求澄清由主 agent 直接完成;用户确认后可由主 agent 写入配置,或启动 `product_manager` 只做文档沉淀和状态维护 | Codex: `.codex/agents/product-manager.toml`; Claude: `.claude/agents/product-manager.md` |
+| `blueprint` | `product_manager` 主导五层递进,无独立子 agent | Codex: `.codex/agents/product-manager.toml`; Claude: `.claude/agents/product-manager.md` |
 | `help` | `product_manager` | Codex: `.codex/agents/product-manager.toml`; Claude: `.claude/agents/product-manager.md` |
 | `status` | `product_manager` | Codex: `.codex/agents/product-manager.toml`; Claude: `.claude/agents/product-manager.md` |
-| `analyze` | `demand_analyst` / `demand-analyst` | Codex: `.codex/agents/demand-analyst.toml`; Claude: `.claude/agents/demand-analyst.md` |
-| `architect` | `tech_architect` / `tech-architect` | Codex: `.codex/agents/tech-architect.toml`; Claude: `.claude/agents/tech-architect.md` |
 | `design` | `ui_designer` / `ui-designer` | Codex: `.codex/agents/ui-designer.toml`; Claude: `.claude/agents/ui-designer.md` |
+| `analyze` | `demand_analyst` / `demand-analyst`(PRD 后置:基于蓝图与 UI 定稿回填成文) | Codex: `.codex/agents/demand-analyst.toml`; Claude: `.claude/agents/demand-analyst.md` |
+| `architect` | `tech_architect` / `tech-architect` | Codex: `.codex/agents/tech-architect.toml`; Claude: `.claude/agents/tech-architect.md` |
 | `plan` | `dev_planner` / `dev-planner` | Codex: `.codex/agents/dev-planner.toml`; Claude: `.claude/agents/dev-planner.md` |
 | `review` | `quality_reviewer` / `quality-reviewer` | Codex: `.codex/agents/quality-reviewer.toml`; Claude: `.claude/agents/quality-reviewer.md` |
-| `deliver` | `product_manager`，并在打包前启动 `quality_reviewer` 做最终完整性检查 | Codex: `.codex/agents/product-manager.toml`, `.codex/agents/quality-reviewer.toml`; Claude: `.claude/agents/product-manager.md`, `.claude/agents/quality-reviewer.md` |
+| `deliver` | `product_manager`,并在打包前启动 `quality_reviewer` 做最终完整性检查 | Codex: `.codex/agents/product-manager.toml`, `.codex/agents/quality-reviewer.toml`; Claude: `.claude/agents/product-manager.md`, `.claude/agents/quality-reviewer.md` |
 
-自然语言路由示例：
+自然语言路由示例:
 
 - "我想做一个记录每天读书笔记的网站" -> `init`
 - "澄清需求" / "需求澄清" -> `init`
-- "开始分析需求" -> `analyze`
-- "开始设计技术架构" -> `architect`
+- "梳理流程" / "做设计底稿" / "五层确认" -> `blueprint`
 - "开始界面原型设计" -> `design`
+- "开始分析需求" / "写 PRD" -> `analyze`(后置)
+- "开始设计技术架构" -> `architect`
 - "开始规划" -> `plan`
 - "审核一下" / "检查文档" / "质量把关" -> `review`
 - "开始打包" -> `deliver`
@@ -144,14 +145,13 @@ project-root/
   docs/
     workflow-state.json
     project-config.md
-    requirement-alignment.md
+    feature-flow-layout.md
     prd.md
     handoff-prd.md
     architecture-options.md
     tech-architecture.md
     handoff-architecture.md
     ui-design-brief.md
-    ui-information-architecture.md
     ui-design-tokens.md
     ui-build-tasks.md
     ui-design.md
@@ -234,67 +234,41 @@ Claude Code 结构会创建 `.claude/CLAUDE.md`、`.claude/settings.json`、`.cl
 
 结束时若澄清未完成，继续围绕缺口提问；若澄清完成但未确认，请用户确认理解是否正确；只有用户确认后，才询问：审核初始化、修改配置，还是开始需求分析。
 
-### 阶段 01：需求分析
+### 阶段 00.5:蓝图(blueprint)
 
-阶段说明：[references/commands/analyze.md](references/commands/analyze.md)
+阶段说明:[references/commands/blueprint.md](references/commands/blueprint.md)
 
-需求分析师开始前先输出阶段开场卡，并检查 `clarification.status=user_confirmed`。如果未确认，先交还产品经理继续澄清；用户坚持继续时必须记录风险。澄清确认只代表可以进入需求分析，不代表可以直接写 PRD。
+蓝图阶段是 init 与 design 之间的桥梁。产品经理按 [references/blueprint-method.md](references/blueprint-method.md) 五层递进逐层和用户确认,产出 `docs/feature-flow-layout.md`,作为 UI 设计的直接输入。
 
-需求分析师执行“对齐清单先行”的三步式需求分析：
+五层顺序:
 
-1. 先生成 `docs/requirement-alignment.md`，把模块、页面、业务流程逐项列出，标明边界、模糊点和推荐理解。
-2. 产品经理一个模块一个模块、一个页面一个页面、一个业务流程一个业务流程提交给用户确认；整体状态未达到 `已确认` 前，不得编写或改写 `docs/prd.md` 正式内容。
-3. 用户明确同意“可以开始写 PRD”后，需求分析师再生成符合新 1-8 章格式的 PRD 草稿；阻塞问题写入 `docs/workflow-state.json.pending_user_questions`。用户回答后，需求分析师回填并完善 `docs/prd.md` 和 `docs/handoff-prd.md`，清空 `pending_user_questions`，把 `recommended_next` 设置为 `review analyze`，再自动调用 `quality_reviewer` 审核 `analyze`。
+1. **信息架构**:页面清单、给谁用、全局导航、跳转地图。
+2. **核心流程**:把页面串成端到端流程,标关键卡点。
+3. **逐个页面**:骨架、布局选型(带理由)、模块、四态。
+4. **逐个功能**:输入/处理/输出/异常/MVP 边界,功能编号 `M{模块}-F{功能}` 在此落定。
+5. **逐个交互**:触发/主流程/异常,加全局异常态。
 
-PRD 草稿和最终稿都使用四轮引导框架，并映射到新 PRD 结构：
+执行规则(应用 craft-principles 第 1、2 条):**串行**,前一层不通过不进下一层;**层内一次只抛一项**给用户拍板,确认一项落盘一项。用户提方向性改动时按 craft-principles 第 4 条「重大变革协议」处理。
 
-1. 产品概述与目标用户。
-2. 功能范围、功能模块与依赖。
-3. 核心业务流程、优先级与边界：P0/P1/P2 和不在范围内的功能。
-4. 功能详细设计：业务规则、页面字段、页面操作、异常边界、状态流转、权限、初步接口和验收信号。
+产物:`docs/feature-flow-layout.md`。
 
-需求分析必须先基于 `project-config.md` 中的高频真实需求、使用人群、触发点和真实使用流程判断真需求与伪需求。低频、炫技、重复、增加理解成本或偏离高频路径的需求要标记为合并、后置或删除；P0 功能必须说明对应的高频场景和流程位置。功能模块必须优先合并同类能力，避免把 PRD 写成一长串功能清单。
+结束时询问用户:审核蓝图、修改某一层,还是进入 `design`(界面与高保真原型)。
 
-每个功能必须获得 `M{模块号}-F{功能号}` 编号，并在 `2.1 功能模块总览`、`4.x 功能详细设计`、`5.2 状态流转` 和接口需求中保持可追溯。`docs/handoff-prd.md` 总结架构和界面设计需要的输入。
+### 阶段 01:界面与网页原型(design)
 
-草稿阶段不触发审核；最终稿完成后必须自动运行 `review analyze`，再询问用户：修改需求文档，还是开始技术架构。
+阶段说明:[references/commands/design.md](references/commands/design.md)
 
-### 阶段 02：技术架构
+界面设计师以 `docs/feature-flow-layout.md`(蓝图)和 `docs/project-config.md` 为直接上游输入。**信息架构已在蓝图第 1 层定稿,design 阶段不再单独产出 `docs/ui-information-architecture.md`**;design 聚焦视觉系统、Tokens、HTML 高保真原型、Impeccable 自审。
 
-阶段说明：[references/commands/architect.md](references/commands/architect.md)
+按 `ui-prototype-design/references/design-flow.md` 走阶段化流程:设计简报、设计系统和 tokens、方向 demo、UI 构建任务、完整原型、截图审查。开始时必须做上游前置审查,确认蓝图五层均已定稿、`docs/feature-flow-layout.md` 完整;若蓝图缺失或某层未确认,立即报告并回到 blueprint。
 
-技术架构师开始前先输出阶段开场卡，用小白能听懂的话说明会先提供几版技术架构候选方案供用户参考。不得直接开始编写正式架构定稿。
+方向选择必须真实可看:基于 `assets/design-themes/` 推荐 2-3 个有明显差异的设计方向,每个候选方向必须生成一个可打开的首页 demo,放在 `prototype/directions/`,并在 `docs/ui-design.md` 中给出预览路径。等待用户选择;只有在用户明确授权时,才默认使用第一推荐。
 
-架构阶段必须先产出 `docs/architecture-options.md`，至少提供 2-3 个候选方案，分别说明前端/客户端、后端/API、数据库/存储、部署方式、适合场景、维护成本、主要风险和推荐等级。技术架构师可以给第一推荐，但必须等待用户确认最终选择；选型确认状态不是 `已确认` 时，不得编写或改写 `docs/tech-architecture.md` 正式方案。
+UI 硬规则:页面可见文案、按钮、导航、空状态和提示语禁止使用 emoji;图标必须使用图标库、SVG 或图片资源,不用 emoji 代替。默认字号基准为正文、表单、按钮、列表文本不小于 16px;辅助说明可小于 16px 但不得低于 14px;移动端优先保持 16px 起。
 
-例如：如果产品是微信小程序内使用，候选方案里应包含微信原生小程序 + 微信云开发是否足够；如果是网页、App 或桌面软件，再根据平台、用户体量、商业化计划、迭代方向和维护成本比较技术栈。
-
-技术架构师使用五维度决策框架：
-
-- 平台类型
-- 复杂度
-- 数据规模
-- 第三方集成
-- 维护成本
-
-用户确认某个候选方案后，`docs/tech-architecture.md` 必须包含技术选型、数据库设计、接口清单、部署方案和需求到架构映射表。`docs/handoff-architecture.md` 总结下游界面设计和开发规划关注点。
-
-结束时询问用户：审核架构、修改架构，还是开始界面与体验设计。
-
-### 阶段 03：界面与网页原型
-
-阶段说明：[references/commands/design.md](references/commands/design.md)
-
-界面设计师先按 `ui-prototype-design/references/design-flow.md` 走阶段化流程：设计简报、信息架构、设计系统和 tokens、方向 demo、UI 构建任务、完整原型、截图审查。开始时必须做上游前置审查，确认高频真实需求和真实使用流程清晰，并询问用户上下文是否足够理解显性需求和隐藏需求；不能在一两轮询问后提前自认已经搞清楚。
-
-方向选择仍然必须真实可看：基于 `assets/design-themes/` 推荐 2-3 个有明显差异的设计方向，每个候选方向必须生成一个可打开的首页 demo，放在 `prototype/directions/`，并在 `docs/ui-design.md` 中给出预览路径。等待用户选择；只有在用户明确授权时，才默认使用第一推荐。
-
-UI 硬规则：页面可见文案、按钮、导航、空状态和提示语禁止使用 emoji；图标必须使用图标库、SVG 或图片资源，不用 emoji 代替。默认字号基准为正文、表单、按钮、列表文本不小于 16px；辅助说明可小于 16px 但不得低于 14px；移动端优先保持 16px 起。
-
-产物：
+产物:
 
 - `docs/ui-design-brief.md`
-- `docs/ui-information-architecture.md`
 - `docs/ui-design-tokens.md`
 - `docs/ui-build-tasks.md`
 - `docs/ui-design.md`
@@ -302,55 +276,76 @@ UI 硬规则：页面可见文案、按钮、导航、空状态和提示语禁�
 - `docs/prototype-review.md`
 - `prototype/`
 
-原型结构：
+原型结构:
 
-- 单页面产品：`prototype/index.html` 是完整可交互原型，复用页面结构放在 `prototype/layout/`。
-- 多页面系统：`prototype/index.html` 是入口，页面放在 `prototype/pages/`，复用页面结构放在 `prototype/layout/`，可复用组件示例放在 `prototype/components/`，资源放在 `prototype/assets/`。
-- 方向候选：`prototype/directions/` 存放 2-3 个首页 demo，`prototype/directions/index.html` 是预览索引；它只用于方向选择，不替代最终完整原型。
+- 单页面产品:`prototype/index.html` 是完整可交互原型,复用页面结构放在 `prototype/layout/`。
+- 多页面系统:`prototype/index.html` 是入口,页面放在 `prototype/pages/`,复用页面结构放在 `prototype/layout/`,可复用组件示例放在 `prototype/components/`,资源放在 `prototype/assets/`。
+- 方向候选:`prototype/directions/` 存放 2-3 个首页 demo,`prototype/directions/index.html` 是预览索引;它只用于方向选择,不替代最终完整原型。
 
-原型必须覆盖 P0 点击路径、成功/失败/空/加载状态、关键异常和主要响应式视口。`prototype/layout/` 必须沉淀可复用页面结构，避免界面实现只能在原型中成立、实际开发时无法稳定复现。
+原型必须覆盖蓝图第 4 层定下的 P0 功能点击路径、第 5 层定下的成功/失败/空/加载状态与全局异常态、主要响应式视口。`prototype/layout/` 必须沉淀可复用页面结构。
 
-完整原型交付前，界面设计师必须完成 Playwright + Impeccable 自审：按当前 CLI 结构生成 Impeccable 上下文（Codex 默认 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`，Claude Code 可用 `.claude/context/PRODUCT.md` 和 `.claude/context/DESIGN.md` 或沿用 `.agents/context/`），运行 Impeccable context loader，用 Playwright 覆盖 desktop/tablet/mobile 截图，对候选 demo 和完整原型执行 `critique`、`audit`、`adapt` 以及必要的 `layout`、`typeset`、`clarify`、`animate`、`harden`、`polish`，并把审查、修正和复查结果写入 `docs/prototype-review.md`。
+完整原型交付前,界面设计师必须完成 Playwright + Impeccable 自审:按当前 CLI 结构生成 Impeccable 上下文(Codex 默认 `.agents/context/PRODUCT.md` 和 `.agents/context/DESIGN.md`,Claude Code 可用 `.claude/context/PRODUCT.md` 和 `.claude/context/DESIGN.md` 或沿用 `.agents/context/`),运行 Impeccable context loader,用 Playwright 覆盖 desktop/tablet/mobile 截图,对候选 demo 和完整原型执行 `critique`、`audit`、`adapt` 以及必要的 `layout`、`typeset`、`clarify`、`animate`、`harden`、`polish`,并把审查、修正和复查结果写入 `docs/prototype-review.md`。
 
-UI 页面访问逻辑必须从真实使用流程推导，页面数量以完成高频路径为准。页面模块不能堆叠过多；能合并的入口、状态、表单、列表、详情必须合并，并在 `docs/ui-information-architecture.md` 和 `docs/ui-design.md` 记录合并理由。不要为了展示完整性把低频功能前置到主路径里。
+完整原型实现前必须产出 `docs/ui-build-tasks.md`,任务按垂直切片拆分,每个任务都要能独立打开、独立交互、独立截图验证。每完成一个 UI 任务必须立即验证,通过后才能进入下一任务。
 
-完整原型实现前必须产出 `docs/ui-build-tasks.md`，任务按垂直切片拆分，每个任务都要能独立打开、独立交互、独立截图验证。每完成一个 UI 任务必须立即验证，通过后才能进入下一任务。
+如果 design 阶段为了视觉合理性需要调整蓝图中已确认的页面、流程节点或交互,必须按 craft-principles 第 4 条「重大变革协议」处理:回到 blueprint 修订对应层 → 全文一致传播 → 一致性检查;不要在 UI 文档或原型里静默新增范围。
 
-如果 UI 阶段为了体验合理性调整了页面清单、交互路径、字段、状态、技术约束或验收标准，或发现页面/模块过多、流程不顺，必须同步回写 `docs/prd.md`、`docs/handoff-prd.md`、`docs/project-config.md`、必要时 `docs/tech-architecture.md` / `docs/handoff-architecture.md`，并在 UI 主文档和 `docs/handoff-ui.md` 的 `## 文档同步检查` 中记录，不能只在 UI 文档或原型里静默新增范围。
+结束时询问用户:审核界面设计、修改设计/原型、回 blueprint 修订某一层,还是进入 `analyze`(PRD 后置成文)。
 
-原型目录职责：
+### 阶段 02:需求文档(analyze,PRD 后置)
 
-| 路径 | 职责 |
-|---|---|
-| `prototype/directions/` | 设计方向首页 demo 和预览索引。 |
-| `prototype/index.html` | 原型入口、全局导航、关键流程起点。 |
-| `prototype/pages/` | 多页面系统的独立业务页面。 |
-| `prototype/layout/` | 应用外壳、导航、页头、侧栏、内容网格、表单页骨架、状态页骨架等可复用页面结构。 |
-| `prototype/components/` | 按钮组、表单控件、卡片、列表、弹窗、状态块等可复用组件和交互片段。 |
-| `prototype/assets/` | 样式、脚本、图片、图标、示例数据等公共资源。 |
-| `prototype/review/screenshots/` | Playwright 原型自审截图证据，按 desktop/tablet/mobile 存放。 |
+阶段说明:[references/commands/analyze.md](references/commands/analyze.md)
 
-结束时询问用户：审核界面设计、修改设计/原型，还是开始开发规划。
+PRD 后置:基于已确认的 `docs/feature-flow-layout.md`(蓝图)和 `docs/ui-design.md`(界面定稿)、`prototype/`(高保真原型)**回填成文**,而非凭空起草。
 
-### 阶段 04：开发规划
+需求分析师开始前先输出阶段开场卡,并检查蓝图与 UI 是否定稿。如果蓝图缺失或 UI 未通过,先回到对应阶段。
 
-阶段说明：[references/commands/plan.md](references/commands/plan.md)
+写作流程:
 
-开发规划师把需求、架构、界面设计和原型转为 Kiro 风格实施计划 `docs/dev-tasks.md`。该文件必须保留为单文件，不新增任务目录，使用 `- [ ] 1. 任务名` checklist，让开发者可以按编号逐项执行和勾选。
+1. 把蓝图中已确认的功能编号、模块边界、流程、规则和交互逻辑映射为 PRD 1-8 章结构。
+2. 把 UI 阶段定的页面字段、操作、状态作为详细设计的可视化依据。
+3. 草稿阶段把仍需用户回答的阻塞问题写入 `docs/workflow-state.json.pending_user_questions`。
+4. 用户回答后,完善 `docs/prd.md` 和 `docs/handoff-prd.md`,清空 `pending_user_questions`,把 `recommended_next` 设置为 `review analyze`,再自动调用 `quality_reviewer` 审核 `analyze`。
 
-任务规则：
+PRD 必须使用以下章节:`文档信息`、`1. 产品概述`、`2. 功能范围`、`3. 核心业务流程`、`4. 功能详细设计`、`5. 数据模型`、`6. 权限设计`、`7. 非功能性需求`、`8. 参考资料`。功能编号沿用蓝图第 4 层定下的 `M{模块}-F{功能}`,在 `2.1 功能模块总览`、`4.x 功能详细设计`、`5.2 状态流转` 和接口需求中保持可追溯。
 
-- 每个编号任务都是最小可执行粒度，只处理一个清晰目标。
-- 第一个任务必须锁定语言/框架版本、包管理器、依赖文件形态、脚手架命令、安装命令、启动命令和测试命令；缺失时列为阻塞确认项。
-- 每个任务下保留 3-6 条具体动作，动作中写清文件、方法、接口、组件、命令或测试场景。
-- 每个任务最后必须包含测试/验收动作；测试或验收通过后才能进入下一个编号任务。
-- 每个任务必须用 `_需求: Mx-Fx, ..._` 追溯 PRD 功能编号；工程准备任务可写 `_需求: 工程准备_`。
+`docs/handoff-prd.md` 总结架构和后续阶段需要的输入。
+
+草稿阶段不触发审核;最终稿完成后必须自动运行 `review analyze`,再询问用户:修改 PRD,还是开始技术架构。
+
+### 阶段 03:技术架构(architect)
+
+阶段说明:[references/commands/architect.md](references/commands/architect.md)
+
+技术架构师开始前先输出阶段开场卡,用小白能听懂的话说明会先提供几版技术架构候选方案供用户参考。不得直接开始编写正式架构定稿。
+
+架构阶段必须先产出 `docs/architecture-options.md`,至少提供 2-3 个候选方案,分别说明前端/客户端、后端/API、数据库/存储、部署方式、适合场景、维护成本、主要风险和推荐等级。技术架构师可以给第一推荐,但必须等待用户确认最终选择;选型确认状态不是 `已确认` 时,不得编写或改写 `docs/tech-architecture.md` 正式方案。
+
+技术架构师使用五维度决策框架:平台类型、复杂度、数据规模、第三方集成、维护成本。
+
+用户确认某个候选方案后,`docs/tech-architecture.md` 必须包含技术选型、数据库设计、接口清单、部署方案和功能编号到架构映射表(沿用蓝图第 4 层的 `M{模块}-F{功能}` 编号)。`docs/handoff-architecture.md` 总结下游开发规划关注点。
+
+结束时询问用户:审核架构、修改架构,还是开始开发规划。
+
+### 阶段 04:开发规划(plan)
+
+阶段说明:[references/commands/plan.md](references/commands/plan.md)
+
+开发规划师把蓝图、需求、架构、界面设计和原型转为 Kiro 风格实施计划 `docs/dev-tasks.md`。该文件必须保留为单文件,不新增任务目录,使用 `- [ ] 1. 任务名` checklist,让开发者可以按编号逐项执行和勾选。
+
+任务规则:
+
+- 每个编号任务都是最小可执行粒度,只处理一个清晰目标。
+- 第一个任务必须锁定语言/框架版本、包管理器、依赖文件形态、脚手架命令、安装命令、启动命令和测试命令;缺失时列为阻塞确认项。
+- 每个任务下保留 3-6 条具体动作,动作中写清文件、方法、接口、组件、命令或测试场景。
+- 每个任务最后必须包含测试/验收动作;测试或验收通过后才能进入下一个编号任务。
+- 每个任务必须用 `_需求: Mx-Fx, ..._` 追溯蓝图与 PRD 的功能编号;工程准备任务可写 `_需求: 工程准备_`。
 - 任务计划必须把环境配置、项目骨架、依赖/测试框架、数据结构、数据访问、业务逻辑、接口/页面入口、回归测试拆成独立编号任务。
 - 不得保留 `待补充`、`TODO`、`类似上一步`、`写相关测试`、`处理边界情况` 等空泛语句。
-- 不得生成“实现完整模块、完成全部接口、搭建整个项目、创建所有测试、接入完整业务流程”这类过粗任务。
+- 不得生成"实现完整模块、完成全部接口、搭建整个项目、创建所有测试、接入完整业务流程"这类过粗任务。
 - 不得自行默认 Python/Node/框架版本、包管理器、依赖文件或脚手架创建方式。
 
-结束时询问用户：审核任务规划、修改任务，还是打包交付。
+结束时询问用户:审核任务规划、修改任务,还是打包交付。
 
 ### 阶段 05：交付打包
 
@@ -372,22 +367,23 @@ node .agents/skills/pm-workflow/scripts/package_delivery.js --root .
 
 用户触发审核时，必须启动当前 CLI 结构下的质量审核子 agent：Codex 使用 `.codex/agents/quality-reviewer.toml`，Claude Code 使用 `.claude/agents/quality-reviewer.md`。若当前环境无法启动项目子 agent，必须停止审核，不生成或修改审核报告，不运行审核脚本，并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
 
-运行：
+运行:
 
 ```bash
-node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|analyze|architect|design|plan|deliver>
+node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|blueprint|design|analyze|architect|plan|deliver>
 ```
 
-质量审核官必须使用三种机制：
+质量审核官必须使用三种机制:
 
-1. 对完整性、清晰度、一致性、可执行性评分。通过标准：平均分 >= 8 且每项 >= 6。
-2. 仿真下游角色，判断是否能基于当前产物继续工作。
-3. 核对追溯关系：
+1. 对完整性、清晰度、一致性、可执行性评分。通过标准:平均分 >= 8 且每项 >= 6。
+2. 仿真下游角色,判断是否能基于当前产物继续工作。
+3. 核对追溯关系:
+   - 蓝图功能编号(Mx-Fx)在 design / analyze / architect / plan 各阶段产物中的覆盖率。
    - 需求功能编号到架构数据、接口、部署。
    - 需求功能编号到界面页面、组件、状态、原型路径。
    - 需求功能编号到开发任务。
 
-审核脚本会把审核轮次记录到 `docs/workflow-state.json`。如果某阶段三轮仍不通过，必须向用户明确说明风险，并建议先修复再继续。
+审核脚本会把审核轮次记录到 `docs/workflow-state.json`。如果某阶段三轮仍不通过,必须向用户明确说明风险,并建议先修复再继续。
 
 ## 状态流程
 
@@ -397,10 +393,10 @@ node .agents/skills/pm-workflow/scripts/review_stage.js --root . --stage <init|a
 
 ## 质量要求
 
-- 不编造缺失的业务事实；需要时提问或标记风险。
-- 不跳过阶段收尾引导；始终询问用户要审核、修改还是进入下一阶段。
+- 不编造缺失的业务事实;需要时提问或标记风险。
+- 不跳过阶段收尾引导;始终询问用户要审核、修改还是进入下一阶段。
 - 不要让后续阶段静默新增需求范围。
-- 功能编号必须从需求文档贯穿到架构、界面和任务。
-- 即使审核不是硬阻断，也要把它当作真实质量机制。
-- 界面原型必须使用真实业务数据和可运行网页交互，不要用静态文字替代关键 P0 流程。
-- 交付默认止步于交付包，除非用户明确要求继续实现产品。
+- 功能编号 `Mx-Fx` 在蓝图第 4 层落定后,必须贯穿到 design / analyze(PRD) / architect / plan 各阶段产物。
+- 即使审核不是硬阻断,也要把它当作真实质量机制。
+- 界面原型必须使用真实业务数据和可运行网页交互,不要用静态文字替代关键 P0 流程。
+- 交付默认止步于交付包,除非用户明确要求继续实现产品。

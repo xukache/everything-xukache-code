@@ -19,9 +19,11 @@ Do not reach conclusions too early. The agent must not stop clarification after 
 
 Stage 00 must also identify who uses the product frequently, the user's real high-frequency need, the trigger for opening the product, the user's start-to-finish flow, and the page/module reduction boundary. These details drive true-demand analysis and simple page access logic.
 
-Document synchronization is a hard gate. When any stage changes requirements, scope, feature IDs, interfaces, data, technical constraints, page paths, interaction flows, states, acceptance criteria, test strategy, or development execution method, check upstream source documents, current stage documents, and downstream handoff documents. Fill `## 文档同步检查` in the stage artifact before review.
+Apply the workflow craft principles end-to-end (see `.claude/skills/pm-workflow/references/craft-principles.md`): one decision at a time, three-piece decisions, hold the boundary, major-change protocol, consistency check, traceability. When any stage changes requirements, scope, feature IDs, interfaces, data, technical constraints, page paths, interaction flows, states, acceptance criteria, test strategy, or development execution method, run the major-change protocol: validate insight → map cascade → confirm scope → propagate consistently across upstream/current/downstream documents → consistency check.
 
-The sync table must include: 变更项, 影响类型, 是否影响上游事实, 已检查文档, 已同步文档, 不需要同步原因, 责任阶段, 检查结论. Do not leave it blank, use placeholders, or hide behind generic "not applicable" wording.
+As of 2.0 we no longer require a fixed `## 文档同步检查` table in each artifact; `review <stage>` performs the consistency backstop.
+
+2.0 stage order: `init → blueprint → design → analyze → architect → plan → deliver`. Blueprint is the new central artifact (`docs/feature-flow-layout.md` — five layers: information architecture, core flows, per-page skeleton, per-feature with Mx-Fx, per-interaction). Design consumes blueprint directly. PRD is post-design (back-fill from blueprint + UI). Architect, plan, deliver follow.
 
 Technical architecture must be confirmed iteratively before producing a final architecture document. Clarify platform, deployment environment, data scale, third-party dependencies, runtime/framework versions, package manager, scaffold method, team maintenance constraints, and unacceptable options.
 

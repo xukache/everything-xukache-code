@@ -37,7 +37,7 @@
 ## 输入文档
 
 - `project-config.md`
-- `requirement-alignment.md`
+- `feature-flow-layout.md`
 - `prd.md`
 - `handoff-prd.md`
 - `tech-architecture.md`

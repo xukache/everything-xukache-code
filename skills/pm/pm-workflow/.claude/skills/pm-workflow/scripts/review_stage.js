@@ -11,11 +11,9 @@ const REVIEW_TEMPLATE = "quality-review/templates/review-stage.md";
 
 const STAGE_ARTIFACTS = {
   init: ["docs/project-config.md"],
-  analyze: ["docs/requirement-alignment.md", "docs/prd.md", "docs/handoff-prd.md"],
-  architect: ["docs/architecture-options.md", "docs/tech-architecture.md", "docs/handoff-architecture.md"],
+  blueprint: ["docs/feature-flow-layout.md"],
   design: [
     "docs/ui-design-brief.md",
-    "docs/ui-information-architecture.md",
     "docs/ui-design-tokens.md",
     "docs/ui-build-tasks.md",
     "docs/ui-design.md",
@@ -24,9 +22,12 @@ const STAGE_ARTIFACTS = {
     "prototype/directions/index.html",
     "prototype/index.html",
   ],
+  analyze: ["docs/prd.md", "docs/handoff-prd.md"],
+  architect: ["docs/architecture-options.md", "docs/tech-architecture.md", "docs/handoff-architecture.md"],
   plan: ["docs/dev-tasks.md"],
   deliver: [
     "docs/project-config.md",
+    "docs/feature-flow-layout.md",
     "docs/prd.md",
     "docs/tech-architecture.md",
     "docs/ui-design.md",
@@ -37,19 +38,21 @@ const STAGE_ARTIFACTS = {
 };
 
 const NEXT_STAGE = {
-  init: "analyze",
+  init: "blueprint",
+  blueprint: "design",
+  design: "analyze",
   analyze: "architect",
-  architect: "design",
-  design: "plan",
+  architect: "plan",
   plan: "deliver",
   deliver: "status",
 };
 
 const DOWNSTREAM_ROLE = {
-  init: "需求分析师",
+  init: "产品经理(蓝图层)",
+  blueprint: "界面设计师",
+  design: "需求分析师(PRD 后置)",
   analyze: "技术架构师",
-  architect: "界面设计师",
-  design: "开发规划师",
+  architect: "开发规划师",
   plan: "Codex 执行者",
   deliver: "最终接包人",
 };
@@ -59,7 +62,6 @@ const PLAN_VAGUE_PATTERNS = ["类似上一步", "写相关测试", "处理边界
 const PLAN_COARSE_PATTERNS = ["实现完整模块", "完成全部接口", "搭建整个项目", "创建所有测试", "接入完整业务流程"];
 const B_END_SIGNAL_PATTERN = /后台|管理系统|运营台|SaaS|工作台|CRM|ERP|数据看板|审批|配置|权限|表格|列表|筛选|批量操作/i;
 const VBEN_ARCO_REJECTION_PATTERN = /不采用\s*(Vben|Arco)|拒绝\s*(Vben|Arco)|用户明确拒绝\s*(Vben|Arco)|技术架构硬冲突|架构硬冲突|不属于\s*B\s*端/i;
-const SYNC_RISK_PATTERN = /需求|范围|功能编号|M\d+-F\d+|接口|API|数据|数据库|字段|权限|部署|环境|技术约束|框架|版本|包管理器|脚手架|页面|路径|交互|状态|验收|测试策略|测试命令|开发执行|模块边界/i;
 const EMOJI_PATTERN = /[\u{1F1E6}-\u{1F1FF}\u{1F300}-\u{1FAFF}\u{2700}-\u{27BF}\u{2600}-\u{26FF}]/u;
 const FONT_SIZE_PATTERN = /font-size\s*:\s*([0-9]+(?:\.[0-9]+)?)px/gi;
 const REQUIRED_CLARIFICATION_CRITERIA = {
@@ -74,11 +76,11 @@ const REQUIRED_CLARIFICATION_CRITERIA = {
 };
 
 const STAGE_SYNC_DOCS = {
-  analyze: ["docs/requirement-alignment.md", "docs/prd.md", "docs/handoff-prd.md"],
+  blueprint: ["docs/feature-flow-layout.md"],
+  analyze: ["docs/prd.md", "docs/handoff-prd.md"],
   architect: ["docs/architecture-options.md", "docs/tech-architecture.md", "docs/handoff-architecture.md"],
   design: [
     "docs/ui-design-brief.md",
-    "docs/ui-information-architecture.md",
     "docs/ui-design-tokens.md",
     "docs/ui-build-tasks.md",
     "docs/ui-design.md",
@@ -88,6 +90,7 @@ const STAGE_SYNC_DOCS = {
   plan: ["docs/dev-tasks.md"],
   deliver: [
     "docs/project-config.md",
+    "docs/feature-flow-layout.md",
     "docs/prd.md",
     "docs/tech-architecture.md",
     "docs/ui-design.md",
@@ -243,43 +246,24 @@ function hasBlockingAnalyzeQuestions(state, prd) {
   return pending.length > 0;
 }
 
-function requirementAlignmentViolations(root) {
-  const alignmentPath = path.join(root, "docs", "requirement-alignment.md");
-  const text = readText(alignmentPath);
+function blueprintLayerViolations(root) {
+  const text = readText(path.join(root, "docs", "feature-flow-layout.md"));
   const violations = [];
   if (!text.trim()) {
-    violations.push("docs/requirement-alignment.md 缺失或为空");
+    violations.push("docs/feature-flow-layout.md 缺失或为空");
     return violations;
   }
-  const requiredMarkers = [
-    "## 模块逐项对齐",
-    "## 页面逐项对齐",
-    "## 业务流程逐项对齐",
-    "## 模糊点处理记录",
-    "## PRD 写作准入",
-    "## 用户确认原文",
+  // 五层递进:对应章节存在即可,不强制表格格式。
+  const requiredLayers = [
+    { name: "信息架构(第 1 层)", patterns: [/信息架构/, /页面清单/] },
+    { name: "核心流程(第 2 层)", patterns: [/流程/, /用户/] },
+    { name: "页面/区域划分(第 3 层)", patterns: [/页面.*划分|页面.{0,4}骨架|布局选型/] },
+    { name: "功能规则与边界(第 4 层)", patterns: [/功能规则|功能.{0,6}边界|MVP\s*边界/] },
+    { name: "交互逻辑与异常态(第 5 层)", patterns: [/交互逻辑|异常态/] },
   ];
-  for (const marker of requiredMarkers) {
-    if (!text.includes(marker)) violations.push(`docs/requirement-alignment.md 缺少 ${marker}`);
-  }
-  if (!/整体确认状态[：:]\s*已确认/.test(text)) {
-    violations.push("docs/requirement-alignment.md 整体确认状态必须为已确认");
-  }
-  const gateSection = text.split("## PRD 写作准入")[1] || "";
-  for (const gate of ["模块已逐项确认", "页面已逐项确认", "业务流程已逐项确认", "范围取舍已确认", "用户允许写 PRD"]) {
-    const gateLine = gateSection.split(/\r?\n/).find((line) => line.includes(gate)) || "";
-    if (!tableRowHasConfirmedStatus(gateLine)) {
-      violations.push(`docs/requirement-alignment.md PRD 写作准入未确认：${gate}`);
-    }
-  }
-  const activeRows = text
-    .split(/\r?\n/)
-    .filter((line) => /^\|\s*(M\d+|P\d+|F\d+|A\d+)/.test(line));
-  for (const row of activeRows) {
-    if (!tableRowHasConfirmedStatus(row)) {
-      violations.push("docs/requirement-alignment.md 存在未确认的模块、页面、业务流程或模糊点");
-      break;
-    }
+  for (const layer of requiredLayers) {
+    const hit = layer.patterns.some((p) => p.test(text));
+    if (!hit) violations.push(`docs/feature-flow-layout.md 缺少 ${layer.name} 内容`);
   }
   return violations;
 }
@@ -319,20 +303,12 @@ function architectureOptionViolations(root) {
   return violations;
 }
 
-function tableRowHasConfirmedStatus(row) {
-  return row
-    .split("|")
-    .map((cell) => cell.trim().replace(/`/g, ""))
-    .some((cell) => cell === "已确认");
-}
-
 function designUiRuleViolations(root) {
   const targets = [];
   const uiDoc = path.join(root, "docs", "ui-design.md");
   if (exists(uiDoc)) targets.push(uiDoc);
   const designDocPaths = [
     "docs/ui-design-brief.md",
-    "docs/ui-information-architecture.md",
     "docs/ui-design-tokens.md",
     "docs/ui-build-tasks.md",
     "docs/ui-design.md",
@@ -342,8 +318,8 @@ function designUiRuleViolations(root) {
   const upstreamDocs = [
     "docs/prd.md",
     "docs/tech-architecture.md",
+    "docs/feature-flow-layout.md",
     "docs/ui-design-brief.md",
-    "docs/ui-information-architecture.md",
     "docs/ui-design-tokens.md",
     "docs/ui-design.md",
   ].map((name) => readText(path.join(root, name))).join("\n");
@@ -419,76 +395,46 @@ function designUiRuleViolations(root) {
 }
 
 function documentSyncViolations(root, stage) {
+  // 轻量化一致性检查(对应 craft-principles 第 4、5 条):
+  // 不要求固定表格格式;只在高风险变更信号出现时,检查上下游引用是否到位。
   const docs = STAGE_SYNC_DOCS[stage] || [];
   if (!docs.length) return [];
 
   const availableDocs = docs.filter((name) => readText(path.join(root, name)).trim());
   if (!availableDocs.length) return [];
 
-  const textByDoc = new Map(availableDocs.map((name) => [name, readText(path.join(root, name))]));
-  const combined = [...textByDoc.values()].join("\n\n");
+  const combined = availableDocs.map((name) => readText(path.join(root, name))).join("\n\n");
   const violations = [];
-
-  if (!/##\s*文档同步检查|#\s*文档同步检查/.test(combined)) {
-    violations.push(`${stage} 阶段缺少“文档同步检查”固定区，无法确认上下游文档已同步。`);
-    return violations;
-  }
-
-  const requiredColumns = ["变更项", "影响类型", "是否影响上游事实", "已检查文档", "已同步文档", "不需要同步原因", "责任阶段", "检查结论"];
-  const missingColumns = requiredColumns.filter((column) => !combined.includes(column));
-  if (missingColumns.length) {
-    violations.push(`文档同步检查表缺少列：${missingColumns.join(", ")}`);
-  }
-
-  const syncRows = combined
-    .split(/\r?\n/)
-    .filter((line) => /^\|/.test(line) && !/^\|\s*-+/.test(line) && !requiredColumns.every((column) => line.includes(column)));
-  const meaningfulRows = syncRows.filter((line) => {
-    const normalized = line.replace(/\s+/g, "");
-    return (
-      /已同步|不需要同步|无影响|已检查|已确认|不涉及|一致/.test(normalized) &&
-      !/待补充|TODO|\{\{/.test(normalized)
-    );
-  });
-  if (!meaningfulRows.length) {
-    violations.push("文档同步检查表未填写有效结论，不能全为空、待补充或不适用。");
-  }
-
-  if (SYNC_RISK_PATTERN.test(combined) && !meaningfulRows.some((line) => /已同步|不需要同步|无影响|不涉及/.test(line))) {
-    violations.push("阶段文档包含需求/接口/页面/测试等高风险变更信号，但未记录已同步文档或不需要同步原因。");
-  }
 
   if (stage === "plan") {
     const tasks = readText(path.join(root, "docs", "dev-tasks.md"));
     const requiredSources = ["docs/prd.md", "docs/tech-architecture.md", "docs/ui-design.md"];
     const missingSources = requiredSources.filter((source) => !tasks.includes(source));
     if (missingSources.length) {
-      violations.push(`docs/dev-tasks.md 必须在文档同步检查或追溯区引用来源文档：${missingSources.join(", ")}`);
-    }
-    const baselineRisk = /环境|框架|版本|包管理器|脚手架|测试策略|测试命令|技术基线|模块边界|接口/.test(tasks);
-    const architectureSyncRecorded = meaningfulRows.some(
-      (line) => line.includes("docs/tech-architecture.md") && /已同步|不需要同步|无影响|不涉及|上游已明确/.test(line)
-    );
-    if (baselineRisk && !architectureSyncRecorded) {
-      violations.push("plan 阶段涉及环境/框架/脚手架/测试策略/接口等技术基线变化，必须在有效同步行中记录 docs/tech-architecture.md 已同步或不需要同步原因。");
+      violations.push(`docs/dev-tasks.md 应在追溯区或引用区列出来源文档:${missingSources.join(", ")}`);
     }
   }
 
   if (stage === "design") {
     const designRisk = /页面|模块|交互|路径|字段|状态|响应式|验收/.test(combined);
-    const prdSyncRecorded = meaningfulRows.some((line) => line.includes("docs/prd.md") && /已同步|不需要同步|无影响|不涉及/.test(line));
-    const uiHandoffRecorded = meaningfulRows.some((line) => line.includes("docs/handoff-ui.md") && /已同步|不需要同步|无影响|不涉及/.test(line));
-    if (designRisk && (!prdSyncRecorded || !uiHandoffRecorded)) {
-      violations.push("design 阶段涉及页面/交互/字段/状态/验收等变更信号，必须在有效同步行中记录 docs/prd.md 和 docs/handoff-ui.md 的同步结论。");
+    const blueprintRef = combined.includes("feature-flow-layout") || combined.includes("蓝图");
+    if (designRisk && !blueprintRef) {
+      violations.push("design 阶段产物未引用 docs/feature-flow-layout.md(蓝图),无法验证上游一致性。");
+    }
+  }
+
+  if (stage === "analyze") {
+    const blueprintRef = combined.includes("feature-flow-layout") || combined.includes("蓝图");
+    if (!blueprintRef) {
+      violations.push("PRD 后置:analyze 产物应引用 docs/feature-flow-layout.md 作为来源,未发现引用。");
     }
   }
 
   if (stage === "deliver") {
-    const deliverText = combined;
-    const requiredDeliverDocs = ["docs/prd.md", "docs/tech-architecture.md", "docs/ui-design.md", "docs/dev-tasks.md", "AGENTS.md"];
-    const missingDeliverDocs = requiredDeliverDocs.filter((doc) => !deliverText.includes(doc));
+    const requiredDeliverDocs = ["docs/feature-flow-layout.md", "docs/prd.md", "docs/tech-architecture.md", "docs/ui-design.md", "docs/dev-tasks.md", "AGENTS.md"];
+    const missingDeliverDocs = requiredDeliverDocs.filter((doc) => !combined.includes(doc));
     if (missingDeliverDocs.length) {
-      violations.push(`deliver 阶段文档同步检查必须覆盖：${missingDeliverDocs.join(", ")}`);
+      violations.push(`deliver 阶段一致性检查需覆盖:${missingDeliverDocs.join(", ")}`);
     }
   }
 
@@ -594,7 +540,7 @@ function scoreStage(root, stage) {
   const initNotConfirmed = stage === "init" && !clarificationConfirmed(state);
   const initMissingCriteria = stage === "init" ? missingClarificationCriteria(state) : [];
   const analyzeHasOpenQuestions = stage === "analyze" && hasBlockingAnalyzeQuestions(state, readText(path.join(root, "docs", "prd.md")));
-  const alignmentViolations = stage === "analyze" ? requirementAlignmentViolations(root) : [];
+  const blueprintViolations = stage === "blueprint" ? blueprintLayerViolations(root) : [];
   const architectureViolations = stage === "architect" ? architectureOptionViolations(root) : [];
   const designUiViolations = stage === "design" ? designUiRuleViolations(root) : [];
   const planViolations = stage === "plan" ? planQualityViolations(root) : [];
@@ -609,7 +555,7 @@ function scoreStage(root, stage) {
   }
   if (initConceptsNotAligned) missing.push("docs/workflow-state.json: clarification.concepts_aligned=true");
   if (analyzeHasOpenQuestions) missing.push("docs/workflow-state.json: pending_user_questions 未清空");
-  missing.push(...alignmentViolations);
+  missing.push(...blueprintViolations);
   missing.push(...architectureViolations);
   missing.push(...designUiViolations);
   missing.push(...planViolations);
@@ -617,12 +563,12 @@ function scoreStage(root, stage) {
 
   let completeness = missing.length ? Math.max(1, Math.round((10 * presentCount) / Math.max(requiredCount, 1))) : 10;
   if (hasPlaceholder) completeness = Math.min(completeness, 6);
-  if (initNotConfirmed || analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length || syncViolations.length) completeness = Math.min(completeness, 5);
+  if (initNotConfirmed || analyzeHasOpenQuestions || blueprintViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length || syncViolations.length) completeness = Math.min(completeness, 5);
 
   let clarity = totalChars > 2500 && !hasPlaceholder ? 9 : totalChars > 800 ? 6 : 3;
   if (stage === "plan" && !planViolations.length && !hasPlaceholder) clarity = Math.max(clarity, 8);
   if (hasPlaceholder) clarity = Math.min(clarity, 5);
-  if (analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length || syncViolations.length) clarity = Math.min(clarity, 5);
+  if (analyzeHasOpenQuestions || blueprintViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length || syncViolations.length) clarity = Math.min(clarity, 5);
 
   let [consistency, consistencyNote] = consistencyScore(root, stage);
   if (initNotConfirmed) {
@@ -630,7 +576,7 @@ function scoreStage(root, stage) {
     consistencyNote = "需求澄清尚未获得用户确认或关键术语概念未对齐，不能视为初始化完成。";
   }
   let executability = executabilityScore(contents, stage, hasPlaceholder);
-  if (initNotConfirmed || analyzeHasOpenQuestions || alignmentViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length || syncViolations.length) executability = Math.min(executability, 5);
+  if (initNotConfirmed || analyzeHasOpenQuestions || blueprintViolations.length || architectureViolations.length || designUiViolations.length || planViolations.length || syncViolations.length) executability = Math.min(executability, 5);
 
   const scores = {
     completeness,
@@ -645,7 +591,7 @@ function scoreStage(root, stage) {
   scores.init_not_confirmed = initNotConfirmed;
   scores.init_concepts_not_aligned = initConceptsNotAligned;
   scores.analyze_has_open_questions = analyzeHasOpenQuestions;
-  scores.requirement_alignment_violations = alignmentViolations;
+  scores.blueprint_violations = blueprintViolations;
   scores.architecture_option_violations = architectureViolations;
   scores.design_ui_violations = designUiViolations;
   scores.plan_violations = planViolations;
@@ -757,36 +703,62 @@ function featureHasNumberedTaskAndValidation(tasks, featureId) {
 }
 
 function consistencyScore(root, stage) {
+  // 新顺序:init → blueprint → design → analyze(PRD) → architect → plan → deliver
+  // 功能编号 Mx-Fx 在 blueprint 第 4 层落定;后续阶段都向蓝图对账。
+  const blueprint = readText(path.join(root, "docs", "feature-flow-layout.md"));
   const prd = readText(path.join(root, "docs", "prd.md"));
   const tech = readText(path.join(root, "docs", "tech-architecture.md"));
   const ui = readText(path.join(root, "docs", "ui-design.md"));
   const tasks = readText(path.join(root, "docs", "dev-tasks.md"));
-  const prdIds = extractIds(prd, "feature");
+
   if (stage === "init") return [8, "初始化阶段主要检查项目配置自身一致性。"];
-  if (!prdIds.size && stage !== "analyze") return [4, "上游需求功能编号缺失，无法做跨阶段对账。"];
+
+  const blueprintIds = extractIds(blueprint, "feature");
+  const prdIds = extractIds(prd, "feature");
+  // 蓝图阶段:检查蓝图自身是否落了五层并产生功能编号(允许首次落定)。
+  if (stage === "blueprint") {
+    return blueprintIds.size
+      ? [9, "蓝图已落定 Mx-Fx 功能编号(第 4 层定稿)。"]
+      : [6, "蓝图尚未出现 Mx-Fx 功能编号;若已规划但未编号,请补齐。"];
+  }
+
+  // 上游编号源:有蓝图就用蓝图;若用户走传统顺序(无蓝图),退化用 PRD。
+  const sourceIds = blueprintIds.size ? blueprintIds : prdIds;
+  if (!sourceIds.size && stage !== "analyze") {
+    return [4, "上游(蓝图或 PRD)未发现 Mx-Fx 功能编号,无法做跨阶段对账。"];
+  }
 
   const targetText = {
+    design: ui,
     analyze: prd,
     architect: tech,
-    design: ui,
     plan: tasks,
-    deliver: [tech, ui, tasks].join("\n"),
+    deliver: [prd, tech, ui, tasks].join("\n"),
   }[stage] || "";
   const targetIds = extractIds(targetText, "feature");
+
   if (stage === "analyze") {
-    return targetIds.size ? [8, "需求文档已出现功能编号。"] : [4, "需求文档未出现 Mx-Fx 功能编号。"];
+    if (!targetIds.size) return [4, "PRD 未出现 Mx-Fx 功能编号。"];
+    if (sourceIds.size) {
+      const missing = [...sourceIds].filter((id) => !targetIds.has(id)).sort();
+      if (missing.length) return [6, `蓝图中以下功能编号未在 PRD 中出现:${missing.join(", ")}`];
+      return [9, "PRD 与蓝图功能编号一致。"];
+    }
+    return [8, "PRD 已出现 Mx-Fx 功能编号(无蓝图可对账)。"];
   }
-  const missingIds = [...prdIds].filter((id) => !targetIds.has(id)).sort();
-  if (missingIds.length) return [5, `以下需求功能编号未在本阶段产物中出现：${missingIds.join(", ")}`];
-  return [9, "需求功能编号在本阶段产物中均有出现。"];
+
+  const missingIds = [...sourceIds].filter((id) => !targetIds.has(id)).sort();
+  if (missingIds.length) return [5, `以下功能编号未在本阶段产物中出现:${missingIds.join(", ")}`];
+  return [9, "上游功能编号在本阶段产物中均有出现。"];
 }
 
 function executabilityScore(contents, stage, hasPlaceholder) {
   const requiredTerms = {
     init: ["下一步", "工作量", "核心场景"],
+    blueprint: ["信息架构", "流程", "页面", "功能", "交互", "MVP"],
+    design: ["原型", "状态", "prototype", "directions", "impeccable", "screenshots"],
     analyze: ["P0", "不在范围", "业务规则", "异常", "接口", "权限"],
     architect: ["接口", "数据库", "部署"],
-    design: ["原型", "状态", "prototype", "directions", "impeccable", "screenshots"],
     plan: ["实施计划", "- [ ]", "_需求:", "验收/测试", "技术基线", "包管理器", "脚手架"],
     deliver: ["AGENTS", "dev-tasks", "prototype"],
   }[stage];
@@ -850,19 +822,24 @@ function buildReport(root, stage, roundNo, result, scores) {
 }
 
 function reconciliationTable(root, stage) {
+  // 上游 ID 源:优先蓝图(新顺序);蓝图缺失则退化用 PRD。
+  const blueprintIds = extractIds(readText(path.join(root, "docs", "feature-flow-layout.md")), "feature");
   const prdIds = extractIds(readText(path.join(root, "docs", "prd.md")), "feature");
-  if (!prdIds.size) return "| 对账项 | 状态 |\n|---|---|\n| 需求功能编号 | 未找到 Mx-Fx 编号 |";
+  const sourceIds = blueprintIds.size ? blueprintIds : prdIds;
+  const sourceLabel = blueprintIds.size ? "蓝图功能编号" : "需求功能编号";
+  if (!sourceIds.size) return "| 对账项 | 状态 |\n|---|---|\n| 功能编号 | 未找到 Mx-Fx 编号 |";
 
   const targetPaths = {
-    architect: ["docs/tech-architecture.md"],
     design: ["docs/ui-design.md"],
+    analyze: ["docs/prd.md"],
+    architect: ["docs/tech-architecture.md"],
     plan: ["docs/dev-tasks.md"],
-    deliver: ["docs/tech-architecture.md", "docs/ui-design.md", "docs/dev-tasks.md"],
-  }[stage] || ["docs/prd.md"];
+    deliver: ["docs/prd.md", "docs/tech-architecture.md", "docs/ui-design.md", "docs/dev-tasks.md"],
+  }[stage] || ["docs/feature-flow-layout.md"];
   const targetText = targetPaths.map((item) => readText(path.join(root, item))).join("\n");
   const targetIds = extractIds(targetText, "feature");
-  const lines = ["| 需求功能编号 | 本阶段覆盖 |", "|---|---|"];
-  for (const featureId of [...prdIds].sort()) {
+  const lines = [`| ${sourceLabel} | 本阶段覆盖 |`, "|---|---|"];
+  for (const featureId of [...sourceIds].sort()) {
     lines.push(`| ${featureId} | ${targetIds.has(featureId) ? "是" : "否"} |`);
   }
   return lines.join("\n");
@@ -875,12 +852,12 @@ function buildIssues(scores, roundNo) {
   if (scores.init_not_confirmed) issues.push("- 需求澄清尚未获得用户确认，`init` 不能判定完成。");
   if (scores.init_concepts_not_aligned) issues.push("- 关键术语和概念尚未对齐，容易导致 AI 与用户说的是不同东西。");
   if (scores.analyze_has_open_questions) issues.push("- workflow-state 仍存在 pending_user_questions，不能触发 analyze 通过。");
-  if ((scores.requirement_alignment_violations || []).length) issues.push(`- PRD 前需求对齐门禁未通过：${scores.requirement_alignment_violations.join("；")}`);
+  if ((scores.blueprint_violations || []).length) issues.push(`- 蓝图五层未完整定稿:${scores.blueprint_violations.join(";")}`);
   if ((scores.architecture_option_violations || []).length) issues.push(`- 技术架构选型门禁未通过：${scores.architecture_option_violations.join("；")}`);
   if (scores.design_ui_violations.length) issues.push(`- UI 阶段门禁未通过：${scores.design_ui_violations.join("；")}`);
   if ((scores.plan_violations || []).length) issues.push(`- 开发任务规划不符合 Kiro 风格实施计划要求：${scores.plan_violations.join("；")}`);
-  if ((scores.sync_violations || []).length) issues.push(`- 文档同步硬门禁未通过：${scores.sync_violations.join("；")}`);
-  if (scores.consistency < 6) issues.push("- 跨阶段追溯不足，需求功能编号没有完整映射到当前阶段产物。");
+  if ((scores.sync_violations || []).length) issues.push(`- 一致性检查未通过(craft-principles 第 5 条):${scores.sync_violations.join(";")}`);
+  if (scores.consistency < 6) issues.push("- 跨阶段追溯不足，功能编号没有完整映射到当前阶段产物。");
   if (scores.executability < 6) issues.push("- 下游执行信号不足，缺少验收、验证、接口、状态或任务粒度信息。");
   if (roundNo >= 3 && scores.average < 8) issues.push("- 已达到第三轮未通过，建议停止推进并先修复关键问题。");
   return issues.length ? issues.join("\n") : "- 未发现阻塞性问题。";
@@ -890,11 +867,12 @@ function buildRework(stage, result, scores, roundNo) {
   if (result === "通过") return "本阶段已通过，无需返工。可根据用户偏好做非阻塞微调。";
   const suggestions = {
     init: "补齐 8 个澄清判断锚点、六个核心问题、高频真实需求、最值得先做的一段流程、Agent 能力、结果落点、最小 demo 边界和工作量粗估。",
-    analyze: "先完成 docs/requirement-alignment.md：模块、页面、业务流程逐项和用户确认，模糊点全部有最终确认，用户明确同意写 PRD；再让用户回答 pending_user_questions，补齐新 PRD 的功能范围、核心业务流程、4.x 功能详细设计、数据模型、权限、非功能、Mx-Fx 功能编号和异常边界，并填写文档同步检查。",
-    architect: "先补齐 docs/architecture-options.md：提供至少 2 个候选架构方案、五维度对比、推荐理由、用户最终选择和确认原文；再补齐需求到数据库、字段、接口、部署配置和技术风险的映射，并填写文档同步检查。",
-    design: "补齐 docs/ui-design-brief.md、docs/ui-information-architecture.md、docs/ui-design-tokens.md、docs/ui-build-tasks.md、主题库扫描记录、每个方向读取的 DESIGN.md 路径、B 端 Vben 主色记录、项目主色色阶覆盖、组件级 token 应用表、Progress 固定主色规则、Arco Design Pro 组件一比一引用记录、2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、docs/prototype-review.md、Playwright 截图证据、Impeccable 审查记录、页面清单、需求到界面映射、完整原型路径和文档同步检查。",
-    plan: "补齐 Kiro 风格实施计划结构、技术基线锁定、编号 checklist、3-6 条具体动作、测试/验收动作、_需求 追溯，并继续拆小粒度过粗的任务；同时填写文档同步检查并引用 PRD/架构/UI 来源文档。",
-    deliver: "补齐缺失文档、审核报告、AGENTS.md、prototype 和全链路文档同步检查后重新打包。",
+    blueprint: "按 blueprint-method 五层递进逐层定稿:第 1 层(信息架构:页面清单、导航、跳转地图)、第 2 层(核心流程)、第 3 层(逐个页面:骨架/布局选型/四态)、第 4 层(逐个功能:Mx-Fx 编号与 MVP 边界)、第 5 层(逐个交互:触发/主流程/异常)。一次只抛一项给用户拍板,前一层未通过不进下一层。",
+    design: "补齐 docs/ui-design-brief.md、docs/ui-design-tokens.md、docs/ui-build-tasks.md、主题库扫描记录、每个方向读取的 DESIGN.md 路径、B 端 Vben 主色记录、项目主色色阶覆盖、组件级 token 应用表、Progress 固定主色规则、Arco Design Pro 组件一比一引用记录、2-3 个设计方向、每个方向的首页 demo、prototype/directions/index.html 预览索引、docs/prototype-review.md、Playwright 截图证据、Impeccable 审查记录、需求到界面映射、完整原型路径;并确认 design 引用了 docs/feature-flow-layout.md 作为上游(信息架构由蓝图提供,design 不再单独产出)。",
+    analyze: "PRD 后置:基于已确认的 docs/feature-flow-layout.md(蓝图)和 docs/ui-design.md(界面定稿)回填成文。补齐功能范围、核心业务流程、4.x 功能详细设计、数据模型、权限、非功能、Mx-Fx 功能编号(沿用蓝图编号)和异常边界;让用户回答 pending_user_questions。",
+    architect: "先补齐 docs/architecture-options.md:提供至少 2 个候选架构方案、五维度对比、推荐理由、用户最终选择和确认原文;再补齐功能编号到数据库、字段、接口、部署配置和技术风险的映射。",
+    plan: "补齐 Kiro 风格实施计划结构、技术基线锁定、编号 checklist、3-6 条具体动作、测试/验收动作、_需求 追溯,并继续拆小粒度过粗的任务;在追溯区引用 PRD/架构/UI 来源文档。",
+    deliver: "补齐缺失文档、审核报告、AGENTS.md、prototype,确认全链路 Mx-Fx 编号一致后重新打包。",
   };
   const extra = roundNo >= 3 && scores.average < 8 ? "\n\n第三轮仍未通过：请向用户报告继续推进的具体风险。" : "";
   return suggestions[stage] + extra;

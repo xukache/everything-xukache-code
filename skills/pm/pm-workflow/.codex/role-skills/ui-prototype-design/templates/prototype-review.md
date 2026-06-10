@@ -12,10 +12,10 @@
 | 阶段产物 | 路径 | 是否完成 | 是否影响原型 |
 |---|---|---|---|
 | 设计简报 | docs/ui-design-brief.md | 待补充 | 待补充 |
-| 信息架构 | docs/ui-information-architecture.md | 待补充 | 待补充 |
 | 设计系统和 tokens | docs/ui-design-tokens.md | 待补充 | 待补充 |
 | UI 构建任务 | docs/ui-build-tasks.md | 待补充 | 待补充 |
 | 汇总设计文档 | docs/ui-design.md | 待补充 | 待补充 |
+| 蓝图引用 | docs/feature-flow-layout.md | 待补充 | 待补充 |
 
 | 类型 | 页面 | 路径 | 覆盖功能编号 | 状态 |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@
 | 是否存在原型开发前用户确认记录 | `docs/ui-design.md` 的 `## 原型开发前确认` | 待补充 |
 | 确认前是否已经开始写完整页面代码 | git diff、文件时间或实现记录；未确认不得进入原型实现 | 待补充 |
 | 用户提出的边界问题是否已回写设计文档 | `docs/ui-design.md` 的页面任务卡、模块准入表、修正记录 | 待补充 |
-| 用户提出的边界问题是否已同步阶段产物 | `docs/ui-information-architecture.md`、`docs/ui-build-tasks.md` | 待补充 |
+| 用户提出的边界问题是否已同步阶段产物 | `docs/feature-flow-layout.md`(若需调整,按重大变革协议)、`docs/ui-build-tasks.md` | 待补充 |
 | 最终原型是否和已确认页面任务卡一致 | 页面截图、交互路径、模块保留/删除结果 | 待补充 |
 
 ## UI 构建任务验证
@@ -125,11 +125,6 @@
 
 ## 复查记录
 
-- 第 1 轮：
-- 第 2 轮：
+- 第 1 轮:
+- 第 2 轮:
 
-## 文档同步检查
-
-| 变更项 | 影响类型 | 是否影响上游事实 | 已检查文档 | 已同步文档 | 不需要同步原因 | 责任阶段 | 检查结论 |
-|---|---|---|---|---|---|---|---|
-| 原型自审和修正 | 页面/交互/状态/响应式/验收 | 是/否 | `docs/prd.md`、`docs/tech-architecture.md`、`docs/ui-design.md`、`docs/handoff-ui.md`、`docs/dev-tasks.md` | 待填写 | 待填写 | design | 待确认 |

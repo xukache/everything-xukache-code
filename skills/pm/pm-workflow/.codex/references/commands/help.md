@@ -1,21 +1,22 @@
 # help 命令
 
-当用户输入 `$pm-workflow help`、没有提供参数，或询问"有哪些命令"时，使用本命令。
+当用户输入 `$pm-workflow help`、没有提供参数,或询问"有哪些命令"时,使用本命令。
 
 ## 响应要求
 
-必须启动当前 CLI 结构下的产品经理子 agent 展示菜单并引导用户选择阶段：Codex 使用 `.codex/agents/product-manager.toml`，Claude Code 使用 `.claude/agents/product-manager.md`。
+必须启动当前 CLI 结构下的产品经理子 agent 展示菜单并引导用户选择阶段:Codex 使用 `.codex/agents/product-manager.toml`,Claude Code 使用 `.claude/agents/product-manager.md`。
 
-如果当前环境无法启动产品经理子 agent，必须停止菜单引导，不修改任何产物，并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
+如果当前环境无法启动产品经理子 agent,必须停止菜单引导,不修改任何产物,并提示用户在支持项目子 agent 调度的 CLI 中打开当前工作室目录后重试。
 
-按阶段展示命令菜单：
+按阶段展示命令菜单(2.0 阶段顺序:`init → blueprint → design → analyze → architect → plan → deliver`):
 
 | 命令 | 自然语言说法 | 产物 |
 |---|---|---|
 | `init` | 我想做一个... / 澄清需求 | `docs/project-config.md` |
-| `analyze` | 开始分析需求 | `docs/requirement-alignment.md`, `docs/prd.md`, `docs/handoff-prd.md` |
+| `blueprint` | 做设计底稿 / 梳理流程 / 五层确认 | `docs/feature-flow-layout.md` |
+| `design` | 开始界面原型设计 | `docs/ui-design-brief.md`, `docs/ui-design-tokens.md`, `docs/ui-build-tasks.md`, `docs/ui-design.md`, `docs/handoff-ui.md`, `prototype/` |
+| `analyze` | 开始分析需求 / 写 PRD(后置) | `docs/prd.md`, `docs/handoff-prd.md` |
 | `architect` | 开始设计技术架构 | `docs/architecture-options.md`, `docs/tech-architecture.md`, `docs/handoff-architecture.md` |
-| `design` | 开始界面原型设计 | `docs/ui-design-brief.md`, `docs/ui-information-architecture.md`, `docs/ui-design-tokens.md`, `docs/ui-build-tasks.md`, `docs/ui-design.md`, `docs/handoff-ui.md`, `prototype/` |
 | `plan` | 开始规划 | `docs/dev-tasks.md` |
 | `review [stage]` | 审核一下 | `docs/review-{stage}.md` |
 | `deliver` | 开始打包 | `outputs/dev-package/` |

@@ -104,8 +104,3 @@
 - 用户意见：
 - 下一阶段：方向 demo 和 `docs/ui-build-tasks.md`
 
-## 文档同步检查
-
-| 变更项 | 影响类型 | 是否影响上游事实 | 已检查文档 | 已同步文档 | 不需要同步原因 | 责任阶段 | 检查结论 |
-|---|---|---|---|---|---|---|---|
-| 设计系统和 tokens | UI 框架/组件库/主题/响应式 | 是/否 | `docs/tech-architecture.md`、`docs/handoff-architecture.md`、`docs/ui-design.md`、`docs/handoff-ui.md` | 待填写 | 待填写 | design | 待确认 |
