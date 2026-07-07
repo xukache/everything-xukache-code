@@ -24,6 +24,8 @@
 ```
 skills/
 ├── ai-coding-task-planner/   # AI 编程需求拆解与提示词优化
+├── career/                    # 求职、简历与面试表达
+│   └── resume-optimizer/
 ├── projects/                  # 项目文档维护
 │   └── code-documentation/
 ├── pm/                        # 产品工作流与 Skill 迭代
@@ -49,6 +51,12 @@ skills/
 | Skill | 介绍 | 使用方式 |
 | --- | --- | --- |
 | [`code-documentation`](skills/projects/code-documentation/) | 维护项目文档，覆盖 README、API 文档、架构说明、开发者指南、代码注释和文档同步检查。 | "更新 README"、"补充接口文档" |
+
+### 💼 求职与面试
+
+| Skill | 介绍 | 使用方式 |
+| --- | --- | --- |
+| [`resume-optimizer`](skills/career/resume-optimizer/) | 简历优化与面试表达辅导，覆盖材料梳理、JD 匹配、经历证据挖掘、简历改写、审查修复和面试追问准备。 | "帮我优化简历"<br>"针对这个 JD 定制简历" |
 
 ### 🚀 产品工作流
 
@@ -99,6 +107,7 @@ skills/
 | 技能名 | 仓库内路径 |
 | --- | --- |
 | `ai-coding-task-planner` | `skills/ai-coding-task-planner/` |
+| `resume-optimizer` | `skills/career/resume-optimizer/` |
 | `code-documentation` | `skills/projects/code-documentation/` |
 | `pm-workflow` | `skills/pm/pm-workflow/` |
 | `skill-iteration-retrospective` | `skills/pm/skill-iteration-retrospective/` |
@@ -147,6 +156,7 @@ cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ./.agents/skill
 
 # 安装所有技能到全局
 cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/career/resume-optimizer ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/projects/code-documentation ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/pm/pm-workflow ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/pm/skill-iteration-retrospective ~/.agents/skills/
@@ -184,6 +194,7 @@ pmflow init --ai claude --root ./pm-workflow-claude-demo --name "习惯打卡"
 | Skill | 来源 | 链接 |
 | --- | --- | --- |
 | `ai-coding-task-planner` | 原创 | — |
+| `resume-optimizer` | 原创 | — |
 | `pm-workflow` | 原创 | — |
 | `code-documentation` | 原创 | — |
 | `skill-iteration-retrospective` | 原创 | — |

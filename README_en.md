@@ -24,6 +24,8 @@ A curated collection of Agent Skills for AI-assisted programming workflows. Each
 ```
 skills/
 ├── ai-coding-task-planner/   # Requirement decomposition & prompt optimization
+├── career/                    # Career, resume, and interview preparation
+│   └── resume-optimizer/
 ├── projects/                  # Project documentation maintenance
 │   └── code-documentation/
 ├── pm/                        # Product workflow & skill iteration
@@ -49,6 +51,12 @@ skills/
 | Skill | Description | Usage |
 | --- | --- | --- |
 | [`code-documentation`](skills/projects/code-documentation/) | Maintains project documentation including README, API docs, architecture docs, developer guides, and doc-sync checks. | "Update the README" |
+
+### 💼 Career & Interview
+
+| Skill | Description | Usage |
+| --- | --- | --- |
+| [`resume-optimizer`](skills/career/resume-optimizer/) | Optimizes resumes and prepares interview narratives, covering material intake, JD matching, evidence mining, resume rewriting, review, repair, and interview follow-ups. | "Optimize my resume"<br>"Tailor my resume for this JD" |
 
 ### 🚀 Product Workflow
 
@@ -99,6 +107,7 @@ Use skills/wechat/wechat-article-workflow to plan a WeChat article
 | Skill Name | Path in Repository |
 | --- | --- |
 | `ai-coding-task-planner` | `skills/ai-coding-task-planner/` |
+| `resume-optimizer` | `skills/career/resume-optimizer/` |
 | `code-documentation` | `skills/projects/code-documentation/` |
 | `pm-workflow` | `skills/pm/pm-workflow/` |
 | `skill-iteration-retrospective` | `skills/pm/skill-iteration-retrospective/` |
@@ -146,6 +155,7 @@ cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ./.agents/skill
 
 # Install all skills globally
 cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/career/resume-optimizer ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/projects/code-documentation ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/pm/pm-workflow ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/pm/skill-iteration-retrospective ~/.agents/skills/
@@ -183,6 +193,7 @@ pmflow init --ai claude --root ./pm-workflow-claude-demo --name "HabitTracker"
 | Skill | Source | Link |
 | --- | --- | --- |
 | `ai-coding-task-planner` | Original | — |
+| `resume-optimizer` | Original | — |
 | `pm-workflow` | Original | — |
 | `code-documentation` | Original | — |
 | `skill-iteration-retrospective` | Original | — |
