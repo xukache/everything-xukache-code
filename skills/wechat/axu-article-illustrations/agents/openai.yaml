@@ -1,0 +1,4 @@
+interface:
+  display_name: "阿栩正文配图"
+  short_description: "生成阿栩风格公众号正文解释图，并复用内置封面模板。"
+  default_prompt: "Use 阿栩正文配图，为这篇公众号文章规划并生成正文解释图；如需要封面，则使用内置 900x383 模板替换栏目名、标题和副标题。"

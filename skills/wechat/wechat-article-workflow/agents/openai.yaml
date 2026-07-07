@@ -1,0 +1,4 @@
+interface:
+  display_name: "公众号文章工作流"
+  short_description: "按文章目的、读者路径、真实素材和公众号排版交付推进文章生产。"
+  default_prompt: "帮我用这个 skill 从主题和素材出发，先判断文章目的、写作任务、读者状态、文章主承诺和技术解释类型，再推进大纲；大纲确认后再写初稿。最终 Markdown 确认后，如需公众号格式，再用 wechat-axu-styler 导出阿栩品牌 HTML。"

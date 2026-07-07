@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>阿栩公众号封面模板 · 900x383</title>
+<style>
+:root {
+  --paper: oklch(0.985 0.008 82);
+  --paper-deep: oklch(0.955 0.012 88);
+  --ink: oklch(0.265 0.012 250);
+  --muted: oklch(0.46 0.015 245);
+  --line: oklch(0.68 0.055 145);
+  --sage: oklch(0.76 0.055 145);
+  --warm: oklch(0.82 0.045 62);
+  --shadow: oklch(0.78 0.012 80 / 0.34);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 18% 16%, oklch(0.99 0.01 88), transparent 28%),
+    linear-gradient(135deg, oklch(0.94 0.012 80), oklch(0.9 0.01 105));
+  color: var(--ink);
+  font-family:
+    "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC",
+    "SimSun", serif;
+}
+
+.stage {
+  width: min(94vw, 900px);
+}
+
+.cover {
+  position: relative;
+  width: 900px;
+  height: 383px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, oklch(0.985 0.008 82) 0%, oklch(0.98 0.01 86) 58%, oklch(0.958 0.014 92) 100%);
+  border: 1px solid oklch(0.88 0.008 82);
+  box-shadow: 0 20px 60px var(--shadow);
+  transform-origin: top left;
+}
+
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 20px 20px 22px;
+  border: 1px solid oklch(0.86 0.009 82);
+  pointer-events: none;
+}
+
+.label {
+  position: absolute;
+  top: 45px;
+  left: 62px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: var(--muted);
+  font-family:
+    "Noto Sans CJK SC", "Source Han Sans SC", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  font-size: 17px;
+  letter-spacing: 0;
+}
+
+.label::before {
+  content: "";
+  width: 42px;
+  height: 2px;
+  background: var(--line);
+}
+
+.label::after {
+  content: "";
+  width: 42px;
+  height: 2px;
+  background: var(--line);
+}
+
+.label-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 999px;
+  background: var(--sage);
+}
+
+.brand-inline {
+  color: var(--muted);
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.headline {
+  position: absolute;
+  left: 61px;
+  top: var(--headline-top, 104px);
+  width: var(--headline-width, 510px);
+  margin: 0;
+  font-size: var(--headline-size, 58px);
+  line-height: var(--headline-line-height, 1.24);
+  font-weight: 760;
+  letter-spacing: 0;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.subtitle {
+  position: absolute;
+  left: 64px;
+  top: var(--subtitle-top, 258px);
+  width: var(--subtitle-width, 410px);
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--subtitle-size, 22px);
+  line-height: var(--subtitle-line-height, 1.45);
+  letter-spacing: 0;
+}
+
+.small-rule {
+  position: absolute;
+  left: 64px;
+  bottom: 34px;
+  width: 76px;
+  height: 2px;
+  background: var(--line);
+}
+
+.hero-art {
+  position: absolute;
+  right: 42px;
+  top: 70px;
+  width: 300px;
+  height: 270px;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hero-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: none;
+  filter: contrast(1.04) saturate(0.92);
+}
+
+.guide {
+  margin-top: 18px;
+  color: oklch(0.36 0.012 245);
+  font-family:
+    "Noto Sans CJK SC", "Source Han Sans SC", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.guide code {
+  padding: 2px 6px;
+  background: oklch(0.96 0.01 82);
+  border: 1px solid oklch(0.86 0.01 82);
+  color: var(--ink);
+}
+
+@media (max-width: 960px) {
+  .cover {
+    transform: scale(calc((94vw) / 900));
+  }
+
+  .stage {
+    height: calc(383px * (94vw / 900) + 90px);
+  }
+}
+</style>
+</head>
+<body>
+<main class="stage">
+  <section class="cover" aria-label="公众号封面模板，900乘383像素">
+    <div class="label">AI 成长笔记 <span class="label-dot" aria-hidden="true"></span><span class="brand-inline">阿栩学AI</span></div>
+    <h1 class="headline">把复杂的 AI<br>慢慢讲清楚</h1>
+    <p class="subtitle">从一个具体问题开始，拆成今天就能用的一小步。</p>
+    <div class="small-rule"></div>
+
+    <div class="hero-art" aria-hidden="true">
+      <img src="images/article-cover-character-cutout.png" alt="">
+    </div>
+  </section>
+
+  <p class="guide">
+    画布固定为 <code>900px × 383px</code>。替换 <code>.label</code>、<code>.headline</code>、<code>.subtitle</code> 文案即可复用；模板会根据标题和副标题长度自动调整字号、行距和文本宽度。
+  </p>
+</main>
+<script>
+(() => {
+  const cover = document.querySelector('.cover');
+  const headline = document.querySelector('.headline');
+  const subtitle = document.querySelector('.subtitle');
+  const hero = document.querySelector('.hero-art');
+  if (!cover || !headline || !subtitle || !hero) return;
+
+  function escapeHtml(value) {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function applySemanticBreak() {
+    applySemanticBreakTo(headline, 12);
+    applySemanticBreakTo(subtitle, 18);
+  }
+
+  function applySemanticBreakTo(element, minLength) {
+    if (element.querySelector('br')) return;
+    const text = element.textContent.trim();
+    if (text.length < minLength) return;
+
+    const punctuation = ['，', '：', '；', '、'];
+    const candidates = [];
+    for (const mark of punctuation) {
+      let index = text.indexOf(mark);
+      while (index !== -1) {
+        candidates.push({ index, mark });
+        index = text.indexOf(mark, index + 1);
+      }
+    }
+    if (!candidates.length) return;
+
+    const midpoint = text.length / 2;
+    const best = candidates
+      .filter((candidate) => candidate.index >= 4 && candidate.index <= text.length - 5)
+      .sort((a, b) => Math.abs(a.index - midpoint) - Math.abs(b.index - midpoint))[0];
+
+    if (!best) return;
+    const before = text.slice(0, best.index + 1);
+    const after = text.slice(best.index + 1).trimStart();
+    if (!after) return;
+    element.innerHTML = `${escapeHtml(before)}<br>${escapeHtml(after)}`;
+  }
+
+  applySemanticBreak();
+
+  const presets = [
+    { headlineSize: 58, headlineLine: 1.24, headlineTop: 94, headlineWidth: 510, subtitleSize: 22, subtitleLine: 1.45, subtitleTop: 284, subtitleWidth: 410 },
+    { headlineSize: 54, headlineLine: 1.24, headlineTop: 92, headlineWidth: 535, subtitleSize: 21, subtitleLine: 1.43, subtitleTop: 286, subtitleWidth: 455 },
+    { headlineSize: 50, headlineLine: 1.24, headlineTop: 90, headlineWidth: 560, subtitleSize: 20, subtitleLine: 1.42, subtitleTop: 288, subtitleWidth: 500 },
+    { headlineSize: 46, headlineLine: 1.24, headlineTop: 90, headlineWidth: 570, subtitleSize: 19, subtitleLine: 1.42, subtitleTop: 289, subtitleWidth: 520 },
+    { headlineSize: 42, headlineLine: 1.25, headlineTop: 88, headlineWidth: 585, subtitleSize: 18, subtitleLine: 1.4, subtitleTop: 290, subtitleWidth: 540 },
+    { headlineSize: 38, headlineLine: 1.25, headlineTop: 86, headlineWidth: 600, subtitleSize: 17, subtitleLine: 1.38, subtitleTop: 290, subtitleWidth: 555 },
+  ];
+
+  function applyPreset(preset) {
+    cover.style.setProperty('--headline-size', `${preset.headlineSize}px`);
+    cover.style.setProperty('--headline-line-height', preset.headlineLine);
+    cover.style.setProperty('--headline-top', `${preset.headlineTop}px`);
+    cover.style.setProperty('--headline-width', `${preset.headlineWidth}px`);
+    cover.style.setProperty('--subtitle-size', `${preset.subtitleSize}px`);
+    cover.style.setProperty('--subtitle-line-height', preset.subtitleLine);
+    cover.style.setProperty('--subtitle-top', `${preset.subtitleTop}px`);
+    cover.style.setProperty('--subtitle-width', `${preset.subtitleWidth}px`);
+  }
+
+  function fits() {
+    const headlineRect = headline.getBoundingClientRect();
+    const subtitleRect = subtitle.getBoundingClientRect();
+    const heroRect = hero.getBoundingClientRect();
+    const coverRect = cover.getBoundingClientRect();
+    const headlineBottomLimit = subtitleRect.top - 14;
+    const subtitleBottomLimit = coverRect.top + 335;
+    const textRightLimit = heroRect.left - 18;
+
+    return headline.scrollHeight <= headline.clientHeight + 2
+      && subtitle.scrollHeight <= subtitle.clientHeight + 2
+      && headlineRect.bottom <= headlineBottomLimit
+      && subtitleRect.bottom <= subtitleBottomLimit
+      && headlineRect.right <= textRightLimit
+      && subtitleRect.right <= textRightLimit;
+  }
+
+  for (const preset of presets) {
+    applyPreset(preset);
+    if (fits()) return;
+  }
+})();
+</script>
+</body>
+</html>

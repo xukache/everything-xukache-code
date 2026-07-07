@@ -1,0 +1,4 @@
+name: wechat-axu-styler
+display_name: WeChat Axu Styler
+short_description: Convert Markdown into 阿栩/Xukache branded WeChat HTML.
+default_prompt: 用 WeChat Axu Styler 打开本地编辑预览页，帮我把 Markdown 排成公众号可复制的格式。

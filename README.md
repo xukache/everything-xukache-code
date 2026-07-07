@@ -24,16 +24,16 @@
 ```
 skills/
 ├── ai-coding-task-planner/   # AI 编程需求拆解与提示词优化
-├── projects/                  # 项目理解、文档维护、代码审查
-│   ├── codebase-onboarding/
-│   ├── code-documentation/
-│   ├── backend-code-review/
-│   └── frontend-code-review/
+├── projects/                  # 项目文档维护
+│   └── code-documentation/
 ├── pm/                        # 产品工作流与 Skill 迭代
 │   ├── pm-workflow/
 │   └── skill-iteration-retrospective/
-└── uiux/                      # UI/UX 设计知识库
-    └── ui-ux-pro-max/
+└── wechat/                    # 公众号写作、对标、配图与排版
+    ├── wechat-article-workflow/
+    ├── wechat-benchmark-distiller/
+    ├── wechat-axu-styler/
+    └── axu-article-illustrations/
 ```
 
 ## 技能一览
@@ -48,10 +48,7 @@ skills/
 
 | Skill | 介绍 | 使用方式 |
 | --- | --- | --- |
-| [`codebase-onboarding`](skills/projects/codebase-onboarding/) | 分析陌生代码库，生成结构化入门指南、架构地图、关键入口、项目约定和 `AGENTS.md`。 | "帮我理解这个仓库" |
 | [`code-documentation`](skills/projects/code-documentation/) | 维护项目文档，覆盖 README、API 文档、架构说明、开发者指南、代码注释和文档同步检查。 | "更新 README"、"补充接口文档" |
-| [`backend-code-review`](skills/projects/backend-code-review/) | 后端代码审查，面向 Python 后端，检查安全、性能、架构分层、SQLAlchemy 等问题。 | "review 这次后端改动" |
-| [`frontend-code-review`](skills/projects/frontend-code-review/) | 前端代码审查，面向 `.tsx`、`.ts`、`.js`，按质量、性能和业务逻辑清单输出意见。 | "review 这次前端改动" |
 
 ### 🚀 产品工作流
 
@@ -60,11 +57,25 @@ skills/
 | [`pm-workflow`](skills/pm/pm-workflow/) | AI 产品开发工作室，覆盖需求分析、架构设计、界面原型、开发规划、质量审核和交付打包。 | `pmflow init --ai codex --root ./demo --name "产品名"` |
 | [`skill-iteration-retrospective`](skills/pm/skill-iteration-retrospective/) | 复盘并迭代指定 Skill，基于失败样本诊断触发条件和输出接口。 | "这个 skill 不好用，帮我复盘" |
 
-### 🎨 设计
+### 📝 公众号内容创作
 
 | Skill | 介绍 | 使用方式 |
 | --- | --- | --- |
-| [`ui-ux-pro-max`](skills/uiux/ui-ux-pro-max/) | UI/UX 设计知识库，含 50+ 风格、161 配色方案、57 字体搭配、99 条 UX 指南等。 | "给这个页面做 UI/UX 设计建议" |
+| [`wechat-article-workflow`](skills/wechat/wechat-article-workflow/) | 辅助 Xukai/Axu 公众号文章生产，覆盖素材梳理、大纲、初稿、标题、配图计划、最终目录和交接文档。 | "帮我规划这篇公众号文章" |
+| [`wechat-benchmark-distiller`](skills/wechat/wechat-benchmark-distiller/) | 从一个或多个微信公众号对标样本中蒸馏结构、语言、标题和读者关系，沉淀成可复用写作规则。 | "帮我分析这些对标文章" |
+| [`wechat-axu-styler`](skills/wechat/wechat-axu-styler/) | 将中文 Markdown 文章转换成 Xukache/阿栩品牌微信公众号 HTML，并支持本地编辑预览。 | "把这篇 Markdown 转成公众号排版" |
+| [`axu-article-illustrations`](skills/wechat/axu-article-illustrations/) | 生成阿栩风格公众号正文解释图、配图 shot list 和内置 900x383 封面模板。 | "用阿栩风格帮这篇文章规划配图" |
+
+## 外部推荐 Skills
+
+以下 Skill 不在本仓库内维护，只作为外部仓库推荐。请以原仓库最新版本为准。
+
+| Skill | 说明 | 外部仓库 |
+| --- | --- | --- |
+| `web-access` | 为 AI Agent 提供联网、搜索、网页抓取、登录态浏览器 CDP 操作和站点经验积累能力。 | [eze-is/web-access](https://github.com/eze-is/web-access) |
+| `ui-ux-pro-max` | UI/UX 设计知识库，包含风格、配色、字体、UX 指南和多技术栈设计建议。 | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) |
+| `backend-code-review` | Dify 项目中的后端代码审查规则，覆盖安全、性能、架构分层、SQLAlchemy 等检查项。 | [langgenius/dify](https://github.com/langgenius/dify) |
+| `frontend-code-review` | Dify 项目中的前端代码审查规则，覆盖 `.tsx`、`.ts`、`.js` 的质量、性能和业务逻辑检查。 | [langgenius/dify](https://github.com/langgenius/dify) |
 
 ## 快速使用
 
@@ -73,9 +84,8 @@ skills/
 ```bash
 # 常用调用方式
 请使用 skills/ai-coding-task-planner 帮我把这个大需求拆成小任务
-请使用 skills/projects/backend-code-review review 当前后端改动
 请使用 skills/projects/code-documentation 更新 README 和架构说明
-请使用 skills/projects/codebase-onboarding 帮我梳理这个仓库
+请使用 skills/wechat/wechat-article-workflow 帮我规划公众号文章
 ```
 
 ## 安装技能（AI 执行指令）
@@ -89,19 +99,19 @@ skills/
 | 技能名 | 仓库内路径 |
 | --- | --- |
 | `ai-coding-task-planner` | `skills/ai-coding-task-planner/` |
-| `codebase-onboarding` | `skills/projects/codebase-onboarding/` |
 | `code-documentation` | `skills/projects/code-documentation/` |
-| `backend-code-review` | `skills/projects/backend-code-review/` |
-| `frontend-code-review` | `skills/projects/frontend-code-review/` |
 | `pm-workflow` | `skills/pm/pm-workflow/` |
 | `skill-iteration-retrospective` | `skills/pm/skill-iteration-retrospective/` |
-| `ui-ux-pro-max` | `skills/uiux/ui-ux-pro-max/` |
+| `wechat-article-workflow` | `skills/wechat/wechat-article-workflow/` |
+| `wechat-benchmark-distiller` | `skills/wechat/wechat-benchmark-distiller/` |
+| `wechat-axu-styler` | `skills/wechat/wechat-axu-styler/` |
+| `axu-article-illustrations` | `skills/wechat/axu-article-illustrations/` |
 
 ### 用户指令示例
 
 ```text
 帮我安装 ai-coding-task-planner 技能到全局
-帮我安装 backend-code-review 技能到当前项目下
+帮我安装 wechat-article-workflow 技能到当前项目下
 帮我安装所有技能到全局
 帮我安装所有技能到当前项目下
 ```
@@ -137,13 +147,13 @@ cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ./.agents/skill
 
 # 安装所有技能到全局
 cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/projects/codebase-onboarding ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/projects/code-documentation ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/projects/backend-code-review ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/projects/frontend-code-review ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/pm/pm-workflow ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/pm/skill-iteration-retrospective ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/uiux/ui-ux-pro-max ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/wechat/wechat-article-workflow ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/wechat/wechat-benchmark-distiller ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/wechat/wechat-axu-styler ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/wechat/axu-article-illustrations ~/.agents/skills/
 ```
 
 **4. 清理临时文件：**
@@ -169,20 +179,18 @@ pmflow init --ai claude --root ./pm-workflow-claude-demo --name "习惯打卡"
 
 `pmflow init` 仅需 Node.js，无需 Python。
 
-## 致谢与来源
-
-本仓库中部分 Skill 来自优秀的开源项目，在此致谢：
+## 本仓库维护的 Skills
 
 | Skill | 来源 | 链接 |
 | --- | --- | --- |
-| `backend-code-review` | Dify 项目 | [langgenius/dify](https://github.com/langgenius/dify) |
-| `frontend-code-review` | Dify 项目 | [langgenius/dify](https://github.com/langgenius/dify) |
-| `ui-ux-pro-max` | UI UX Pro Max Skill | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) |
-| `codebase-onboarding` | ECC 社区 | — |
 | `ai-coding-task-planner` | 原创 | — |
 | `pm-workflow` | 原创 | — |
 | `code-documentation` | 原创 | — |
 | `skill-iteration-retrospective` | 原创 | — |
+| `wechat-article-workflow` | 原创 | — |
+| `wechat-benchmark-distiller` | 原创 | — |
+| `wechat-axu-styler` | 原创 | — |
+| `axu-article-illustrations` | 原创 | — |
 
 ## 相关资源
 
@@ -190,6 +198,7 @@ pmflow init --ai claude --root ./pm-workflow-claude-demo --name "习惯打卡"
 - [Anthropic 官方 Skills 仓库](https://github.com/anthropics/skills)
 - [awesome-agent-skills 社区合集](https://github.com/VoltAgent/awesome-claude-skills)
 - [Agent Skills Marketplace](https://skillsmp.com/)
+- [AI 编程实战三卷书](https://book.aibuzhiyu.com/)
 
 ## 许可证
 
