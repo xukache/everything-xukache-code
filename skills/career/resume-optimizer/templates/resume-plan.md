@@ -37,5 +37,10 @@
 - 目标长度：
 - 公司定制版本：
 
+## 模板化交付
 
+- 是否生成 HTML 预览：
+- Markdown 内容源：`templates/resume-preview/resume-content.md`
+- 需要用户补充的字段：
+- 预览和审查方式：
 

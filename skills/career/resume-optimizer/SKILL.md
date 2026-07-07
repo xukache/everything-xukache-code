@@ -98,6 +98,10 @@ resume-workspace/
 
 基于已确认策略改写简历或目标章节。最强的岗位匹配证据必须放在黄金广告位。
 
+如果用户需要生成完整可视化简历，或当前 skill 目录存在 `templates/resume-preview/index.html` 简历模板，读取 `references/resume-template.md`。先将改写后的内容写入 `templates/resume-preview/resume-content.md` 的结构化 Markdown，再用 `templates/resume-preview/index.html` 渲染预览。不要直接把用户真实信息硬编码进 HTML。
+
+如果用户要求从 AI/RAG/MCP 项目或代码仓库提炼简历项目经历，可按需参考 `references/examples/modular-rag-mcp-project.md` 的拆解方式：技术亮点、话术方向、可量化角度。该文件是案例参考，不是通用事实库，不要把其中的项目数据直接套到用户经历上。
+
 ### 阶段 6：多视角审查
 
 读取 `references/review-checklists.md`。
@@ -109,6 +113,8 @@ resume-workspace/
 3. 面试可讲审查。
 
 使用 `templates/resume-review.md`。
+
+如果已生成可视化简历，同时审查 `templates/resume-preview/resume-content.md` 与 `templates/resume-preview/index.html` 渲染结果是否一致：字段是否缺失、项目顺序是否符合策略、黄金广告位是否放入最强证据、是否存在未脱敏示例信息。
 
 ### 阶段 7：最小切片修复
 
@@ -144,6 +150,8 @@ resume-workspace/
 - 使用 `references/repo-analysis.md` 处理代码仓库和作品集分析。
 - 使用 `references/resume-strategy.md` 处理结构、黄金广告位、模块排序和多版本策略。
 - 使用 `references/bullet-writing.md` 处理 bullet 改写和结果导向表达。
+- 使用 `references/resume-template.md` 处理 Markdown 内容源和 HTML 简历模板渲染。
+- 使用 `references/examples/modular-rag-mcp-project.md` 作为 AI/RAG/MCP 项目经历拆解案例，只借鉴结构和提炼方式。
 - 当存在弱匹配、空窗、转岗、频繁变动、贡献不清或过度包装风险时，使用 `references/risk-handling.md`。
 - 使用 `references/review-checklists.md` 做质量审查。
 - 使用 `references/repair-policy.md` 做局部修复。
@@ -158,11 +166,9 @@ resume-workspace/
 - 经历证据库；
 - 简历策略计划；
 - 改写后的简历或目标章节；
+- `templates/resume-preview/resume-content.md` 驱动的 HTML 简历预览；
 - 多 JD 简历版本；
 - 审查发现和修复记录；
 - 面试表达稿和高频追问。
 
 最终回复应清楚说明改了什么、还有哪些不确定信息，以及用户投递前需要自行核实什么。
-
-
-
