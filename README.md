@@ -23,56 +23,32 @@
 
 ```
 skills/
-├── ai-coding-task-planner/   # AI 编程需求拆解与提示词优化
-├── career/                    # 求职、简历与面试表达
-│   └── resume-optimizer/
-├── projects/                  # 项目文档维护
-│   └── code-documentation/
-├── pm/                        # 产品工作流与 Skill 迭代
-│   ├── pm-workflow/
-│   └── skill-iteration-retrospective/
-└── wechat/                    # 公众号写作、对标、配图与排版
-    ├── wechat-article-workflow/
-    ├── wechat-benchmark-distiller/
-    ├── wechat-axu-styler/
-    └── axu-article-illustrations/
+├── ai-coding-task-planner/        # AI 编程需求拆解与提示词优化
+├── prompt-engineering-loop/        # 通用提示词优化与评测闭环
+├── resume-optimizer/               # 简历优化与面试表达
+├── code-documentation/             # 项目文档维护
+├── pm-workflow/                    # 产品工作流 Studio
+├── skill-iteration-retrospective/  # Skill 迭代复盘
+├── wechat-article-workflow/        # 公众号文章生产
+├── wechat-benchmark-distiller/     # 公众号对标蒸馏
+├── wechat-axu-styler/              # 公众号 HTML 排版
+└── axu-article-illustrations/      # 阿栩风格文章配图
 ```
 
 ## 技能一览
 
-### 🧠 编程辅助
-
 | Skill | 介绍 | 使用方式 |
 | --- | --- | --- |
 | [`ai-coding-task-planner`](skills/ai-coding-task-planner/) | 将原始编程需求处理成 AI 能稳定完成的原子任务和高质量提示词。大需求先拆解（含依赖和完成标准），再逐个优化提示词。采用渐进式加载架构。 | "帮我把这个需求拆给 Cursor 做"<br>"用编程提示词 Skill 优化：xxx" |
-
-### 📂 项目工程
-
-| Skill | 介绍 | 使用方式 |
-| --- | --- | --- |
-| [`code-documentation`](skills/projects/code-documentation/) | 维护项目文档，覆盖 README、API 文档、架构说明、开发者指南、代码注释和文档同步检查。 | "更新 README"、"补充接口文档" |
-
-### 💼 求职与面试
-
-| Skill | 介绍 | 使用方式 |
-| --- | --- | --- |
-| [`resume-optimizer`](skills/career/resume-optimizer/) | 简历优化与面试表达辅导，覆盖材料梳理、JD 匹配、经历证据挖掘、简历改写、审查修复和面试追问准备。 | "帮我优化简历"<br>"针对这个 JD 定制简历" |
-
-### 🚀 产品工作流
-
-| Skill | 介绍 | 使用方式 |
-| --- | --- | --- |
-| [`pm-workflow`](skills/pm/pm-workflow/) | AI 产品开发工作室，覆盖需求分析、架构设计、界面原型、开发规划、质量审核和交付打包。 | `pmflow init --ai codex --root ./demo --name "产品名"` |
-| [`skill-iteration-retrospective`](skills/pm/skill-iteration-retrospective/) | 复盘并迭代指定 Skill，基于失败样本诊断触发条件和输出接口。 | "这个 skill 不好用，帮我复盘" |
-
-### 📝 公众号内容创作
-
-| Skill | 介绍 | 使用方式 |
-| --- | --- | --- |
-| [`wechat-article-workflow`](skills/wechat/wechat-article-workflow/) | 辅助 Xukai/Axu 公众号文章生产，覆盖素材梳理、大纲、初稿、标题、配图计划、最终目录和交接文档。 | "帮我规划这篇公众号文章" |
-| [`wechat-benchmark-distiller`](skills/wechat/wechat-benchmark-distiller/) | 从一个或多个微信公众号对标样本中蒸馏结构、语言、标题和读者关系，沉淀成可复用写作规则。 | "帮我分析这些对标文章" |
-| [`wechat-axu-styler`](skills/wechat/wechat-axu-styler/) | 将中文 Markdown 文章转换成 Xukache/阿栩品牌微信公众号 HTML，并支持本地编辑预览。 | "把这篇 Markdown 转成公众号排版" |
-| [`axu-article-illustrations`](skills/wechat/axu-article-illustrations/) | 生成阿栩风格公众号正文解释图、配图 shot list 和内置 900x383 封面模板。 | "用阿栩风格帮这篇文章规划配图" |
+| [`prompt-engineering-loop`](skills/prompt-engineering-loop/) | 将用户意图或待优化提示词转成上下文充足、结构清晰、可评测迭代的标准提示词交付包，并提供失败分类、定位方法和评测闭环。 | "帮我优化这个提示词并给评测方法"<br>"把这个意图变成标准 prompt" |
+| [`code-documentation`](skills/code-documentation/) | 维护项目文档，覆盖 README、API 文档、架构说明、开发者指南、代码注释和文档同步检查。 | "更新 README"、"补充接口文档" |
+| [`resume-optimizer`](skills/resume-optimizer/) | 简历优化与面试表达辅导，覆盖材料梳理、JD 匹配、经历证据挖掘、简历改写、审查修复和面试追问准备。 | "帮我优化简历"<br>"针对这个 JD 定制简历" |
+| [`pm-workflow`](skills/pm-workflow/) | AI 产品开发工作室，覆盖需求分析、架构设计、界面原型、开发规划、质量审核和交付打包。 | `pmflow init --ai codex --root ./demo --name "产品名"` |
+| [`skill-iteration-retrospective`](skills/skill-iteration-retrospective/) | 复盘并迭代指定 Skill，基于失败样本诊断触发条件和输出接口。 | "这个 skill 不好用，帮我复盘" |
+| [`wechat-article-workflow`](skills/wechat-article-workflow/) | 辅助 Xukai/Axu 公众号文章生产，覆盖素材梳理、大纲、初稿、标题、配图计划、最终目录和交接文档。 | "帮我规划这篇公众号文章" |
+| [`wechat-benchmark-distiller`](skills/wechat-benchmark-distiller/) | 从一个或多个微信公众号对标样本中蒸馏结构、语言、标题和读者关系，沉淀成可复用写作规则。 | "帮我分析这些对标文章" |
+| [`wechat-axu-styler`](skills/wechat-axu-styler/) | 将中文 Markdown 文章转换成 Xukache/阿栩品牌微信公众号 HTML，并支持本地编辑预览。 | "把这篇 Markdown 转成公众号排版" |
+| [`axu-article-illustrations`](skills/axu-article-illustrations/) | 生成阿栩风格公众号正文解释图、配图 shot list 和内置 900x383 封面模板。 | "用阿栩风格帮这篇文章规划配图" |
 
 ## 外部推荐 Skills
 
@@ -92,8 +68,8 @@ skills/
 ```bash
 # 常用调用方式
 请使用 skills/ai-coding-task-planner 帮我把这个大需求拆成小任务
-请使用 skills/projects/code-documentation 更新 README 和架构说明
-请使用 skills/wechat/wechat-article-workflow 帮我规划公众号文章
+请使用 skills/code-documentation 更新 README 和架构说明
+请使用 skills/wechat-article-workflow 帮我规划公众号文章
 ```
 
 ## 安装技能（AI 执行指令）
@@ -107,14 +83,15 @@ skills/
 | 技能名 | 仓库内路径 |
 | --- | --- |
 | `ai-coding-task-planner` | `skills/ai-coding-task-planner/` |
-| `resume-optimizer` | `skills/career/resume-optimizer/` |
-| `code-documentation` | `skills/projects/code-documentation/` |
-| `pm-workflow` | `skills/pm/pm-workflow/` |
-| `skill-iteration-retrospective` | `skills/pm/skill-iteration-retrospective/` |
-| `wechat-article-workflow` | `skills/wechat/wechat-article-workflow/` |
-| `wechat-benchmark-distiller` | `skills/wechat/wechat-benchmark-distiller/` |
-| `wechat-axu-styler` | `skills/wechat/wechat-axu-styler/` |
-| `axu-article-illustrations` | `skills/wechat/axu-article-illustrations/` |
+| `prompt-engineering-loop` | `skills/prompt-engineering-loop/` |
+| `resume-optimizer` | `skills/resume-optimizer/` |
+| `code-documentation` | `skills/code-documentation/` |
+| `pm-workflow` | `skills/pm-workflow/` |
+| `skill-iteration-retrospective` | `skills/skill-iteration-retrospective/` |
+| `wechat-article-workflow` | `skills/wechat-article-workflow/` |
+| `wechat-benchmark-distiller` | `skills/wechat-benchmark-distiller/` |
+| `wechat-axu-styler` | `skills/wechat-axu-styler/` |
+| `axu-article-illustrations` | `skills/axu-article-illustrations/` |
 
 ### 用户指令示例
 
@@ -156,14 +133,15 @@ cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ./.agents/skill
 
 # 安装所有技能到全局
 cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/career/resume-optimizer ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/projects/code-documentation ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/pm/pm-workflow ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/pm/skill-iteration-retrospective ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/wechat/wechat-article-workflow ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/wechat/wechat-benchmark-distiller ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/wechat/wechat-axu-styler ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/wechat/axu-article-illustrations ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/prompt-engineering-loop ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/resume-optimizer ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/code-documentation ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/pm-workflow ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/skill-iteration-retrospective ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/wechat-article-workflow ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/wechat-benchmark-distiller ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/wechat-axu-styler ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/axu-article-illustrations ~/.agents/skills/
 ```
 
 **4. 清理临时文件：**
@@ -194,6 +172,7 @@ pmflow init --ai claude --root ./pm-workflow-claude-demo --name "习惯打卡"
 | Skill | 来源 | 链接 |
 | --- | --- | --- |
 | `ai-coding-task-planner` | 原创 | — |
+| `prompt-engineering-loop` | 原创 | — |
 | `resume-optimizer` | 原创 | — |
 | `pm-workflow` | 原创 | — |
 | `code-documentation` | 原创 | — |

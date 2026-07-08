@@ -31,7 +31,7 @@
 6. 生成后提示用户用本地服务打开模板：
 
 ```bash
-cd skills/career/resume-optimizer
+cd skills/resume-optimizer
 python3 -m http.server 8080
 ```
 

@@ -5,18 +5,18 @@
 
 ## 技术栈
 - 本仓库是 Agent Skills 集合，主要内容是 Markdown 技能说明、参考资料、CSV 知识库和少量脚本。
-- 唯一 npm 包位于 `skills/pm/pm-workflow/`，包名为 `pm-workflow-studio`，使用 CommonJS，要求 Node.js `>=16`。
-- `skills/wechat/` 包含公众号文章生产、对标蒸馏、阿栩配图和微信 HTML 排版相关技能，其中部分脚本使用 Node.js。
+- 唯一 npm 包位于 `skills/pm-workflow/`，包名为 `pm-workflow-studio`，使用 CommonJS，要求 Node.js `>=16`。
+- 公众号文章生产、对标蒸馏、阿栩配图和微信 HTML 排版相关技能位于 `skills/wechat-article-workflow/`、`skills/wechat-benchmark-distiller/`、`skills/axu-article-illustrations/` 和 `skills/wechat-axu-styler/`，其中部分脚本使用 Node.js。
 
 ## 构建与运行
 - 根目录没有统一构建脚本。
-- 调试 PM Workflow CLI：`cd skills/pm/pm-workflow && node bin/pmflow.js --help`
-- npm 包测试命令：`cd skills/pm/pm-workflow && npm test`
+- 调试 PM Workflow CLI：`cd skills/pm-workflow && node bin/pmflow.js --help`
+- npm 包测试命令：`cd skills/pm-workflow && npm test`
 - 本仓库没有检测到 lint、format、CI 或依赖安装脚本。
 
 ## 测试
-- 已确认测试入口：`skills/pm/pm-workflow/package.json` 中的 `npm test`，实际运行 `node bin/pmflow.js --help`。
-- 修改 `pmflow` 初始化/更新逻辑后，至少运行 `cd skills/pm/pm-workflow && npm test`。
+- 已确认测试入口：`skills/pm-workflow/package.json` 中的 `npm test`，实际运行 `node bin/pmflow.js --help`。
+- 修改 `pmflow` 初始化/更新逻辑后，至少运行 `cd skills/pm-workflow && npm test`。
 - 其他技能主要是文档资产，修改后应人工检查 frontmatter、相对链接和渐进式加载路径。
 
 ## 代码风格
@@ -27,16 +27,18 @@
 
 ## 项目结构
 - `README.md` / `README_en.md`：中英文项目介绍、技能清单和安装说明。
+- `skills/`：所有 Skill 和 npm 包均直接放在该目录下，不再按用途创建二级分类目录。
 - `skills/ai-coding-task-planner/`：编程需求拆解与提示词优化技能。
-- `skills/projects/`：项目文档维护技能。
-- `skills/pm/pm-workflow/`：PM Workflow Studio npm 包，包含 `bin/pmflow.js` 和 Codex/Claude/Kiro 三套模板镜像。
-- `skills/pm/skill-iteration-retrospective/`：技能迭代复盘工作流。
-- `skills/wechat/`：微信公众号内容创作链路，包括文章工作流、对标蒸馏、阿栩正文配图和公众号 HTML 排版导出。
+- `skills/prompt-engineering-loop/`：通用提示词优化与评测闭环技能。
+- `skills/code-documentation/`：项目文档维护技能。
+- `skills/pm-workflow/`：PM Workflow Studio npm 包，包含 `bin/pmflow.js` 和 Codex/Claude/Kiro 三套模板镜像。
+- `skills/skill-iteration-retrospective/`：技能迭代复盘工作流。
+- `skills/wechat-article-workflow/`、`skills/wechat-benchmark-distiller/`、`skills/wechat-axu-styler/`、`skills/axu-article-illustrations/`：微信公众号内容创作链路。
 
 ## 修改边界
 - 可以编辑各技能目录下的 `SKILL.md`、`references/`、`templates/`、`scripts/`、`assets/` 和 README。
 - 不要手动编辑 `__pycache__/` 或 `.pyc` 文件；这些是生成缓存。
-- 修改 `skills/pm/pm-workflow/.codex/`、`.claude/`、`.kiro/` 中任一平台镜像时，注意三套结构可能需要同步更新。
+- 修改 `skills/pm-workflow/.codex/`、`.claude/`、`.kiro/` 中任一平台镜像时，注意三套结构可能需要同步更新。
 - 修改 `pmflow` 生成策略时，重点检查不会覆盖用户业务产物；更新模式应继续保护 `docs/`、`prototype/`、`README.md` 和根目录 `AGENTS.md`。
 - 发布 `pm-workflow-studio` 前需核对 `package.json` 的 `files`、版本号、许可证声明和 README 中的命令示例。
 

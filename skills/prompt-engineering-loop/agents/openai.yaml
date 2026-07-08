@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prompt Engineering Loop"
+  short_description: "把意图转成可评测的高质量提示词闭环"
+  default_prompt: "Use $prompt-engineering-loop to turn my intent into a complete, testable prompt with evaluation guidance."
