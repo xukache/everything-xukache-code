@@ -31,6 +31,7 @@
 - `skills/ai-coding-task-planner/`：编程需求拆解与提示词优化技能。
 - `skills/prompt-engineering-loop/`：通用提示词优化与评测闭环技能。
 - `skills/code-documentation/`：项目文档维护技能。
+- `skills/project-standards-bootstrap/`：项目启动规范模板技能，覆盖 AGENTS、技术架构总纲、API 契约、前后端规范和架构演进监控规则。
 - `skills/pm-workflow/`：PM Workflow Studio npm 包，包含 `bin/pmflow.js` 和 Codex/Claude/Kiro 三套模板镜像。
 - `skills/skill-iteration-retrospective/`：技能迭代复盘工作流。
 - `skills/wechat-article-workflow/`、`skills/wechat-benchmark-distiller/`、`skills/wechat-axu-styler/`、`skills/axu-article-illustrations/`：微信公众号内容创作链路。

@@ -27,6 +27,7 @@ skills/
 ├── prompt-engineering-loop/        # 通用提示词优化与评测闭环
 ├── resume-optimizer/               # 简历优化与面试表达
 ├── code-documentation/             # 项目文档维护
+├── project-standards-bootstrap/     # 项目启动规范与架构文档模板
 ├── pm-workflow/                    # 产品工作流 Studio
 ├── skill-iteration-retrospective/  # Skill 迭代复盘
 ├── wechat-article-workflow/        # 公众号文章生产
@@ -42,6 +43,7 @@ skills/
 | [`ai-coding-task-planner`](skills/ai-coding-task-planner/) | 将原始编程需求处理成 AI 能稳定完成的原子任务和高质量提示词。大需求先拆解（含依赖和完成标准），再逐个优化提示词。采用渐进式加载架构。 | "帮我把这个需求拆给 Cursor 做"<br>"用编程提示词 Skill 优化：xxx" |
 | [`prompt-engineering-loop`](skills/prompt-engineering-loop/) | 将用户意图或待优化提示词转成上下文充足、结构清晰、可评测迭代的标准提示词交付包，并提供失败分类、定位方法和评测闭环。 | "帮我优化这个提示词并给评测方法"<br>"把这个意图变成标准 prompt" |
 | [`code-documentation`](skills/code-documentation/) | 维护项目文档，覆盖 README、API 文档、架构说明、开发者指南、代码注释和文档同步检查。 | "更新 README"、"补充接口文档" |
+| [`project-standards-bootstrap`](skills/project-standards-bootstrap/) | 为 AI 辅助开发项目生成或重组标准化启动文档，覆盖 AGENTS、技术架构总纲、API 契约、前后端开发规范和架构演进监控规则。 | "为这个项目生成标准规范文档"<br>"整理 AGENTS、架构文档和 API 契约模板" |
 | [`resume-optimizer`](skills/resume-optimizer/) | 简历优化与面试表达辅导，覆盖材料梳理、JD 匹配、经历证据挖掘、简历改写、审查修复和面试追问准备。 | "帮我优化简历"<br>"针对这个 JD 定制简历" |
 | [`pm-workflow`](skills/pm-workflow/) | AI 产品开发工作室，覆盖需求分析、架构设计、界面原型、开发规划、质量审核和交付打包。 | `pmflow init --ai codex --root ./demo --name "产品名"` |
 | [`skill-iteration-retrospective`](skills/skill-iteration-retrospective/) | 复盘并迭代指定 Skill，基于失败样本诊断触发条件和输出接口。 | "这个 skill 不好用，帮我复盘" |
@@ -86,6 +88,7 @@ skills/
 | `prompt-engineering-loop` | `skills/prompt-engineering-loop/` |
 | `resume-optimizer` | `skills/resume-optimizer/` |
 | `code-documentation` | `skills/code-documentation/` |
+| `project-standards-bootstrap` | `skills/project-standards-bootstrap/` |
 | `pm-workflow` | `skills/pm-workflow/` |
 | `skill-iteration-retrospective` | `skills/skill-iteration-retrospective/` |
 | `wechat-article-workflow` | `skills/wechat-article-workflow/` |
@@ -136,6 +139,7 @@ cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skill
 cp -r /tmp/everything-xukache-code/skills/prompt-engineering-loop ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/resume-optimizer ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/code-documentation ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/project-standards-bootstrap ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/pm-workflow ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/skill-iteration-retrospective ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/wechat-article-workflow ~/.agents/skills/
@@ -176,6 +180,7 @@ pmflow init --ai claude --root ./pm-workflow-claude-demo --name "习惯打卡"
 | `resume-optimizer` | 原创 | — |
 | `pm-workflow` | 原创 | — |
 | `code-documentation` | 原创 | — |
+| `project-standards-bootstrap` | 原创 | — |
 | `skill-iteration-retrospective` | 原创 | — |
 | `wechat-article-workflow` | 原创 | — |
 | `wechat-benchmark-distiller` | 原创 | — |

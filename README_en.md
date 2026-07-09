@@ -27,6 +27,7 @@ skills/
 ├── prompt-engineering-loop/        # General prompt optimization & evaluation loop
 ├── resume-optimizer/               # Resume optimization & interview preparation
 ├── code-documentation/             # Project documentation maintenance
+├── project-standards-bootstrap/     # Project standards and architecture templates
 ├── pm-workflow/                    # Product workflow studio
 ├── skill-iteration-retrospective/  # Skill iteration retrospective
 ├── wechat-article-workflow/        # WeChat article production
@@ -42,6 +43,7 @@ skills/
 | [`ai-coding-task-planner`](skills/ai-coding-task-planner/) | Converts raw programming requirements into atomic AI-executable tasks with high-quality prompts. Decomposes large features first (with dependencies and completion criteria), then optimizes prompts per task. | "Break this requirement into tasks for Cursor"<br>"Optimize this prompt for AI coding" |
 | [`prompt-engineering-loop`](skills/prompt-engineering-loop/) | Turns user intent or rough prompts into context-rich, structured, testable prompt deliverables with failure diagnosis and evaluation-loop guidance. | "Optimize this prompt and give me an eval plan"<br>"Turn this intent into a standard prompt" |
 | [`code-documentation`](skills/code-documentation/) | Maintains project documentation including README, API docs, architecture docs, developer guides, and doc-sync checks. | "Update the README" |
+| [`project-standards-bootstrap`](skills/project-standards-bootstrap/) | Generates or reorganizes standardized startup docs for AI-assisted projects, covering AGENTS, architecture docs, API contracts, frontend/backend conventions, and architecture evolution rules. | "Generate standard project docs"<br>"Organize AGENTS, architecture, and API contract templates" |
 | [`resume-optimizer`](skills/resume-optimizer/) | Optimizes resumes and prepares interview narratives, covering material intake, JD matching, evidence mining, resume rewriting, review, repair, and interview follow-ups. | "Optimize my resume"<br>"Tailor my resume for this JD" |
 | [`pm-workflow`](skills/pm-workflow/) | AI product development studio covering requirement analysis, architecture design, UI prototyping, dev planning, quality review, and delivery. | `pmflow init --ai codex --root ./demo --name "MyApp"` |
 | [`skill-iteration-retrospective`](skills/skill-iteration-retrospective/) | Retrospective and iteration for skills based on failure diagnosis. | "This skill isn't working well, help me improve it" |
@@ -86,6 +88,7 @@ Use skills/wechat-article-workflow to plan a WeChat article
 | `prompt-engineering-loop` | `skills/prompt-engineering-loop/` |
 | `resume-optimizer` | `skills/resume-optimizer/` |
 | `code-documentation` | `skills/code-documentation/` |
+| `project-standards-bootstrap` | `skills/project-standards-bootstrap/` |
 | `pm-workflow` | `skills/pm-workflow/` |
 | `skill-iteration-retrospective` | `skills/skill-iteration-retrospective/` |
 | `wechat-article-workflow` | `skills/wechat-article-workflow/` |
@@ -135,6 +138,7 @@ cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skill
 cp -r /tmp/everything-xukache-code/skills/prompt-engineering-loop ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/resume-optimizer ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/code-documentation ~/.agents/skills/
+cp -r /tmp/everything-xukache-code/skills/project-standards-bootstrap ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/pm-workflow ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/skill-iteration-retrospective ~/.agents/skills/
 cp -r /tmp/everything-xukache-code/skills/wechat-article-workflow ~/.agents/skills/
@@ -175,6 +179,7 @@ pmflow init --ai claude --root ./pm-workflow-claude-demo --name "HabitTracker"
 | `resume-optimizer` | Original | — |
 | `pm-workflow` | Original | — |
 | `code-documentation` | Original | — |
+| `project-standards-bootstrap` | Original | — |
 | `skill-iteration-retrospective` | Original | — |
 | `wechat-article-workflow` | Original | — |
 | `wechat-benchmark-distiller` | Original | — |
