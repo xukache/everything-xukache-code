@@ -6,11 +6,7 @@
 
 将实用的 Agent Skills 按用途组织，适配 Claude Code / Codex / Cursor / Copilot 等 AI 编程工具。
 
-![Agent Skills](https://img.shields.io/badge/Agent_Skills-Specification-blue)
-
-![License](https://img.shields.io/badge/License-MIT-green.svg)
-
-![GitHub stars](https://img.shields.io/github/stars/xukache/everything-xukache-code?logo=github)
+![Agent Skills](https://img.shields.io/badge/Agent_Skills-Specification-blue) ![License](https://img.shields.io/badge/License-MIT-green.svg) ![GitHub stars](https://img.shields.io/github/stars/xukache/everything-xukache-code?logo=github)
 
 [English](README_en.md) | 简体中文
 
