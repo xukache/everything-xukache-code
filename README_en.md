@@ -1,6 +1,6 @@
 <div align="center">
 
-# everything-xukache-code
+# everything-xukache-skills
 
 **Essential Agent Skills Collection for AI-Powered Programming**
 
@@ -8,7 +8,7 @@ A curated set of Agent Skills organized by use case, compatible with Claude Code
 
 [![Agent Skills](https://img.shields.io/badge/Agent_Skills-Specification-blue)](https://agentskills.io/specification)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/xukache/everything-xukache-code?logo=github)](https://github.com/xukache/everything-xukache-code/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/xukache/everything-xukache-skills?logo=github)](https://github.com/xukache/everything-xukache-skills/stargazers)
 
 English | [简体中文](README.md)
 
@@ -79,7 +79,7 @@ Use skills/wechat-article-workflow to plan a WeChat article
 
 > This section is for AI coding assistants (Claude Code / Codex / Cursor, etc.) to read and execute. Users only need to tell the AI which skills to install in natural language.
 
-**Repository URL:** `https://github.com/xukache/everything-xukache-code.git`
+**Repository URL:** `https://github.com/xukache/everything-xukache-skills.git`
 
 ### Skill Path Mapping
 
@@ -113,7 +113,7 @@ When the user requests skill installation, follow these steps:
 **1. Clone the repository (if not already local):**
 
 ```bash
-git clone --depth 1 https://github.com/xukache/everything-xukache-code.git /tmp/everything-xukache-code
+git clone --depth 1 https://github.com/xukache/everything-xukache-skills.git /tmp/everything-xukache-skills
 ```
 
 **2. Determine target directory based on scope:**
@@ -129,29 +129,29 @@ git clone --depth 1 https://github.com/xukache/everything-xukache-code.git /tmp/
 
 ```bash
 # Install single skill (example: ai-coding-task-planner globally)
-cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/ai-coding-task-planner ~/.agents/skills/
 
 # Install single skill to current project
-cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ./.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/ai-coding-task-planner ./.agents/skills/
 
 # Install all skills globally
-cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/prompt-engineering-loop ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/resume-optimizer ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/code-documentation ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/project-standards-bootstrap ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/pm-workflow ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/skill-iteration-retrospective ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/wechat-article-workflow ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/wechat-benchmark-distiller ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/wechat-axu-styler ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/axu-article-illustrations ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/ai-coding-task-planner ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/prompt-engineering-loop ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/resume-optimizer ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/code-documentation ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/project-standards-bootstrap ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/pm-workflow ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/skill-iteration-retrospective ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/wechat-article-workflow ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/wechat-benchmark-distiller ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/wechat-axu-styler ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/axu-article-illustrations ~/.agents/skills/
 ```
 
 **4. Clean up temporary files:**
 
 ```bash
-rm -rf /tmp/everything-xukache-code
+rm -rf /tmp/everything-xukache-skills
 ```
 
 **5. After installation, inform the user:**

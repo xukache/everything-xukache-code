@@ -2,7 +2,7 @@
 
 AI 产品开发工作室 CLI。把一句产品想法初始化成 Codex、Claude Code 或 Kiro 可直接使用的产品工作室目录，也支持把 pm-workflow 安全更新到已有项目。
 
-GitHub 仓库：[xukache/everything-xukache-code / skills/pm-workflow](https://github.com/xukache/everything-xukache-code/tree/main/skills/pm-workflow)
+GitHub 仓库：[xukache/everything-xukache-skills / skills/pm-workflow](https://github.com/xukache/everything-xukache-skills/tree/main/skills/pm-workflow)
 
 ## 安装
 

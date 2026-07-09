@@ -1,12 +1,12 @@
 <div align="center">
 
-# everything-xukache-code
+# everything-xukache-skills
 
 **日常 AI 编程必备的 Agent Skills 集合**
 
 将实用的 Agent Skills 按用途组织，适配 Claude Code / Codex / Cursor / Copilot 等 AI 编程工具。
 
-![Agent Skills](https://img.shields.io/badge/Agent_Skills-Specification-blue) ![License](https://img.shields.io/badge/License-MIT-green.svg) ![GitHub stars](https://img.shields.io/github/stars/xukache/everything-xukache-code?logo=github)
+![Agent Skills](https://img.shields.io/badge/Agent_Skills-Specification-blue) ![License](https://img.shields.io/badge/License-MIT-green.svg) ![GitHub stars](https://img.shields.io/github/stars/xukache/everything-xukache-skills?logo=github)
 
 [English](README_en.md) | 简体中文
 
@@ -81,7 +81,7 @@ skills/
 
 > 本章节供 AI 编程助手（Claude Code / Codex / Cursor 等）读取并执行。用户只需用自然语言告诉 AI 安装哪些技能即可。
 
-**仓库地址：** `https://github.com/xukache/everything-xukache-code.git`
+**仓库地址：** `https://github.com/xukache/everything-xukache-skills.git`
 
 ### 技能路径映射
 
@@ -118,7 +118,7 @@ skills/
 
 ```bash
 # 克隆到临时目录
-git clone --depth 1 https://github.com/xukache/everything-xukache-code.git /tmp/everything-xukache-code
+git clone --depth 1 https://github.com/xukache/everything-xukache-skills.git /tmp/everything-xukache-skills
 ```
 
 **2. 根据安装范围确定目标目录：**
@@ -136,29 +136,29 @@ git clone --depth 1 https://github.com/xukache/everything-xukache-code.git /tmp/
 
 ```bash
 # 安装单个技能（示例：ai-coding-task-planner 到全局）
-cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/ai-coding-task-planner ~/.agents/skills/
 
 # 安装单个技能到当前项目
-cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ./.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/ai-coding-task-planner ./.agents/skills/
 
 # 安装所有技能到全局
-cp -r /tmp/everything-xukache-code/skills/ai-coding-task-planner ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/prompt-engineering-loop ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/resume-optimizer ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/code-documentation ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/project-standards-bootstrap ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/pm-workflow ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/skill-iteration-retrospective ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/wechat-article-workflow ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/wechat-benchmark-distiller ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/wechat-axu-styler ~/.agents/skills/
-cp -r /tmp/everything-xukache-code/skills/axu-article-illustrations ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/ai-coding-task-planner ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/prompt-engineering-loop ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/resume-optimizer ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/code-documentation ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/project-standards-bootstrap ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/pm-workflow ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/skill-iteration-retrospective ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/wechat-article-workflow ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/wechat-benchmark-distiller ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/wechat-axu-styler ~/.agents/skills/
+cp -r /tmp/everything-xukache-skills/skills/axu-article-illustrations ~/.agents/skills/
 ```
 
 **4. 清理临时文件：**
 
 ```bash
-rm -rf /tmp/everything-xukache-code
+rm -rf /tmp/everything-xukache-skills
 ```
 
 **5. 安装完成后告知用户：**
