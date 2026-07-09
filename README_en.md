@@ -8,6 +8,7 @@ A curated set of Agent Skills organized by use case, compatible with Claude Code
 
 [![Agent Skills](https://img.shields.io/badge/Agent_Skills-Specification-blue)](https://agentskills.io/specification)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/xukache/everything-xukache-code?logo=github)](https://github.com/xukache/everything-xukache-code/stargazers)
 
 English | [简体中文](README.md)
 
