@@ -2,6 +2,22 @@
 
 这些模板用于生成目标项目文档。替换占位符时，只使用目标项目自身事实。
 
+## DEV_SPEC 模式入口
+
+使用 DEV_SPEC 前，先读取：
+
+- 模式判断：`references/dev-spec-mode-selection.md`
+- 固定七章：`references/dev-spec-fixed-outline.md`
+- 版本治理：`references/document-version-governance.md`
+
+模板只提供入口和治理骨架，不复制固定七章正文。必须先向用户展示完整模式、轻量模式和不启用三种选择，并记录最终选择。
+
+```text
+DEV_SPEC 模式：<完整模式 | 轻量模式 | 不启用>
+当前治理级别：<strict | reviewed | autonomous | 不适用>
+当前集成分支：<architecture | develop | main | custom | 不适用>
+```
+
 ## 引导语模板
 
 ~~~markdown
@@ -19,6 +35,10 @@
 > - 技术架构总纲：`docs/architecture.md`
 > - API 契约入口：`docs/api-contracts.md`
 > - Agent 变更监控：`docs/architecture/10-evolution-rules.md`
+> - 当前完整开发规格：`DEV_SPEC.md`（启用 DEV_SPEC 时）
+> - 开发规格版本规则：`docs/dev-spec/README.md`（完整模式或升级后）
+> - 当前治理级别：`<strict | reviewed | autonomous>`（启用 DEV_SPEC 时）
+> - 当前集成分支：`<branch>`（启用协作治理时）
 >
 > 本文件只保留顶层索引、Agent 阅读顺序和项目特有补充。不要在这里重复维护详细规则。
 
@@ -123,6 +143,90 @@
 - 分册中出现的公开 API 字段必须与 `docs/api-contracts/` 保持一致。
 - 架构变更必须更新 changelog。
 - Agent 变更监控属于架构演进治理，统一写入 `docs/architecture/10-evolution-rules.md`；不单独创建 `docs/agent-monitoring.md`。
+~~~
+
+## `docs/dev-spec/README.md` 模板
+
+~~~markdown
+# 开发规格版本规则
+
+> 当前完整规格：`../../DEV_SPEC.md`
+> 固定七章：`../../references/dev-spec-fixed-outline.md`（Skill reference）
+> 架构版本规则：`../architecture/README.md`
+
+## 当前配置
+
+- DEV_SPEC 模式：`<完整模式>`
+- 治理级别：`<strict | reviewed | autonomous>`
+- 集成分支：`<architecture | develop | main | custom>`
+- 任务分支格式：`task/<task-id>-<slug>`
+- 单任务单分支：`<true | false>`
+
+## 版本职责
+
+- `DEV_SPEC.md`：当前有效开发规格。
+- `docs/dev-spec/versions/`：独立规格基线的只读增量。
+- 规格版本不等于架构版本或产品发布版本。
+
+## 同步顺序
+
+1. 识别原始变化。
+2. 更新并确认当前规格。
+3. 判断是否形成独立规格基线。
+4. 按版本治理矩阵追加版本。
+5. 回写任务状态、验证状态和证据。
+
+## 版本索引
+
+| 版本 | 日期 | 变更摘要 | 关联架构 | 验证证据 |
+|---|---|---|---|---|
+| `<version>` | `<YYYY-MM-DD>` | `<独立能力或规格基线>` | `<版本或不适用>` | `<链接>` |
+~~~
+
+## `docs/architecture/README.md` 版本入口模板
+
+~~~markdown
+# 架构版本规则
+
+> 当前架构入口：`../architecture.md`
+> 架构 changelog：`99-changelog.md`
+> 当前开发规格：`../../DEV_SPEC.md`
+
+## 版本规则
+
+- 当前架构分册持续维护当前有效事实。
+- `versions/` 只保存完整架构快照和相对上一版本的差异。
+- 改变模块职责、依赖方向、数据所有权、公共契约、运行链路或部署拓扑时，判断是否发布完整架构版本。
+- 只调整入口导航、链接或文档组织时，不发布完整架构版本。
+- 已发布架构版本只读，不覆盖历史快照。
+
+## 架构版本索引
+
+| 版本 | 日期 | 关联规格 | 边界变化 | 迁移 / 兼容 | 验证证据 |
+|---|---|---|---|---|---|
+| `<version>` | `<YYYY-MM-DD>` | `<规格版本>` | `<是 | 否>` | `<说明>` | `<链接>` |
+~~~
+
+## `docs/architecture/99-changelog.md` 表格模板
+
+~~~markdown
+# 架构变更记录
+
+> 当前架构入口：`../architecture.md`
+
+| 日期 | 类型 | 变更内容 | 影响文档 | 是否改变架构边界 |
+|---|---|---|---|---|
+| `<YYYY-MM-DD>` | `<架构事实 | 契约 | 导航 | 运行时 | 其他>` | `<变更摘要>` | `<链接>` | `<是 | 否>` |
+
+## 本次变更结论
+
+| 项目 | 结论 |
+|---|---|
+| DEV_SPEC | `<更新 / 不更新>` |
+| 规格版本 | `<创建 / 不创建>` |
+| 当前架构分册 | `<更新 / 不更新>` |
+| 架构版本 | `<创建 / 不创建>` |
+| 验证证据 | `<链接>` |
 ~~~
 
 ## `docs/architecture/<nn>-<domain>.md` 模板

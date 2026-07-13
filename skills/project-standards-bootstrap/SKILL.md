@@ -1,6 +1,6 @@
 ---
 name: project-standards-bootstrap
-description: 为 AI 辅助开发项目创建标准化启动文档。适用于需要编写或重组 AGENTS.md、技术架构、API 契约文档、前端/后端开发规范、Agent 运行规则和架构演进监控清单的场景；覆盖新项目、已有项目、前端项目、后端项目、全栈项目和带 Agent 工作流的项目。
+description: 适用于需要建立或重组项目启动规范、DEV_SPEC、技术架构、API 契约、工程规范、Agent 协作规则或架构与文档版本治理的新项目和已有项目。
 ---
 
 # 项目规范启动模板
@@ -13,19 +13,39 @@ description: 为 AI 辅助开发项目创建标准化启动文档。适用于需
 
 > 我会先判断项目类型和阶段，再读取现有文档与代码结构，最后生成或整理一套标准化项目启动文档。默认规则是：`AGENTS.md` 放在项目根目录；其他规范文档全部放在 `docs/` 下；技术架构总纲和 API 契约总纲是必须存在的事实源；具体分册和章节按项目实际复杂度选用。通用规范和项目专有补充会分层放置，避免重复维护和内容漂移。
 
+> 本技能还支持 DEV_SPEC 完整模式、轻量模式和不启用三种选择。我会根据项目生命周期、系统边界、协作、契约、验收和演进风险给出建议，并由你最终确认。
+
 如果用户没有指定文档语言，默认使用中文。
 
 ## 工作流程
 
-1. 判断项目分类。
-2. 阅读当前文档和代码目录。
-3. 基于最全文档模板，选择本项目实际需要启用的章节和分册。
-4. 按单一事实来源原则起草或整理文档。
-5. 确保技术架构和 API 契约事实源存在；没有后端 API 的项目也要在契约总纲中说明“不暴露 HTTP API / 暂无公开 API”。
-6. 为带 Agent 的项目补充变更监控规则；统一写入技术架构文档，优先放在 `docs/architecture/10-evolution-rules.md`，`AGENTS.md` 只保留阅读入口和强制提醒。
-7. 检查通用规范与项目专有事实是否分层清楚。
+1. 项目分类与已有文档审计。
+2. 使用风险维度矩阵推荐 DEV_SPEC 模式，并展示完整、轻量、不启用三种选择。
+3. 获取用户最终模式选择；未确认前不创建 DEV_SPEC、版本目录、实现代码或任务状态。
+4. 只读取当前阶段需要的 reference。
+5. 建立或整理唯一事实源。
+6. 生成标准文档并执行一致性、版本治理和已有文档保护验收。
 
-写具体模板时读取 `references/standard-doc-templates.md`。梳理已有项目、判断架构演进监控范围或做最终验收时读取 `references/audit-checklists.md`。
+模式门禁：
+
+- 完整模式：逐章确认固定七章；根据 `strict`、`reviewed` 或 `autonomous` 执行治理门禁。
+- 轻量模式：整体确认单文件 `DEV_SPEC.md`，只启用必选和直接相关小节。
+- 不启用：继续原有标准架构和工程规范流程，不生成 DEV_SPEC。
+- 已有项目：先只读审计，未经确认不覆盖、删除、迁移或改写有效事实。
+
+写具体模板时读取 `references/standard-doc-templates.md`。判断 DEV_SPEC 模式时读取 `references/dev-spec-mode-selection.md`；选择固定章节时读取 `references/dev-spec-fixed-outline.md`；完整模式、模式升级或版本判定时读取 `references/document-version-governance.md`；梳理已有项目、判断架构演进监控范围或做最终验收时读取 `references/audit-checklists.md`。
+
+## 渐进加载
+
+| 当前任务 | 读取 reference |
+|---|---|
+| 标准项目文档和基础模板 | `standard-doc-templates.md` |
+| 判断是否启用 DEV_SPEC | `dev-spec-mode-selection.md` |
+| 已确认启用轻量或完整模式，需要固定目录 | `dev-spec-fixed-outline.md` |
+| 完整模式、模式升级、版本或分支治理 | `document-version-governance.md` |
+| 已有项目审计或最终验收 | `audit-checklists.md` |
+
+不得为了“完整阅读”一次性加载所有 reference。读取顺序和工具轨迹应能说明为什么当前文件是必要的。
 
 ## 分类判断
 
@@ -47,7 +67,8 @@ description: 为 AI 辅助开发项目创建标准化启动文档。适用于需
 
 严格使用以下落位规则：
 
-- `<project-root>/AGENTS.md`：唯一允许放在项目根目录的启动文档，负责顶层索引、Agent 读文档顺序、项目专有补充和关键约束摘要。
+- `<project-root>/AGENTS.md`：项目根目录的启动文档，负责顶层索引、Agent 读文档顺序、项目专有补充和关键约束摘要。
+- `<project-root>/DEV_SPEC.md`：启用 DEV_SPEC 时项目根目录的唯一开发规格文件；不启用 DEV_SPEC 时不得创建。
 - `<project-root>/docs/frontend-conventions.md`：前端开发规范。
 - `<project-root>/docs/backend-conventions.md`：后端开发规范。
 - `<project-root>/docs/architecture.md`：技术架构入口索引；只做阅读顺序、分册索引、事实源优先级和维护规则。所有项目都必须有；简单项目可只保留少量章节并说明不适用项。
@@ -76,6 +97,7 @@ description: 为 AI 辅助开发项目创建标准化启动文档。适用于需
 ## 文档分层原则
 
 - `AGENTS.md` 只放顶层入口、阅读顺序、项目专有补充和必须提醒 Agent 的约束。
+- `DEV_SPEC.md` 只在启用 DEV_SPEC 时放在项目根目录；规格版本和相关治理入口放在 `docs/dev-spec/`。
 - `docs/architecture.md` 只放技术架构索引、阅读顺序、事实源优先级和维护规则，不追加长篇模块细节。
 - `docs/architecture/<nn>-<domain>.md` 放系统模块边界、业务流、核心数据结构、运行时、消息/事件、权限隔离、前端架构、观测诊断和演进规则。
 - `docs/architecture/<changelog>.md` 放架构变更记录。
@@ -126,7 +148,7 @@ Agent 修改上述内容时，应在同一变更中更新对应文档；如果�
 交付前确认：
 
 - 文档集合符合项目分类。
-- 除 `AGENTS.md` 外，所有产出文档都在 `docs/` 下。
+- 除 `AGENTS.md` 和启用 DEV_SPEC 时的根目录 `DEV_SPEC.md` 外，所有产出文档都在 `docs/` 下。
 - 技术架构入口在 `docs/architecture.md`；复杂项目的架构分册在 `docs/architecture/` 下，并包含架构 changelog。
 - API 契约入口在 `docs/api-contracts.md`；有真实接口领域时，领域契约在 `docs/api-contracts/` 下。
 - 通用规范没有混入源项目业务事实。
