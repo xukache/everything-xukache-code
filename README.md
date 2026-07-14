@@ -62,6 +62,7 @@ skills/
 | ---------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
 | `web-access`           | 为 AI Agent 提供联网、搜索、网页抓取、登录态浏览器 CDP 操作和站点经验积累能力。        | [eze-is/web-access](https://github.com/eze-is/web-access)                                       |
 | `ui-ux-pro-max`        | UI/UX 设计知识库，包含风格、配色、字体、UX 指南和多技术栈设计建议。                 | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) |
+| `web-design-engineer`  | 提升 AI 生成网页的视觉设计质量，覆盖设计系统宣告、反俗套规则、oklch 配色、字体组合、风格配方、动效和按需浏览器验收。 | [ConardLi/garden-skills](https://github.com/ConardLi/garden-skills/tree/main/skills/web-design-engineer) |
 | `backend-code-review`  | Dify 项目中的后端代码审查规则，覆盖安全、性能、架构分层、SQLAlchemy 等检查项。        | [langgenius/dify](https://github.com/langgenius/dify)                                           |
 | `frontend-code-review` | Dify 项目中的前端代码审查规则，覆盖 `.tsx`、`.ts`、`.js` 的质量、性能和业务逻辑检查。 | [langgenius/dify](https://github.com/langgenius/dify)                                           |
 
