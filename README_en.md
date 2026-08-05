@@ -60,6 +60,7 @@ The following skills are not maintained in this repository. Use the upstream rep
 | Skill | Description | External Repository |
 | --- | --- | --- |
 | `web-access` | Adds web access for AI agents, including search, page fetching, browser CDP operations with login state, and site-pattern memory. | [eze-is/web-access](https://github.com/eze-is/web-access) |
+| `human-writing` | Human-like Chinese writing and revision skill that checks material sufficiency, separates nonfiction and fiction workflows, and improves progression, natural Chinese rhythm, and common model-like phrasing. | [KKKKhazix/human-writing](https://github.com/KKKKhazix/human-writing) |
 | `ui-ux-pro-max` | UI/UX design knowledge base with style, color, typography, UX, and technology-stack recommendations. | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) |
 | `web-design-engineer` | Improves the visual quality of AI-generated web artifacts through design-system declaration, anti-cliché rules, oklch color guidance, font pairings, style recipes, motion, and opt-in browser acceptance. | [ConardLi/garden-skills](https://github.com/ConardLi/garden-skills/tree/main/skills/web-design-engineer) |
 | `backend-code-review` | Backend code review rules from Dify, covering security, performance, architecture layering, SQLAlchemy, and related checks. | [langgenius/dify](https://github.com/langgenius/dify) |
